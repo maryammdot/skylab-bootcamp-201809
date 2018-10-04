@@ -15,7 +15,7 @@ tests.push(function() {
 });
 
 tests.push(function() {
-    console.log('should fail saving on wrong password');
+    console.log('should fail saving on invalid password');
 
     var secret = 'this is my secret';
 

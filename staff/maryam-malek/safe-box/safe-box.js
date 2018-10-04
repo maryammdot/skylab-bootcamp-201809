@@ -2,17 +2,23 @@
 
 var safeBox = {
     saveSecret: function(secret, password) {
-        var secr = secret;
+        if(password === undefined || password === null || !password.length || !password.trim().length) throw Error ('invalid password');
+        this.secret = secret;
         var pass = password;
-        return secret;
+        return {
+            password: function () {
+                return pass;
+            }
+        }
     },
 
     retrieveSecret: function(password) {
-        if (password === this.saveSecret.pass){
-            return this.saveSecret.secr;
+        if (password === this.saveSecret.password){
+            return this.secret;
         }
     }
-};
+}
+
 
 safeBox.saveSecret('hola', '123');
 console.log(safeBox.retrieveSecret('123'));
