@@ -4,8 +4,12 @@ var safeBox = {
     saveSecret: function(secret, password) {
         if(password === undefined || password === null || !password.length || !password.trim().length) throw Error ('invalid password');
         this.secret = secret;
+        this.
         var pass = password;
         return {
+            saveSecret: function(){
+                
+            },
             password: function () {
                 return pass;
             }
@@ -13,7 +17,8 @@ var safeBox = {
     },
 
     retrieveSecret: function(password) {
-        if (password === this.saveSecret.password){
+      debugger;
+        if (password === this.saveSecret().password){
             return this.secret;
         }
     }
