@@ -1,28 +1,56 @@
 // safe-box.js
 
-var safeBox = {
-    saveSecret: function(secret, password) {
-        if(typeof password === 'undefined' || typeof password === 'null' || !password.length || !password.trim().length) throw Error ('invalid password');
-        this.secret = secret;
-        var pass = password;
-        return {
-            saveSecret: function(){
-                
-            },
-            password: function () {
-                return pass;
-            }
+var safeBox;
+
+(function(){
+    var _password;
+    var _secret;
+
+    safeBox = {
+        saveSecret: function(secret, password){
+            if (typeof secret !== 'string' || !secret.trim().length) throw Error('invalid secret');
+
+            if (typeof password !== 'string' || !password.trim().length) throw Error('invalid password');
+            
+            _secret = secret;
+            _password = password;
+        },
+
+        retrieveSecret: function(password){
+            if(password !== _password) throw Error ('invalid password');
+            return _secret;
         }
-    },
-
-    retrieveSecret: function(password) {
-      debugger;
-        if (password === this.saveSecret().password){
-            return this.secret;
-        }
-    }
-}
+    };
 
 
+})();
+
+
+// var safeBox;
+// (function () {
+//     var _password;
+//     var _secret;
+
+//     safeBox = {
+//         saveSecret: function (secret, password) {
+//             if (typeof secret !== 'string' || !secret.trim().length) throw Error('invalid secret');
+
+//             if (typeof password !== 'string' || !password.trim().length) throw Error('invalid password');
+
+//             _secret = secret;
+//             _password = password;
+//         },
+
+//         retrieveSecret: function (password) {
+//             if (password !== _password) throw Error('invalid password');
+
+//             return _secret;
+//         }
+//     };
+// })();
 safeBox.saveSecret('hola', '123');
 console.log(safeBox.retrieveSecret('123'));
+
+
+
+
