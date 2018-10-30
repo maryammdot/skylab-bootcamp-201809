@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const [,, port, file] = process.argv
 
-var server = http.createServer(function (req, res) {  
+var server = http.createServer((req, res) => {  
 
     var readStream = fs.createReadStream(file)
     readStream.pipe(res)
