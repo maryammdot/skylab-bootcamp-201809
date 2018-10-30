@@ -1,34 +1,91 @@
-const http = require('http')  
+const http = require('http')
 const url = require('url')
 
-const [,, port] = process.argv
+const [, , port] = process.argv
 
 let date = new Date()
 // .toISOString()
 
-function fill (elem){
+function fill(elem) {
     return (elem < 10 ? '0' : '') + elem
 }
-// let year = date.getFullYear()
-// let month = fill(date.getMonth()+1)
-// let day = fill(date.getDate())
-let hour = fill(date.getHours())
-let minut = fill(date.getMinutes())
-let sec = fill(date.getSeconds())
 
+// let hour = fill(date.getHours())
+// let minut = fill(date.getMinutes())
+// let sec = fill(date.getSeconds())
 
-var server = http.createServer(function (req, res) {  
+var server = http.createServer(function (req, res) {
 
-    if(req.method === 'GET'){
-        url.parse(req.url, true)
-        if(url.pathname === '/api/parsetime'){
-            res.writeHead(200, { 'Content-Type': 'application/json' })         
-            res = {  
-                "hour": hour,  
-                "minute": minut,  
-                "second": sec  
+    if (req.method === 'GET') {
+        let urlPars = url.parse(req.url, true)
+        // console.log(urlPars)
+        if (urlPars.pathname === '/api/parsetime') {
+            // console.log(urlPars.query)
+
+            let iso = urlPars.query.iso
+            let date = new Date(iso)
+            let hour = date.getHours()
+            let minut = date.getMinutes()
+            let sec = date.getSeconds()
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            resp = {
+                "hour": hour,
+                "minute": minut,
+                "second": sec
             }
+            res.end(JSON.stringify(resp))
+        } else if (urlPars.pathname === '/api/unixtime') {
+           
+            let iso = urlPars.query.iso
+            let date = new Date(iso)
+            let unix = date.getTime()
+
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            resp = {
+                "unixtime": unix
+            }
+            res.end(JSON.stringify(resp))
         }
     }
-})  
+})
 server.listen(port)
+
+
+
+// SOLUCTION
+
+// var http = require('http')
+// var url = require('url')
+
+// function parsetime (time) {
+//   return {
+//     hour: time.getHours(),
+//     minute: time.getMinutes(),
+//     second: time.getSeconds()
+//   }
+// }
+
+// function unixtime (time) {
+//   return { unixtime: time.getTime() }
+// }
+
+// var server = http.createServer(function (req, res) {
+//   var parsedUrl = url.parse(req.url, true)
+//   var time = new Date(parsedUrl.query.iso)
+//   var result
+
+//   if (/^\/api\/parsetime/.test(req.url)) {
+//     result = parsetime(time)
+//   } else if (/^\/api\/unixtime/.test(req.url)) {
+//     result = unixtime(time)
+//   }
+
+//   if (result) {
+//     res.writeHead(200, { 'Content-Type': 'application/json' })
+//     res.end(JSON.stringify(result))
+//   } else {
+//     res.writeHead(404)
+//     res.end()
+//   }
+// })
+// server.listen(Number(process.argv[2]))

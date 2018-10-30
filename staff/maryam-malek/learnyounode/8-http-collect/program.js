@@ -1,12 +1,13 @@
 const http = require('http')
-const [,,path] = process.argv
+const [, , path] = process.argv
+// const { argv: [, , path] } = process
 
 http.get(path, response => {
-    let dataArr = ''
-    if(response.error) throw Error
+    let dataStr = ''
+    if (response.error) throw Error
     response.setEncoding('utf8')
     response.on('data', data => {
-        dataArr += data
+        dataStr += data
         // console.log('DATA'+data)
         // console.log(dataArr)
     })
@@ -14,9 +15,9 @@ http.get(path, response => {
         console.log(err)
     })
     response.on('end', () => {
-    
-        console.log(dataArr.length)
-        console.log(dataArr)
-        
+
+        console.log(dataStr.length)
+        console.log(dataStr)
+
     })
 }).on('error', console.error)
