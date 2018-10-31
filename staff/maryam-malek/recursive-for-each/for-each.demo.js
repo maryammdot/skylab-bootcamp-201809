@@ -1,4 +1,4 @@
-const forEach = require('./forEach')
+const forEach = require('./for-each')
 
 // const [,, arra, call] = process.argv
 
