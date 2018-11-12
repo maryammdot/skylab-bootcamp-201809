@@ -43,19 +43,26 @@ const logic = {
 
         if (!id.trim().length) throw new ValueError('id is empty or blank')
 
-        return User.findById(id)
+        return User.findById(id, { _id: 0, password: 0, postits: 0, __v: 0 })
+            // .then(user => {
+            //     if (!user) throw new NotFoundError(`user with id ${id} not found`)
+
+            //     const _user = user.toObject()
+
+            //     _user.id = id
+
+            //     delete _user.password
+            //     delete _user.postits
+
+            //     return _user
+            // })
+            .lean()
             .then(user => {
                 if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                const _user = user.toObject()
-                // const _user = user.lean()
+                user.id = id
 
-                _user.id = id
-
-                delete _user.password
-                delete _user.postits
-
-                return _user
+                return user
             })
     },
 
@@ -81,7 +88,7 @@ const logic = {
                 if (user.password !== password) throw new AuthError('invalid password')
 
                 if (username) {
-                    return User.findOne({username})
+                    return User.findOne({ username })
                         .then(_user => {
                             if (_user) throw new AlreadyExistsError(`username ${username} already exists`)
 
@@ -126,7 +133,7 @@ const logic = {
             .then(user => {
                 if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                const postit = new Postit({ text })
+                const postit = new Postit({ text, status:'TODO' })
 
                 user.postits.push(postit)
 
@@ -140,116 +147,121 @@ const logic = {
         if (!id.trim().length) throw new ValueError('id is empty or blank')
 
         return User.findById(id)
+            .lean()
             .then(user => {
                 if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                return user.postits
+                return user.postits.map((postit) => { 
+                    postit.id = postit._id.toString()
+                    delete postit._id
+                    return postit
+                })
             })
     },
 
-    /**
-     * Removes a postit
-     * 
-     * @param {string} id The user id
-     * @param {string} postitId The postit id
-     * 
-     * @throws {TypeError} On non-string user id, or non-string postit id
-     * @throws {Error} On empty or blank user id or postit text
-     * 
-     * @returns {Promise} Resolves on correct data, rejects on wrong user id, or postit id
-     */
-    removePostit(id, postitId) {
-        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+/**
+ * Removes a postit
+ * 
+ * @param {string} id The user id
+ * @param {string} postitId The postit id
+ * 
+ * @throws {TypeError} On non-string user id, or non-string postit id
+ * @throws {Error} On empty or blank user id or postit text
+ * 
+ * @returns {Promise} Resolves on correct data, rejects on wrong user id, or postit id
+ */
+removePostit(id, postitId) {
+    if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
-        if (!id.trim().length) throw new ValueError('id is empty or blank')
+    if (!id.trim().length) throw new ValueError('id is empty or blank')
 
-        if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
+    if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
 
-        if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
+    if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
 
-        return User.findById(id)
-            .then(user => {
-                if (!user) throw new NotFoundError(`user with id ${id} not found`)
+    return User.findById(id)
+        .then(user => {
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                const { postits } = user
+            const { postits } = user
 
-                // by filtering
+            // by filtering
 
-                // const _postits = postits.filter(postit => postit.id !== postitId)
+            // const _postits = postits.filter(postit => postit.id !== postitId)
 
-                // if (_postits.length !== postits.length - 1) throw Error(`postit with id ${postitId} not found in user with id ${id}`)
+            // if (_postits.length !== postits.length - 1) throw Error(`postit with id ${postitId} not found in user with id ${id}`)
 
-                // user.postits = _postits
+            // user.postits = _postits
 
-                // by finding index
+            // by finding index
 
-                const index = postits.findIndex(postit => postit.id === postitId)
+            const index = postits.findIndex(postit => postit.id === postitId)
 
-                if (index < 0) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
+            if (index < 0) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
 
-                postits.splice(index, 1)
+            postits.splice(index, 1)
 
-                return user.save()
-            })
-    },
+            return user.save()
+        })
+},
 
-    modifyPostit(id, postitId, text) {
-        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+modifyPostit(id, postitId, text) {
+    if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
-        if (!id.trim().length) throw new ValueError('id is empty or blank')
+    if (!id.trim().length) throw new ValueError('id is empty or blank')
 
-        if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
+    if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
 
-        if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
+    if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
 
-        if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
+    if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
 
-        if (!text.trim().length) throw new ValueError('text is empty or blank')
+    if (!text.trim().length) throw new ValueError('text is empty or blank')
 
-        return User.findById(id)
-            .then(user => {
-                if (!user) throw new NotFoundError(`user with id ${id} not found`)
+    return User.findById(id)
+        .then(user => {
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                const { postits } = user
+            const { postits } = user
 
-                const postit = postits.find(postit => postit.id === postitId)
+            const postit = postits.find(postit => postit.id === postitId)
 
-                if (!postit) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
+            if (!postit) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
 
-                postit.text = text
+            postit.text = text
 
-                return user.save()
-            })
-    },
+            return user.save()
+        })
+},
 
-    modifyStatus(id, postitId, newStatus) {
-        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+modifyStatus(id, postitId, newStatus) {
+    if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
-        if (!id.trim().length) throw new ValueError('id is empty or blank')
+    if (!id.trim().length) throw new ValueError('id is empty or blank')
 
-        if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
+    if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
 
-        if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
+    if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
 
-        if (typeof newStatus !== 'string') throw TypeError(`${newStatus} is not a string`)
+    if (typeof newStatus !== 'string') throw TypeError(`${newStatus} is not a string`)
 
-        if (!newStatus.trim().length) throw new ValueError('status is empty or blank')
+    if (!newStatus.trim().length) throw new ValueError('status is empty or blank')
 
-        return User.findById(id)
-            .then(user => {
-                if (!user) throw new NotFoundError(`user with id ${id} not found`)
+    return User.findById(id)
+        .then(user => {
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-                const { postits } = user
+            const { postits } = user
 
-                const postit = postits.find(postit => postit.id === postitId)
+            const postit = postits.find(postit => postit.id === postitId)
 
-                if (!postit) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
+            if (!postit) throw new NotFoundError(`postit with id ${postitId} not found in user with id ${id}`)
 
-                postit.status = newStatus
+            postit.status = newStatus
 
-                return user.save()
-            })
-    }
+            return user.save()
+        })
+}
 }
 
 module.exports = logic

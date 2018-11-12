@@ -60,17 +60,15 @@ class Postits extends Component {
         }
     }
 
-
     allowDrop = event => {
         event.preventDefault()
     }
 
-    drop = event => {
+    drop = (event, status) => {
         event.preventDefault()
-        const postit = event.dataTransfer.getData("id")
-        
+        const id = event.dataTransfer.getData("id")
         try {
-            logic.modifyStatus(postit.id, event.target.name)
+            logic.modifyStatus(id, status)
                 .then(() => logic.listPostits())
                 .then(postits => this.setState({ postits, error: null }))
         } catch ({ message }) {
@@ -79,25 +77,27 @@ class Postits extends Component {
 
     }
 
+
+
     render() {
         return <div className="home">
             <Navbar />
             <InputForm onSubmit={this.handleSubmit} />
             {this.state.error && <Error className="postit-error" message={this.state.error} />}
             <div className="postit-board">
-                <section name="TODO" className="postit-col postit-col--todo" onDragOver={this.allowDrop} onDrop={this.drop}>
+                <section className="postit-col postit-col--todo" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'TODO')}>
                     <h3>TO DO</h3>
                     {this.state.postits.filter(postit => postit.status === 'TODO').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
                 </section>
-                <section className="postit-col postit-col--doing" onDragOver={this.allowDrop} onDrop={this.drop}>
+                <section className="postit-col postit-col--doing" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'DOING')}>
                     <h3>DOING</h3>
                     {this.state.postits.filter(postit => postit.status === 'DOING').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
                 </section>
-                <section className="postit-col postit-col--review" onDragOver={this.allowDrop} onDrop={this.drop}>
+                <section className="postit-col postit-col--review" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'REVIEW')}>
                     <h3>REVIEW</h3>
                     {this.state.postits.filter(postit => postit.status === 'REVIEW').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
                 </section>
-                <section className="postit-col postit-col--done" onDragOver={this.allowDrop} onDrop={this.drop}>
+                <section className="postit-col postit-col--done" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'DONE')}>
                     <h3>DONE</h3>
                     {this.state.postits.filter(postit => postit.status === 'DONE').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
                 </section>

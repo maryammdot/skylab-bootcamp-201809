@@ -80,7 +80,7 @@ router.post('/users/:id/postits', [bearerTokenParser, jwtVerifier, jsonBodyParse
         const { sub, params: { id }, body: { text } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
-
+debugger
         return logic.addPostit(id, text)
             .then(() => res.json({
                 message: 'postit added'

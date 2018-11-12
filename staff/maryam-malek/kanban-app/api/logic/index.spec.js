@@ -57,7 +57,7 @@ describe('logic', () => {
 
             beforeEach(() => {
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
-                return User.create(user)
+                return user.save()
             })
 
             it('should authenticate on correct credentials', () => {
@@ -91,7 +91,7 @@ describe('logic', () => {
                 postit = new Postit({ text: 'hello text' })
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit] })
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on valid id', () =>
@@ -118,7 +118,7 @@ describe('logic', () => {
             beforeEach(() => {
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should update on correct data and password', () => {
@@ -242,7 +242,7 @@ describe('logic', () => {
 
                 text = `text-${Math.random()}`
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on correct data', () =>
@@ -278,7 +278,7 @@ describe('logic', () => {
 
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit, postit2] })
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on correct data', () =>
@@ -328,7 +328,7 @@ describe('logic', () => {
                 postit = new Postit({ text: 'hello text' })
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit] })
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on correct data', () =>
@@ -360,7 +360,7 @@ describe('logic', () => {
 
                 newText = `new-text-${Math.random()}`
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on correct data', () =>
@@ -398,7 +398,7 @@ describe('logic', () => {
 
                 newStatus = 'DONE'
 
-                return User.create(user)
+                return user.save()
             })
 
             it('should succeed on correct data', () =>
@@ -427,6 +427,8 @@ describe('logic', () => {
             )
         })
     })
+
+    afterEach(() => User.deleteMany())
 
     after(() => mongoose.disconnect())
 })

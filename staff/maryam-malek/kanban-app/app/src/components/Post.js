@@ -24,7 +24,6 @@ class Post extends Component {
     }
 
     drag = event => {
-
         event.dataTransfer.setData("id", event.target.id)
     }
 
