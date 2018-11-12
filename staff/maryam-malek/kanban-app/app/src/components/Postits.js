@@ -60,10 +60,6 @@ class Postits extends Component {
         }
     }
 
-    drag = event => {
-        debugger
-        event.dataTransfer.setData("id", event.target.id)
-    }
 
     allowDrop = event => {
         event.preventDefault()
@@ -72,7 +68,7 @@ class Postits extends Component {
     drop = event => {
         event.preventDefault()
         const postit = event.dataTransfer.getData("id")
-        debugger
+        
         try {
             logic.modifyStatus(postit.id, event.target.name)
                 .then(() => logic.listPostits())

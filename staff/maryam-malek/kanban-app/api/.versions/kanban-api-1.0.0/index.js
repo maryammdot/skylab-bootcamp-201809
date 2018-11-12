@@ -9,7 +9,7 @@ const { User } = require('./data')
 
 const { env: { PORT, MONGO_URL } } = process
 
-const client = new MongoClient(`${MONGO_URL}/postit`, { useNewUrlParser: true })
+const client = new MongoClient(MONGO_URL, { useNewUrlParser: true })
 
 client.connect()
     .then(() => {

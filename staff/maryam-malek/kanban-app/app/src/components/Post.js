@@ -23,8 +23,13 @@ class Post extends Component {
         this.props.onUpdatePost(this.props.id, this.state.text)
     }
 
+    drag = event => {
+
+        event.dataTransfer.setData("id", event.target.id)
+    }
+
     render() {
-        return <article className="postIt" draggable="true" onDragStart={() => this.props.drag()}>
+        return <article className="postIt" draggable="true" id = {this.props.id} onDragStart={this.drag}>
             <textarea defaultValue={this.state.text} onChange={this.handleChange} onBlur={this.handleBlur} />
             <select value={this.state.status} onChange={this.handleSelectChange}>
                 <option value="TODO">TO DO</option>

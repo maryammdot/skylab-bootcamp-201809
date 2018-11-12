@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const mongoose = require('mongoose')
+const { MongoClient } = require('mongodb')
 const { User, Postit } = require('../data')
 const logic = require('.')
 const { AlreadyExistsError } = require('../errors')
@@ -14,9 +14,22 @@ const { env: { MONGO_URL } } = process
 // debug -> $ mocha debug src/logic.spec.js --timeout 10000
 
 describe('logic', () => {
-    before(() => mongoose.connect(`${MONGO_URL}/postit-test`, { useNewUrlParser: true }))
+    let client, users
 
-    beforeEach(() => User.deleteMany())
+    before(() => {
+        client = new MongoClient(MONGO_URL, { useNewUrlParser: true })
+
+        return client.connect()
+            .then(() => {
+                const db = client.db('postit-test')
+
+                users = db.collection('users')
+
+                User._collection = users
+            })
+    })
+
+    beforeEach(() => users.deleteMany())
 
     describe('user', () => {
         describe('register', () => {
@@ -31,7 +44,7 @@ describe('logic', () => {
 
             it('should succeed on correct data', () =>
                 logic.registerUser(name, surname, username, password)
-                    .then(() => User.find())
+                    .then(() => users.find().toArray())
                     .then(_users => {
                         expect(_users.length).to.equal(1)
 
@@ -57,7 +70,8 @@ describe('logic', () => {
 
             beforeEach(() => {
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
-                return User.create(user)
+
+                return users.insertOne(user)
             })
 
             it('should authenticate on correct credentials', () => {
@@ -68,7 +82,7 @@ describe('logic', () => {
                         expect(id).to.exist
                         expect(id).to.be.a('string')
 
-                        return User.find()
+                        return users.find().toArray()
                             .then(_users => {
                                 const [_user] = _users
 
@@ -88,10 +102,10 @@ describe('logic', () => {
             let user, postit
 
             beforeEach(() => {
-                postit = new Postit({ text: 'hello text' })
+                postit = new Postit('hello text')
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit] })
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on valid id', () =>
@@ -118,32 +132,30 @@ describe('logic', () => {
             beforeEach(() => {
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
 
-                return User.create(user)
+                users.insertOne(user)
             })
 
             it('should update on correct data and password', () => {
-                return User.findOne({ username: user.username })
-                    .then((user) => {
-                        const { id, name, surname, username, password } = user
-                        const newName = `${name}-${Math.random()}`
-                        const newSurname = `${surname}-${Math.random()}`
-                        const newUsername = `${username}-${Math.random()}`
-                        const newPassword = `${password}-${Math.random()}`
-                        return logic.updateUser(id, newName, newSurname, newUsername, newPassword, password)
+                const { id, name, surname, username, password } = user
 
-                            .then(() => User.find())
-                            .then(_users => {
-                                const [_user] = _users
+                const newName = `${name}-${Math.random()}`
+                const newSurname = `${surname}-${Math.random()}`
+                const newUsername = `${username}-${Math.random()}`
+                const newPassword = `${password}-${Math.random()}`
 
-                                expect(_user.id).to.equal(id)
+                return logic.updateUser(id, newName, newSurname, newUsername, newPassword, password)
+                    .then(() => users.find().toArray())
+                    .then(_users => {
+                        const [_user] = _users
 
-                                const { name, surname, username, password } = _user
+                        expect(_user.id).to.equal(id)
 
-                                expect(name).to.equal(newName)
-                                expect(surname).to.equal(newSurname)
-                                expect(username).to.equal(newUsername)
-                                expect(password).to.equal(newPassword)
-                            })
+                        const { name, surname, username, password } = _user
+
+                        expect(name).to.equal(newName)
+                        expect(surname).to.equal(newSurname)
+                        expect(username).to.equal(newUsername)
+                        expect(password).to.equal(newPassword)
                     })
             })
 
@@ -153,7 +165,7 @@ describe('logic', () => {
                 const newName = `${name}-${Math.random()}`
 
                 return logic.updateUser(id, newName, null, null, null, password)
-                    .then(() => User.find())
+                    .then(() => users.find().toArray())
                     .then(_users => {
                         const [_user] = _users
 
@@ -172,7 +184,7 @@ describe('logic', () => {
                 const newSurname = `${surname}-${Math.random()}`
 
                 return logic.updateUser(id, null, newSurname, null, null, password)
-                    .then(() => User.find())
+                    .then(() => users.find().toArray())
                     .then(_users => {
                         const [_user] = _users
 
@@ -202,31 +214,28 @@ describe('logic', () => {
                     user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
                     user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123' })
 
-                    return User.insertMany([user, user2])
+                    return users.insertMany([user, user2])
                 })
 
                 it('should update on correct data and password', () => {
-                    return User.findOne({ username: user2.username })
-                        .then(() => {
-                            const { id, name, surname, username, password } = user2
+                    const { id, name, surname, username, password } = user2
 
-                            const newUsername = 'jd'
+                    const newUsername = 'jd'
 
-                            return logic.updateUser(id, null, null, newUsername, null, password)
-                                .then(() => expect(true).to.be.false)
-                                .catch(err => {
-                                    expect(err).to.be.instanceof(AlreadyExistsError)
+                    return logic.updateUser(id, null, null, newUsername, null, password)
+                        .then(() => expect(true).to.be.false)
+                        .catch(err => {
+                            expect(err).to.be.instanceof(AlreadyExistsError)
 
-                                    return User.findById(id)
-                                        .then(_user => {
-                                            expect(_user.id).to.equal(id)
+                            return users.findOne({ id })
+                        })
+                        .then(_user => {
+                            expect(_user.id).to.equal(id)
 
-                                            expect(_user.name).to.equal(name)
-                                            expect(_user.surname).to.equal(surname)
-                                            expect(_user.username).to.equal(username)
-                                            expect(_user.password).to.equal(password)
-                                        })
-                                })
+                            expect(_user.name).to.equal(name)
+                            expect(_user.surname).to.equal(surname)
+                            expect(_user.username).to.equal(username)
+                            expect(_user.password).to.equal(password)
                         })
                 })
             })
@@ -242,28 +251,25 @@ describe('logic', () => {
 
                 text = `text-${Math.random()}`
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on correct data', () =>
-                User.findOne({ username: user.username })
-                    .then(() =>
-                        logic.addPostit(user.id, text)
-                            .then(() => User.find())
-                            .then(_users => {
-                                const [_user] = _users
+                logic.addPostit(user.id, text)
+                    .then(() => users.find().toArray())
+                    .then(_users => {
+                        const [_user] = _users
 
-                                expect(_user.id).to.equal(user.id)
+                        expect(_user.id).to.equal(user.id)
 
-                                const { postits } = _user
+                        const { postits } = _user
 
-                                expect(postits.length).to.equal(1)
+                        expect(postits.length).to.equal(1)
 
-                                const [postit] = postits
+                        const [postit] = postits
 
-                                expect(postit.text).to.equal(text)
-                            })
-                    )
+                        expect(postit.text).to.equal(text)
+                    })
             )
 
             // TODO other test cases
@@ -278,46 +284,43 @@ describe('logic', () => {
 
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit, postit2] })
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on correct data', () =>
-                User.findOne({ username: user.username })
-                    .then(() =>
-                        logic.listPostits(user.id)
-                            .then(postits => {
-                                return User.find()
-                                    .then(_users => {
-                                        expect(_users.length).to.equal(1)
+                logic.listPostits(user.id)
+                    .then(postits => {
+                        return users.find().toArray()
+                            .then(_users => {
+                                expect(_users.length).to.equal(1)
 
-                                        const [_user] = _users
+                                const [_user] = _users
 
-                                        expect(_user.id).to.equal(user.id)
+                                expect(_user.id).to.equal(user.id)
 
-                                        const { postits: _postits } = _user
+                                const { postits: _postits } = _user
 
-                                        expect(_postits.length).to.equal(2)
+                                expect(_postits.length).to.equal(2)
 
-                                        expect(postits.length).to.equal(_postits.length)
+                                expect(postits.length).to.equal(_postits.length)
 
-                                        const [_postit, _postit2] = _postits
+                                const [_postit, _postit2] = _postits
 
-                                        expect(_postit.id).to.equal(postit.id)
-                                        expect(_postit.text).to.equal(postit.text)
+                                expect(_postit.id).to.equal(postit.id)
+                                expect(_postit.text).to.equal(postit.text)
 
-                                        expect(_postit2.id).to.equal(postit2.id)
-                                        expect(_postit2.text).to.equal(postit2.text)
+                                expect(_postit2.id).to.equal(postit2.id)
+                                expect(_postit2.text).to.equal(postit2.text)
 
-                                        const [__postit, __postit2] = postits
+                                const [__postit, __postit2] = postits
 
-                                        expect(_postit.id).to.equal(__postit.id)
-                                        expect(_postit.text).to.equal(__postit.text)
+                                expect(_postit.id).to.equal(__postit.id)
+                                expect(_postit.text).to.equal(__postit.text)
 
-                                        expect(_postit2.id).to.equal(__postit2.id)
-                                        expect(_postit2.text).to.equal(__postit2.text)
-                                    })
+                                expect(_postit2.id).to.equal(__postit2.id)
+                                expect(_postit2.text).to.equal(__postit2.text)
                             })
-                    )
+                    })
             )
         })
 
@@ -328,26 +331,23 @@ describe('logic', () => {
                 postit = new Postit({ text: 'hello text' })
                 user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit] })
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on correct data', () =>
-                User.findOne({ username: user.username })
-                    .then(() =>
-                        logic.removePostit(user.id, postit.id)
-                            .then(() => User.find())
-                            .then(_users => {
-                                expect(_users.length).to.equal(1)
+                logic.removePostit(user.id, postit.id)
+                    .then(() => users.find().toArray())
+                    .then(_users => {
+                        expect(_users.length).to.equal(1)
 
-                                const [_user] = _users
+                        const [_user] = _users
 
-                                expect(_user.id).to.equal(user.id)
+                        expect(_user.id).to.equal(user.id)
 
-                                const { postits } = _user
+                        const { postits } = _user
 
-                                expect(postits.length).to.equal(0)
-                            })
-                    )
+                        expect(postits.length).to.equal(0)
+                    })
             )
         })
 
@@ -360,31 +360,26 @@ describe('logic', () => {
 
                 newText = `new-text-${Math.random()}`
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on correct data', () =>
-                User.findOne({ username: user.username })
-                    .then(user => {
-                        const [postit] = user.postits
+                logic.modifyPostit(user.id, postit.id, newText)
+                    .then(() => users.find().toArray())
+                    .then(_users => {
+                        expect(_users.length).to.equal(1)
 
-                        logic.modifyPostit(user.id, postit.id, newText)
-                            .then(() => User.find())
-                            .then(_users => {
-                                expect(_users.length).to.equal(1)
+                        const [_user] = _users
 
-                                const [_user] = _users
+                        expect(_user.id).to.equal(user.id)
 
-                                expect(_user.id).to.equal(user.id)
+                        const { postits } = _user
 
-                                const { postits } = _user
+                        expect(postits.length).to.equal(1)
 
-                                expect(postits.length).to.equal(1)
+                        const [postit] = postits
 
-                                const [postit] = postits
-
-                                expect(postit.text).to.equal(newText)
-                            })
+                        expect(postit.text).to.equal(newText)
                     })
             )
         })
@@ -398,35 +393,30 @@ describe('logic', () => {
 
                 newStatus = 'DONE'
 
-                return User.create(user)
+                return users.insertOne(user)
             })
 
             it('should succeed on correct data', () =>
-                User.findOne({ username: user.username })
-                    .then(user => {
-                        const [postit] = user.postits
+                logic.modifyStatus(user.id, postit.id, newStatus)
+                    .then(() => users.find().toArray())
+                    .then(_users => {
+                        expect(_users.length).to.equal(1)
 
-                        logic.modifyStatus(user.id, postit.id, newStatus)
-                            .then(() => User.find())
-                            .then(_users => {
-                                expect(_users.length).to.equal(1)
+                        const [_user] = _users
 
-                                const [_user] = _users
+                        expect(_user.id).to.equal(user.id)
 
-                                expect(_user.id).to.equal(user.id)
+                        const { postits } = _user
 
-                                const { postits } = _user
+                        expect(postits.length).to.equal(1)
 
-                                expect(postits.length).to.equal(1)
+                        const [postit] = postits
 
-                                const [postit] = postits
-
-                                expect(postit.status).to.equal(newStatus)
-                            })
+                        expect(postit.status).to.equal(newStatus)
                     })
             )
         })
     })
 
-    after(() => mongoose.disconnect())
+    after(() => client.close())
 })

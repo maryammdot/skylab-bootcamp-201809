@@ -7,7 +7,8 @@
     "start": "node .",
     "debug": "node debug .",
     "test": "mocha logic",
-    "debug-test": "mocha debug logic"
+    "debug-test": "mocha debug logic",
+    "test-data": "mocha data"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,7 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
     "mongodb": "^3.1.9",
-    "mongoose": "^5.3.11"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "chai": "^4.2.0"
