@@ -155,15 +155,11 @@ const logic = {
  
             let promises = []
  
- 
             for (var i=0; i<user.colaborators.length; i++) {
                 promises.push(User.findById(user.colaborators[i]))
             }
             return Promise.all(promises)
-                .then(res => {
-                    return res.map(item => item.username)
-                })
- 
+                .then(res => res.map(item => item.username))
         })()
     },
 

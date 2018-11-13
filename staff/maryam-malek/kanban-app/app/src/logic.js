@@ -88,6 +88,21 @@ const logic = {
             })
     },
 
+    listColaborators() {
+        return fetch(`${this.url}/users/${this._userId}/colaborators`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+
+                return res.data
+            })
+    },
+
     addPostit(text) {
         if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
 

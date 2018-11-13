@@ -199,11 +199,12 @@ router.get('/users/:id/colaborators', [bearerTokenParser, jwtVerifier], (req, re
         const { sub, params: { id } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
-
         return logic.listColaborators(id)
-            .then(colaborators => res.json({
+            .then(colaborators => {
+                debugger
+                return res.json({
                 data: colaborators
-            }))
+            })})
     }, res)
 })
 

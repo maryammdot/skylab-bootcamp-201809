@@ -130,6 +130,34 @@ describe('logic', () => {
             )
         })
 
+        describe('list colaborators', () => {
+            let username, password, username2, password2
+
+            beforeEach(() => {
+                const name = 'John', surname = 'Doe'
+
+                username = `jd-${Math.random()}`
+                password = `123-${Math.random()}`
+                username2 = `jd-${Math.random()}`
+                password2 = `123-${Math.random()}`
+
+                return logic.registerUser(name, surname, username, password)
+                    .then(() => logic.registerUser(name, surname, username2, password2))
+                    .then(() => logic.login(username, password))
+                    .then(() => logic.addColaborator(username2))
+            })
+
+            it('should succeed on correct data', () =>
+            logic.listColaborators() 
+            .then(colaborators => {
+                expect(colaborators).not.to.be.undefined
+                expect(colaborators.length).to.equal(1)
+                const [colaborator] = colaborators
+                expect(colaborator).to.equal(username2)
+            })
+            )
+        })
+
     })
 
     describe('postits', () => {
