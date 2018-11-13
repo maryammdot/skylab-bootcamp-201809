@@ -31,6 +31,7 @@ class Postits extends Component {
 
     handleRemovePostit = id => {
         try {
+            debugger
             return logic.removePostit(id)
                 .then(() => logic.listPostits())
                 .then(postits => this.setState({ postits, error: null }))

@@ -107,6 +107,7 @@ const logic = {
         if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
 
         if (!id.trim().length) throw Error('id is empty or blank')
+        debugger
 
         return fetch(`${this.url}/users/${this._userId}/postits/${id}`, {
             method: 'DELETE',

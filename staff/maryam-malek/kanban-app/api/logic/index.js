@@ -152,9 +152,11 @@ const logic = {
             .then(user => {
                 if (!user) throw new NotFoundError(`user with id ${id} not found`)
                 return Postit.find({ user: id })
+                    .lean()
                     .then(postits => postits.map((postit) => {
                         postit.id = postit._id.toString()
                         delete postit._id
+                        postit.user = postit.user.toString()
                         return postit
                     })
                     )
@@ -176,10 +178,10 @@ const logic = {
         if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
         if (!id.trim().length) throw new ValueError('id is empty or blank')
-
+        debugger
         return Postit.findById(id)
             .then(postit => {
-
+                debugger
                 if (!postit) throw new NotFoundError(`postit with id ${id} not found `)
 
                 return postit.remove()

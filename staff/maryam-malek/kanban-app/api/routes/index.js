@@ -108,7 +108,7 @@ router.put('/users/:id/postits/:postitId', [bearerTokenParser, jwtVerifier, json
 
         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.modifyPostit(id, postitId, text)
+        return logic.modifyPostit(postitId, text)
             .then(() => res.json({
                 message: 'postit modified'
             }))
@@ -121,7 +121,7 @@ router.patch('/users/:id/postits/:postitId', [bearerTokenParser, jwtVerifier, js
 
         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.modifyStatus(id, postitId, status)
+        return logic.modifyStatus(postitId, status)
             .then(() => res.json({
                 message: 'postit status modified'
             }))
@@ -133,7 +133,7 @@ router.delete('/users/:id/postits/:postitId', [bearerTokenParser, jwtVerifier, j
         const { sub, params: { id, postitId } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
-        return logic.removePostit(id, postitId)
+        return logic.removePostit(postitId)
             .then(() => res.json({
                 message: 'postit removed'
             }))
