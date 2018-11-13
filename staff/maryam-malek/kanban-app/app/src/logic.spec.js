@@ -108,6 +108,28 @@ describe('logic', () => {
 
             // TODO other cases
         })
+
+        describe('add colaborator', () => {
+            let username, password, username2, password2
+
+            beforeEach(() => {
+                const name = 'John', surname = 'Doe'
+
+                username = `jd-${Math.random()}`
+                password = `123-${Math.random()}`
+                username2 = `jd-${Math.random()}`
+                password2 = `123-${Math.random()}`
+
+                return logic.registerUser(name, surname, username, password)
+                    .then(() => logic.registerUser(name, surname, username2, password2))
+            })
+
+            it('should succeed on correct data', () =>
+                logic.addColaborator(username)
+                    .then(() => expect(true).to.be.true)
+            )
+        })
+
     })
 
     describe('postits', () => {
@@ -298,5 +320,176 @@ describe('logic', () => {
                 })
             })
         })
+
+        false && describe('asign postit', () => {
+            describe('with existing user', () => {
+                let username, password, text, postitId, username2, password2
+
+                beforeEach(() => {
+                    const name = 'John', surname = 'Doe'
+
+                    username = `jd-${Math.random()}`
+                    password = `123-${Math.random()}`
+                    username2 = `jd-${Math.random()}`
+                    password2 = `123-${Math.random()}`
+
+                    text = `hello ${Math.random()}`
+
+                    return logic.registerUser(name, surname, username, password)
+                        .then(() => logic.registerUser(name, surname, username2, password2))
+
+                        .then(() => logic.login(username, password))
+                })
+
+                describe('with existing postit', () => {
+
+                    beforeEach(() => {
+                        return logic.addPostit(text)
+                            .then(() => logic.listPostits())
+                            .then(([postit]) => postitId = postit.id)
+                    })
+
+                    it('should succeed', () =>
+                        logic.asignPostit(postitId, username2)
+                            .then(() => {
+                                expect(true).to.be.true
+                                return logic.listPostits()
+                                    .then(postits => {
+                                        expect(postits).not.to.be.undefined
+                                        expect(postits.length).to.equal(1)
+
+                                        const [postit] = postits
+
+                                        expect(postit.id).to.equal(postitId)
+                                        expect(postit.asigned).to.exist
+                                    })
+                                    .then(() => {
+
+                                        logic.logout()
+                                        return logic.login(username2, password2)
+                                            .then(() => logic.listPostits())
+                                            .then(_postits => {
+                                                expect(_postits).not.to.be.undefined
+                                                expect(_postits.length).to.equal(0)
+                                            })
+                                    })
+                            })
+                    )
+                })
+            })
+        })
+
+        describe('remove asigned postit', () => {
+            describe('with existing user', () => {
+                let username, password, text, postitId, username2, password2
+
+                beforeEach(() => {
+                    const name = 'John', surname = 'Doe'
+
+                    username = `jd-${Math.random()}`
+                    password = `123-${Math.random()}`
+                    username2 = `jd-${Math.random()}`
+                    password2 = `123-${Math.random()}`
+
+                    text = `hello ${Math.random()}`
+
+                    return logic.registerUser(name, surname, username, password)
+                        .then(() => logic.registerUser(name, surname, username2, password2))
+
+                        .then(() => logic.login(username, password))
+                })
+
+                describe('with existing postit', () => {
+
+                    beforeEach(() => {
+                        return logic.addPostit(text)
+                            .then(() => logic.listPostits())
+                            .then(([postit]) => postitId = postit.id)
+                            .then(() => logic.asignPostit(postitId, username2))
+                            .then(() => {
+                                logic.logout()
+                                return logic.login(username2, password2)
+                            })
+                    })
+
+                    it('should succeed', () =>
+                        logic.removeAsigned(postitId)
+                            .then(() => {
+                                expect(true).to.be.true
+                                return logic.listPostits()
+                                    .then(postits => {
+                                        expect(postits).not.to.be.undefined
+                                        expect(postits.length).to.equal(0)
+                                    })
+                                    .then(() => {
+                                        logic.logout()
+                                        return logic.login(username, password)
+                                            .then(() => logic.listPostits())
+                                            .then(_postits => {
+                                                expect(_postits).not.to.be.undefined
+                                                expect(_postits.length).to.equal(1)
+
+                                                const [_postit] = _postits
+
+                                                expect(_postit.id).to.equal(postitId)
+                                                expect(_postit.asigned).to.be.undefined
+                                            })
+                                    })
+                            })
+                    )
+                })
+            })
+        })
+
+
+        describe('list asigned postit', () => {
+            describe('with existing user', () => {
+                let username, password, text, postitId, username2, password2
+
+                beforeEach(() => {
+                    const name = 'John', surname = 'Doe'
+
+                    username = `jd-${Math.random()}`
+                    password = `123-${Math.random()}`
+                    username2 = `jd-${Math.random()}`
+                    password2 = `123-${Math.random()}`
+
+                    text = `hello ${Math.random()}`
+
+                    return logic.registerUser(name, surname, username, password)
+                        .then(() => logic.registerUser(name, surname, username2, password2))
+
+                        .then(() => logic.login(username, password))
+                })
+
+                describe('with existing postit', () => {
+
+                    beforeEach(() => {
+                        return logic.addPostit(text)
+                            .then(() => logic.listPostits())
+                            .then(([postit]) => postitId = postit.id)
+                            .then(() => logic.asignPostit(postitId, username2))
+                            .then(() => {
+                                logic.logout()
+                                return logic.login(username2, password2)
+                            })
+                    })
+
+                    it('should succeed', () =>
+                        logic.listAssignedPostits()
+                            .then(postits => {
+                                expect(postits).not.to.be.undefined
+                                expect(postits.length).to.equal(1)
+                                const [_postit] = postits
+
+                                expect(_postit.id).to.equal(postitId)
+                                expect(_postit.text).to.equal(text)
+                                expect(_postit.asigned).not.to.be.undefined
+                            })
+                    )
+                })
+            })
+        })
+
     })
 })

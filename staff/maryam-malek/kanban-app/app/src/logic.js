@@ -69,6 +69,25 @@ const logic = {
         sessionStorage.removeItem('token')
     },
 
+    addColaborator(username) {
+        if (typeof username !== 'string') throw TypeError(`${username} is not a string`)
+
+        if (!username.trim()) throw Error('username is empty or blank')
+        
+        return fetch(`${this.url}/users/${this._userId}/colaborator`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ colaborator: username })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
     addPostit(text) {
         if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
 
@@ -107,7 +126,6 @@ const logic = {
         if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
 
         if (!id.trim().length) throw Error('id is empty or blank')
-        debugger
 
         return fetch(`${this.url}/users/${this._userId}/postits/${id}`, {
             method: 'DELETE',
@@ -164,6 +182,62 @@ const logic = {
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
+            })
+    },
+
+    asignPostit(id, username) {
+        if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw Error('id is empty or blank')
+
+        if (typeof username !== 'string') throw TypeError(`${username} is not a string`)
+
+        if (!username.trim()) throw Error('username is empty or blank')
+
+        return fetch(`${this.url}/users/${this._userId}/postits/${id}/asign`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ colaborator: username })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    removeAsigned(id) {
+        if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw Error('id is empty or blank')
+
+        return fetch(`${this.url}/users/${this._userId}/postits/${id}/asign`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    listAssignedPostits() {
+        return fetch(`${this.url}/users/${this._userId}/postitsAsigned`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+
+                return res.data
             })
     }
 }

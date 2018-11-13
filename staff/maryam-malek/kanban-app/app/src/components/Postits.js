@@ -31,7 +31,6 @@ class Postits extends Component {
 
     handleRemovePostit = id => {
         try {
-            debugger
             return logic.removePostit(id)
                 .then(() => logic.listPostits())
                 .then(postits => this.setState({ postits, error: null }))
@@ -41,19 +40,18 @@ class Postits extends Component {
     }
 
 
-    handleModifyPostit = (id, text) => {
+    handleAsignPost = (id, username) => {
         try {
-            return logic.modifyPostit(id, text)
-                .then(() => logic.listPostits())
-                .then(postits => this.setState({ postits, error: null }))
+            return logic.asignPostit(id, username)
+                .then(() => this.setState({ error: null }))
         } catch ({ message }) {
             this.setState({ error: message })
         }
     }
 
-    handleModifyStatus = (id, status) => {
+    handleModifyPostit = (id, text) => {
         try {
-            logic.modifyStatus(id, status)
+            return logic.modifyPostit(id, text)
                 .then(() => logic.listPostits())
                 .then(postits => this.setState({ postits, error: null }))
         } catch ({ message }) {
@@ -88,19 +86,19 @@ class Postits extends Component {
             <div className="postit-board">
                 <section className="postit-col postit-col--todo" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'TODO')}>
                     <h3>TO DO</h3>
-                    {this.state.postits.filter(postit => postit.status === 'TODO').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
+                    {this.state.postits.filter(postit => postit.status === 'TODO').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onAsignPost={this.handleAsignPost} />)}
                 </section>
                 <section className="postit-col postit-col--doing" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'DOING')}>
                     <h3>DOING</h3>
-                    {this.state.postits.filter(postit => postit.status === 'DOING').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
+                    {this.state.postits.filter(postit => postit.status === 'DOING').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onAsignPost={this.handleAsignPost} />)}
                 </section>
                 <section className="postit-col postit-col--review" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'REVIEW')}>
                     <h3>REVIEW</h3>
-                    {this.state.postits.filter(postit => postit.status === 'REVIEW').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
+                    {this.state.postits.filter(postit => postit.status === 'REVIEW').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onAsignPost={this.handleAsignPost} />)}
                 </section>
                 <section className="postit-col postit-col--done" onDragOver={this.allowDrop} onDrop={(event) => this.drop(event, 'DONE')}>
                     <h3>DONE</h3>
-                    {this.state.postits.filter(postit => postit.status === 'DONE').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onUpdateStatus={this.handleModifyStatus} />)}
+                    {this.state.postits.filter(postit => postit.status === 'DONE').map(postit => <Post key={postit.id} text={postit.text} status={postit.status} id={postit.id} onDeletePost={this.handleRemovePostit} onUpdatePost={this.handleModifyPostit} onAsignPost={this.handleAsignPost} />)}
                 </section>
             </div>
         </div>

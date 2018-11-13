@@ -88,7 +88,7 @@ describe('logic', () => {
 
             beforeEach(async () => {
                 postit = new Postit({ text: 'hello text' })
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', postits: [postit] })
 
                 await user.save()
             })
@@ -114,7 +114,7 @@ describe('logic', () => {
             let user
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
 
                 await user.save()
             })
@@ -190,7 +190,7 @@ describe('logic', () => {
                 let user2
 
                 beforeEach(async () => {
-                    user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123', colaborators: [] })
+                    user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123' })
 
                     await user2.save()
                 })
@@ -215,69 +215,8 @@ describe('logic', () => {
                     }
                 })
             })
-
-        })
-        describe('add friend', () => {
-            let user, user2
-
-            beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
-                user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123', colaborators: [] })
-
-                await user.save()
-                await user2.save()
-            })
-
-            it('should add a friend on correct username', async () => {
-
-                await logic.addColaborator(user.id, user2.username)
-
-                const _users = await User.find()
-
-                expect(_users.length).to.equal(2)
-
-                const [_user, _user2] = _users
-
-                expect(_user.colaborators.length).to.equal(1)
-
-                expect(_user2.colaborators.length).to.equal(0)
-                expect(_user.colaborators[0].toString()).to.equal(user2.id)
-            })
-
-
-            // it('should fail on undefined username', () => {
-            //     expect(() => logic.authenticateUser(undefined, user.password)).to.throw(TypeError, 'undefined is not a string')
-            // })
-
-            // TODO other test cases
         })
     })
-
-    describe('list colaborators', () => {
-        let user, user2
-
-        beforeEach(async () => {
-            user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123', colaborators: [] })
-            user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [user2._id] })
-
-            await user.save()
-            await user2.save()
-            // await logic.addColaborator(user.id, user2.username)
-        })
-
-        it('should succeed on correct id', async () => {
-
-            const colaborators = await logic.listColaborators(user.id)
-
-            expect(colaborators.length).to.equal(1)
-
-            const [colaborator] = colaborators
-
-            expect(colaborator).to.equal(user2.username)
-        })
-
-    })
-
 
 
     describe('postits', () => {
@@ -285,7 +224,7 @@ describe('logic', () => {
             let user, text
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
 
                 text = `text-${Math.random()}`
 
@@ -313,7 +252,7 @@ describe('logic', () => {
             let user, postit, postit2
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
 
                 postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO' })
                 postit2 = new Postit({ user: user.id, text: 'hello text 2', status: 'TODO' })
@@ -356,7 +295,7 @@ describe('logic', () => {
             let user, postit
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
                 postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO' })
 
                 await user.save()
@@ -375,7 +314,7 @@ describe('logic', () => {
             let user, postit, newText
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
                 postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO' })
                 newText = `new-text-${Math.random()}`
 
@@ -401,7 +340,7 @@ describe('logic', () => {
             let user, postit, newStatus
 
             beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123'})
                 postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO' })
 
                 newStatus = 'DONE'
@@ -422,110 +361,6 @@ describe('logic', () => {
                 expect(_postit.status).to.equal(newStatus)
             })
         })
-
-        describe('asign postit', () => {
-            let user, postit
-
-            beforeEach(async () => {
-
-                user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123', colaborators: [] })
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [user2._id] })
-                postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO' })
-                newText = `new-text-${Math.random()}`
-
-                await user.save()
-                await user2.save()
-                await postit.save()
-            })
-
-            it('should succeed on correct data', async () => {
-
-                await logic.asignPostit(user.id, postit.id, user2.username)
-
-                const postits = await Postit.find()
-
-                expect(postits.length).to.equal(1)
-
-                const [_postit] = postits
-
-                expect(_postit.asigned.toString()).to.equal(user2._id.toString())
-
-            })
-        })
-
-        describe('delete asigned postit', () => {
-            let user, postit
-
-            beforeEach(async () => {
-
-                user2 = new User({ name: 'John', surname: 'Doe', username: 'jd2', password: '123', colaborators: [] })
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [user2._id] })
-                postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO', asigned: user2._id })
-                newText = `new-text-${Math.random()}`
-
-                await user.save()
-                await user2.save()
-                await postit.save()
-            })
-
-            it('should succeed on correct data', async () => {
-
-                await logic.removeAsigned(user2.id, postit.id)
-
-                const postits = await Postit.find()
-
-                expect(postits.length).to.equal(1)
-
-                const [_postit] = postits
-
-                expect(_postit.asigned).to.be.undefined
-
-            })
-        })
-
-        describe('list asigned', () => {
-            let user, postit, postit2
-
-            beforeEach(async () => {
-                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123', colaborators: [] })
-
-                postit = new Postit({ user: user.id, text: 'hello text', status: 'TODO', asigned: user._id })
-                postit2 = new Postit({ user: user.id, text: 'hello text 2', status: 'TODO', asigned: user._id })
-
-                await user.save()
-                await postit.save()
-                await postit2.save()
-            })
-
-            it('should succeed on correct data', async () => {
-
-                const postits = await logic.listAsignedPostits(user.id)
-                const _postits = await Postit.find({ user: user._id })
-
-                expect(_postits.length).to.equal(2)
-                const [_postit, _postit2] = _postits
-
-                expect(_postit.id).to.equal(postit.id.toString())
-                expect(_postit.text).to.equal(postit.text)
-                expect(_postit.user.toString()).to.equal(user.id)
-
-                expect(_postit2.id).to.equal(postit2.id.toString())
-                expect(_postit2.text).to.equal(postit2.text)
-                expect(_postit2.user.toString()).to.equal(user.id)
-
-                const [__postit, __postit2] = postits
-
-                expect(_postit.id).to.equal(__postit.id)
-                expect(_postit.text).to.equal(__postit.text)
-                expect(_postit.user.toString()).to.equal(__postit.user.toString())
-
-                expect(_postit2.id).to.equal(__postit2.id)
-                expect(_postit2.text).to.equal(__postit2.text)
-                expect(_postit2.user.toString()).to.equal(__postit2.user.toString())
-
-            })
-        })
-
     })
 
     afterEach(() => User.deleteMany())
