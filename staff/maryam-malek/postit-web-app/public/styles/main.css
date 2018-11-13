@@ -1,0 +1,77 @@
+body {
+    background-color: #383636;
+}
+
+a{
+    color: white;
+} 
+
+.contaier {
+    position: relative;
+}
+
+.links {
+    position: absolute;
+    right: 5%;
+    top: 5%;
+}
+
+.title {
+    color: gold;
+    font-family: 'Indie Flower', cursive;
+    font-size: 3em;
+}
+
+.sub-title {
+    font-size: 1.5em;
+    color: #008080;
+    font-family: 'Indie Flower', cursive;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+}
+
+.postits-area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+    width: 100%;
+}
+
+.postit {
+    background-color: gold;
+    font-family: 'Indie Flower', cursive;
+    width: 150px;
+    height: 155px;
+    margin: 50px 10px;
+    border-radius: 20px;
+    border: solid 1px yellow;
+}
+
+.postit textarea {
+    background: transparent;
+    border: none;
+    width: 150px;
+    height: 80px;
+    resize: none;
+}
+
+.postit button, .create {
+    border-radius: 20px;
+}
+
+.postit form {
+    margin: 3px;
+}
+
+.quick-button {
+    border-radius: 100%;
+    height: 65px;
+    width: 77px;
+    background-color: #19d7e0;
+}
+
+

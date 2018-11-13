@@ -1,0 +1,9 @@
+extends layout
+block content
+      p(class='sub-title') Welcome #{name.toUpperCase()}!
+      br
+      form(action='/postits', method='GET')
+        button(class='quick-button' type='submit') My postits
+      div(class='links')      
+        a(href='/postits') My postits  |
+        a(href='/logout')   Log out

@@ -1,4 +1,3 @@
-const fs = require('fs')
 const uid = require('uuid/v4')
 
 class User {
@@ -17,7 +16,7 @@ class User {
         return User._collection.findOne({ id: this.id })
             .then(user => {
                 if (user) {
-                    return User._collection.updateOne({ id: this.id }, { $set: this })
+                    return User._collection.updateOne({ id: this.id }, {$set: this})
                 } else {
                     return User._collection.insertOne(this)
                 }
@@ -31,13 +30,13 @@ class User {
     }
 
     static findByUsername(username) {
-        return this._collection.findOne({ username })
-            .then(user => user ? new User(user) : undefined)
+       return User._collection.findOne({ username })
+        .then(user => user? new User(user): undefined)
     }
 
     static findById(id) {
-        return this._collection.findOne({ id })
-            .then(user => user ? new User(user) : undefined)
+        return User._collection.findOne({ id })
+        .then(user => user? new User(user): undefined)
     }
 }
 

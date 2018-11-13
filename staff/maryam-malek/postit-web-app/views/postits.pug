@@ -1,0 +1,28 @@
+extends layout
+block content
+    p(class='sub-title') #{user.name.toUpperCase()}'s postits!
+    form(action='/postits', method='POST')
+      input(type='hidden', name='type', value='create')
+      input(type='text', name='body', placeholder='Write here...')
+      button(class='create' type='submit')
+        i.fas.fa-plus
+    if error 
+      p(class='error') #{error}
+    div(class='postits-area')
+      if postits.length
+        each postit in postits
+          div(class = 'postit')
+            form(action='/postits', method='POST')
+              input(type='hidden', name='type', value='update')
+              input(type='hidden', name='postitId', value= postit.id)
+              textarea(name='body')= postit.body
+              button(type='submit')
+                i.far.fa-edit
+            form(action='/postits', method='POST')
+              input(type='hidden', name='type', value='delete')
+              input(type='hidden', name='postitId', value= postit.id)
+              button(type='submit') 
+                i.far.fa-trash-alt
+    div(class='links')
+      a(href='/home') Home  |
+      a(href='/logout')   Log out

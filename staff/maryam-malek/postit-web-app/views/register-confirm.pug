@@ -1,0 +1,9 @@
+extends layout
+block content
+      p(class='sub-title') Ok! user #{name.toUpperCase()} registered.
+      br
+      form(action='/login', method='GET')
+        button(class='quick-button' type='submit') Log in
+      a(href='/') Go back
+      div(class='links')      
+        a(href='/login') Log in

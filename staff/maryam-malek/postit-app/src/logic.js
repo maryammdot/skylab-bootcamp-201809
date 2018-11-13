@@ -1,10 +1,6 @@
-// import data from './data'
-const data = require('./data')
-
-const { Postit, User } = data
-
 const logic = {
-    _postits : [],
+    _userId: sessionStorage.getItem('userId') || null,
+    _token: sessionStorage.getItem('token') || null,
 
     registerUser(name, surname, username, password) {
         if (typeof name !== 'string') throw TypeError(`${name} is not a string`)
@@ -17,7 +13,7 @@ const logic = {
         if (!username.trim()) throw Error('username is empty or blank')
         if (!password.trim()) throw Error('password is empty or blank')
 
-        return fetch('https://skylabcoders.herokuapp.com/api/user', {
+        return fetch('http://localhost:5000/api/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -27,19 +23,17 @@ const logic = {
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
-
-                return res.data.id
             })
     },
 
-    authenticate(username, password) {
+    login(username, password) {
         if (typeof username !== 'string') throw TypeError(`${username} is not a string`)
         if (typeof password !== 'string') throw TypeError(`${password} is not a string`)
 
         if (!username.trim()) throw Error('username is empty or blank')
         if (!password.trim()) throw Error('password is empty or blank')
 
-        return fetch('https://skylabcoders.herokuapp.com/api/auth', {
+        return fetch('http://localhost:5000/api/auth', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -50,32 +44,67 @@ const logic = {
             .then(res => {
                 if (res.error) throw Error(res.error)
 
-                return res.data
+                const { id, token } = res.data
+
+                this._userId = id
+                this._token = token
+
+                sessionStorage.setItem('userId', id)
+                sessionStorage.setItem('token', token)
             })
     },
 
-    createPostit(text, userId, token) {
+    updateUser(name, surname, newPassword, currentPassword) {
+        if (typeof name !== 'string') throw TypeError(`${name} is not a string`)
+        if (typeof surname !== 'string') throw TypeError(`${surname} is not a string`)
+        if (typeof newPassword !== 'string') throw TypeError(`${newPassword} is not a string`)
+        if (typeof currentPassword !== 'string') throw TypeError(`${currentPassword} is not a string`)
+
+        if (!currentPassword.trim()) throw Error('currentPassword is empty or blank')
+        return fetch(`http://localhost:5000/api/users/${this._userId}/`, {
+            method:'PATCH',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({
+                name,
+                surname,
+                newPassword,
+                currentPassword
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.error) throw Error(res.error)
+        })
+    },
+
+    get loggedIn() {
+        return !!this._userId
+    },
+
+    logout() {
+        this._postits = []
+        this._userId = null
+        this._token = null
+
+        sessionStorage.removeItem('userId')
+        sessionStorage.removeItem('token')
+    },
+
+    createPostit(text) {
         if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
 
         if (!text.trim()) throw Error('text is empty or blank')
 
-        if (typeof userId !== 'string') throw new TypeError(`${userId} is not a string`)
-
-        if (!userId.trim()) throw Error('userId is empty or blank')
-
-        if (typeof token !== 'string') throw TypeError(`${token} is not a string`)
-
-        if (!token.trim()) throw Error('token is empty or blank')
-
-        this._postits.push(new Postit(text))
-
-        return fetch(`https://skylabcoders.herokuapp.com/api/user/${userId}`, {
-            method: 'PUT',
+        return fetch(`http://localhost:5000/api/users/${this._userId}/postits`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this._token}`
             },
-            body: JSON.stringify({ postits: this._postits })
+            body: JSON.stringify({ text })
         })
             .then(res => res.json())
             .then(res => {
@@ -83,49 +112,30 @@ const logic = {
             })
     },
 
-    listPostitsByUser(userId, token) {
-        if (typeof userId !== 'string') throw new TypeError(`${userId} is not a string`)
-
-        if (!userId.trim()) throw Error('userId is empty or blank')
-
-        if (typeof token !== 'string') throw TypeError(`${token} is not a string`)
-
-        if (!token.trim()) throw Error('token is empty or blank')
-
-        return fetch(`https://skylabcoders.herokuapp.com/api/user/${userId}`, {
+    listPostits() {
+        return fetch(`http://localhost:5000/api/users/${this._userId}/postits`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this._token}`
             }
         })
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
 
-                return this._postits = res.data.postits || []
+                return res.data || []
             })
     },
 
-    deletePostit(id, userId, token) {
-        if (typeof id !== 'number') throw new TypeError(`${id} is not a number`)
+    deletePostit(id) {
+        if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+        if (!id.trim()) throw Error('id is empty or blank')
 
-        if (typeof userId !== 'string') throw new TypeError(`${userId} is not a string`)
-
-        if (!userId.trim()) throw Error('userId is empty or blank')
-
-        if (typeof token !== 'string') throw TypeError(`${token} is not a string`)
-
-        if (!token.trim()) throw Error('token is empty or blank')
-
-        this._postits = this._postits.filter(postit => postit.id !== id)
-
-        return fetch(`https://skylabcoders.herokuapp.com/api/user/${userId}`, {
-            method: 'PUT',
+        return fetch(`http://localhost:5000/api/users/${this._userId}/postits/${id}`, {
+            method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ postits: this._postits })
+                'Authorization': `Bearer ${this._token}`
+            }
         })
             .then(res => res.json())
             .then(res => {
@@ -133,24 +143,21 @@ const logic = {
             })
     },
 
-    updatePostit(id, text, userId, token) {
-        if (typeof id !== 'number') throw new TypeError(`${id} is not a number`)
+    updatePostit(id, text) {
+        if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+        if (!id.trim()) throw Error('id is empty or blank')
 
         if (typeof text !== 'string') throw TypeError(`${text} is not a string`)
 
         if (!text.trim()) throw Error('text is empty or blank')
 
-       let postit = this._postits.filter(postit => postit.id === id)
-
-       postit.text = text
-
-        return fetch(`https://skylabcoders.herokuapp.com/api/user/${userId}`, {
-            method: 'PUT',
+        return fetch(`http://localhost:5000/api/users/${this._userId}/postits/${id}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this._token}`
             },
-            body: JSON.stringify({ postits: this._postits })
+            body: JSON.stringify({ text })
         })
             .then(res => res.json())
             .then(res => {

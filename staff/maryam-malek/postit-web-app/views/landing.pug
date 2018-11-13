@@ -1,0 +1,11 @@
+extends layout
+block content
+    br
+    form(action='/register', method='GET')
+        button(class='quick-button' type='submit') Register
+    br
+    form(action='/login', method='GET')
+        button(class='quick-button' type='submit') Log in
+    div(class='links')
+      a(href='/register') Register  |
+      a(href='/login')   Log in
