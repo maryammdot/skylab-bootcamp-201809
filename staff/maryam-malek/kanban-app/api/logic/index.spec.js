@@ -217,6 +217,25 @@ describe('logic', () => {
             })
 
         })
+
+        describe('get username', () => {
+            let user, user2
+    
+            beforeEach(async () => {
+                user = new User({ name: 'John', surname: 'Doe', username: 'jd', password: '123' })
+    
+                await user.save()
+            })
+    
+            it('should succeed on correct id', async () => {
+    
+                const username = await logic.getUsername(user.id)
+    
+                expect(username).to.equal(user.username)
+            })
+    
+        })
+
         describe('add friend', () => {
             let user, user2
 
@@ -270,7 +289,7 @@ describe('logic', () => {
             const colaborators = await logic.listColaborators(user.id)
 
             expect(colaborators.length).to.equal(1)
-debugger
+
             const [colaborator] = colaborators
 
             expect(colaborator).to.equal(user2.username)

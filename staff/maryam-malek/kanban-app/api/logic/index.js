@@ -1,5 +1,7 @@
 const { User, Postit } = require('../data')
 const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('../errors')
+const FormData = require('form-data');
+const fs = require('fs');
 
 const logic = {
     registerUser(name, surname, username, password) {
@@ -97,6 +99,40 @@ const logic = {
 
                 await user.save()
             }
+
+        })()
+    },
+
+    addPicture(id, file) {
+        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw new ValueError('id is empty or blank')
+
+        return (async () => {
+
+            const user = await User.findById(id, { _id: 0, password: 0, postits: 0, __v: 0 }).lean()
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
+
+            var form = new FormData();
+
+            form.append('file', fs.createWriteStream(`/data/${id}/file`));
+
+        })()
+    },
+
+    retrievePicture(id) {
+        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw new ValueError('id is empty or blank')
+
+        return (async () => {
+
+            const user = await User.findById(id, { _id: 0, password: 0, postits: 0, __v: 0 }).lean()
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
+
+            var form = new FormData();
+
+            form.append('file', fs.createReadStream(`/data/${id}`));
 
         })()
     },

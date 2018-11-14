@@ -148,14 +148,48 @@ describe('logic', () => {
             })
 
             it('should succeed on correct data', () =>
-            logic.listColaborators() 
-            .then(colaborators => {
-                expect(colaborators).not.to.be.undefined
-                expect(colaborators.length).to.equal(1)
-                const [colaborator] = colaborators
-                expect(colaborator).to.equal(username2)
-            })
+                logic.listColaborators()
+                    .then(colaborators => {
+                        expect(colaborators).not.to.be.undefined
+                        expect(colaborators.length).to.equal(1)
+                        const [colaborator] = colaborators
+                        expect(colaborator).to.equal(username2)
+                    })
             )
+        })
+
+        describe('update profile', () => {
+            let username, password, newName, newSurname, newUsername, newPassword
+
+            beforeEach(() => {
+                const name = 'John', surname = 'Doe'
+
+                username = `jd-${Math.random()}`
+                password = `123-${Math.random()}`
+
+                newName = `John-${Math.random()}`
+                newSurname = `Doe-${Math.random()}`
+
+                newUsername = `${username}-${Math.random()}`
+                newPassword = `${password}-${Math.random()}`
+
+                return logic.registerUser(name, surname, username, password)
+                    .then(() => logic.login(username, password))
+            })
+
+            it('should succeed on correct data', () =>
+                logic.UpdateProfile(newName, newSurname, newUsername, newPassword, password)
+                    .then(() => logic.retrieveUser())
+                    .then(user => {
+                        debugger
+                        const { name , surname, username, password } = user
+                        expect(user).not.to.be.undefined
+                        expect(name).to.equal(newName)
+                        expect(surname).to.equal(newSurname)
+                        expect(username).to.equal(newUsername)
+                    })
+            )
+
         })
 
     })

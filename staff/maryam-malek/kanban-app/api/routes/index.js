@@ -89,6 +89,36 @@ router.post('/users/:id/colaborator', [bearerTokenParser, jwtVerifier, jsonBodyP
     }, res)
 })
 
+router.post('/users/:id/file', [bearerTokenParser, jwtVerifier, jsonBodyParser], (req, res) => {
+    routeHandler(() => {
+        const { params: { id }, sub, body: { file} } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.addPicture(id, file)
+            .then(() =>
+                res.json({
+                    message: 'picture uploaded'
+                })
+            )
+    }, res)
+})
+
+router.get('/users/:id/file', [bearerTokenParser, jwtVerifier, jsonBodyParser], (req, res) => {
+    routeHandler(() => {
+        const { params: { id }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.retrievePicture(id)
+            .then(() =>
+                res.json({
+                    message: 'picture successfully get'
+                })
+            )
+    }, res)
+})
+
 router.post('/users/:id/postits', [bearerTokenParser, jwtVerifier, jsonBodyParser], (req, res) => {
     routeHandler(() => {
         const { sub, params: { id }, body: { text } } = req
