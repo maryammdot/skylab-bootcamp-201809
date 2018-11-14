@@ -8,7 +8,7 @@ const cors = require('./utils/cors')
 
 const { env: { PORT, MONGO_URL } } = process
 
-mongoose.connect(`${MONGO_URL}/postit`, { useNewUrlParser: true })
+mongoose.connect(`${MONGO_URL}/postit-1`, { useNewUrlParser: true })
     .then(() => {
         console.log(`db server running at ${MONGO_URL}/postit`)
 

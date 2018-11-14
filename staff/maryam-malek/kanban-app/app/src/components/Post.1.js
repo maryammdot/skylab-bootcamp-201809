@@ -19,6 +19,7 @@ class Post extends Component {
 
     }
 
+    
     handleBlur = () => {
         this.props.onUpdatePost(this.props.id, this.state.text)
     }

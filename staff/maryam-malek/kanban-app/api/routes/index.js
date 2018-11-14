@@ -201,11 +201,22 @@ router.get('/users/:id/colaborators', [bearerTokenParser, jwtVerifier], (req, re
         if (id !== sub) throw Error('token sub does not match user id')
         return logic.listColaborators(id)
             .then(colaborators => {
-                debugger
+                
                 return res.json({
                 data: colaborators
             })})
     }, res)
 })
 
+router.get('/users/:id/username/:queryId', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { sub, params: { id, queryId } } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+        return logic.getUsername(queryId)
+            .then(username => res.json({
+                data: username
+            }))
+    }, res)
+})
 module.exports = router

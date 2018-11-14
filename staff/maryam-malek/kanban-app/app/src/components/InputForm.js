@@ -18,11 +18,18 @@ class InputForm extends Component {
     }
 
     render() {
-        return <form className="form" onSubmit={this.handleSubmit}>
+        return <div>
+            {!this.props.colaborators && <form className="form" onSubmit={this.handleSubmit}>
             <input value={this.state.text} placeholder="Write text here..." onChange={this.handleInput} />
 
             <button type="submit"><i className="fas fa-plus"></i></button>
-        </form>
+        </form>}
+        {this.props.colaborators && <form className="form" onSubmit={this.handleSubmit}>
+            <input value={this.state.text} placeholder="Colaborator username" onChange={this.handleInput} />
+
+            <button type="submit"><i className="fas fa-plus"></i></button>
+        </form>}
+        </div>
     }
 }
 

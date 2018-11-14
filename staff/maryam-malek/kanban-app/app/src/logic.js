@@ -254,6 +254,26 @@ const logic = {
 
                 return res.data
             })
+    },
+
+    getUsername(id) {
+        if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw Error('id is empty or blank')
+
+        return fetch(`${this.url}/users/${this._userId}/username/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+                return res.data
+            })
     }
 }
 

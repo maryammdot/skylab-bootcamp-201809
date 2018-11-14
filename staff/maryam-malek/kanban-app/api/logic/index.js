@@ -113,9 +113,9 @@ const logic = {
             const user = await User.findById(id)
             if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-            const friend = await User.findOne({username}).lean()
+            const friend = await User.findOne({ username }).lean()
             if (!friend) throw new NotFoundError(`user with username ${username} not found`)
-            
+
             user.colaborators.push(friend._id)
 
             await user.save()
@@ -134,32 +134,46 @@ const logic = {
         //     if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
         //     const colaborators = await user.colaborators.map(colaborator =>colaborator.toString())
-            
+
         //     let promises = []
-            
+
         //     const colNames = await colaborators.map(async id => {
         //         promises.push( User.findById(id)) 
         //         return promises
         //     })
-            
+
         //     return Promise.all(colNames)
         //     .then(res=> {
         //         return res.map(i=> i.username)
         //     })
-           
+
         // })()
 
         return (async () => {
 
             const user = await User.findById(id, { password: 0, postits: 0, __v: 0 })
- 
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
+
             let promises = []
- 
-            for (var i=0; i<user.colaborators.length; i++) {
+
+            for (var i = 0; i < user.colaborators.length; i++) {
                 promises.push(User.findById(user.colaborators[i]))
             }
             return Promise.all(promises)
                 .then(res => res.map(item => item.username))
+        })()
+    },
+
+    getUsername(id) {
+        if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
+
+        if (!id.trim().length) throw new ValueError('id is empty or blank')
+
+        return (async () => {
+
+            const user = await User.findById(id)
+            if (!user) throw new NotFoundError(`user with id ${id} not found`)
+            return user.username
         })()
     },
 
@@ -208,7 +222,7 @@ const logic = {
                 delete postit._id
                 postit.user = postit.user.toString()
                 //PROVA!!!!!
-                Postit.asigned? postit.asigned.toString(): undefined
+                Postit.asigned ? postit.asigned.toString() : undefined
                 return postit
             })
             return _postits
@@ -288,7 +302,7 @@ const logic = {
         if (typeof postitId !== 'string') throw TypeError(`${postitId} is not a string`)
 
         if (!postitId.trim().length) throw new ValueError('postit id is empty or blank')
-        
+
         if (typeof username !== 'string') throw TypeError(`${username} is not a string`)
 
         if (!username.trim().length) throw new ValueError('username is empty or blank')
@@ -302,7 +316,7 @@ const logic = {
 
             if (!postit) throw new NotFoundError(`postit with id ${id} not found`)
 
-            const friend = await User.findOne({username})
+            const friend = await User.findOne({ username })
 
             if (!friend) throw new NotFoundError(`user with username ${username} not found`)
 
@@ -317,13 +331,12 @@ const logic = {
         if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
         if (!id.trim().length) throw new ValueError('id is empty or blank')
-        
+
         return (async () => {
             const user = await User.findById(id).lean()
             if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
             let postits = await Postit.find({ asigned: id }).lean()
-
             const _postits = postits.map(postit => {
                 postit.id = postit._id.toString()
                 delete postit._id
@@ -353,12 +366,12 @@ const logic = {
 
             if (!postit) throw new NotFoundError(`postit with id ${postitId} not found`)
 
-            if(postit.asigned.toString() !== id) throw new AuthError(`user with id ${id} can not delete postit with id ${postitId}`)
+            if (postit.asigned.toString() !== id) throw new AuthError(`user with id ${id} can not delete postit with id ${postitId}`)
 
             postit.asigned = undefined
 
             await postit.save()
-        })()        
+        })()
     }
 }
 
