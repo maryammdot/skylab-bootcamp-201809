@@ -112,6 +112,36 @@ const logic = {
             })
     },
 
+    addPicture(file) {
+        return fetch(`${this.url}/users/${this._userId}/file`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ file })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    retrievePicture() {
+
+        return fetch(`${this.url}/users/${this._userId}/file`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+                return res.data
+            })
+    },
+
     addColaborator(username) {
         if (typeof username !== 'string') throw TypeError(`${username} is not a string`)
 

@@ -158,6 +158,51 @@ describe('logic', () => {
             )
         })
 
+//         describe('upload picture', () => {
+//             let username, password, file
+
+//             beforeEach(() => {
+//                 const name = 'John', surname = 'Doe'
+
+//                 username = `jd-${Math.random()}`
+//                 password = `123-${Math.random()}`
+// //FILE??????
+
+//                 return logic.registerUser(name, surname, username, password)
+//                     .then(() => logic.login(username, password))
+//             })
+
+//             it('should succeed on correct data', () =>
+//                 logic.addPicture(file)
+//                     .then(() => {
+//                         expect(true).to.be.true
+//                     })
+//             )
+//         })
+
+//         describe('retrieve picture', () => {
+//             let username, password, file
+
+//             beforeEach(() => {
+//                 const name = 'John', surname = 'Doe'
+
+//                 username = `jd-${Math.random()}`
+//                 password = `123-${Math.random()}`
+// // FILE?????
+
+//                 return logic.registerUser(name, surname, username, password)
+//                     .then(() => logic.login(username, password))
+//                     .then(() => logic.addPicture(file))
+//             })
+
+//             it('should succeed on correct data', () =>
+//                 logic.retrievePicture()
+//                     .then(file => {
+//                         expect(file).not.to.be.undefined
+//                     })
+//             )
+//         })
+
         describe('update profile', () => {
             let username, password, newName, newSurname, newUsername, newPassword
 

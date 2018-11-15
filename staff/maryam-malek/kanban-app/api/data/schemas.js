@@ -7,6 +7,8 @@ const Postit = new Schema({
     },
     status: {
         type: String,
+        default: 'TODO',
+        enum: ['TODO', 'DOING', 'REVIEW', 'DONE'],
         required: true
     },
     user: {
@@ -14,6 +16,7 @@ const Postit = new Schema({
         required: true,
         ref: 'User'
     },
+    //assigned!!!!! Typo
     asigned: {
         type: ObjectId,
         ref: 'User'
@@ -38,6 +41,7 @@ const User = new Schema({
         type: String,
         required: true
     },
+    //collaborators Typo
     colaborators: [{
         type: ObjectId,
         ref: 'User'

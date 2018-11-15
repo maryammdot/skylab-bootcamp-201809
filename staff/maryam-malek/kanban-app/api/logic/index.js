@@ -1,6 +1,5 @@
 const { User, Postit } = require('../data')
 const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('../errors')
-const FormData = require('form-data');
 const fs = require('fs');
 
 const logic = {
@@ -104,6 +103,7 @@ const logic = {
     },
 
     addPicture(id, file) {
+
         if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
         if (!id.trim().length) throw new ValueError('id is empty or blank')
@@ -112,11 +112,23 @@ const logic = {
 
             const user = await User.findById(id, { _id: 0, password: 0, postits: 0, __v: 0 }).lean()
             if (!user) throw new NotFoundError(`user with id ${id} not found`)
+            
+            const path = __dirname + `/../data/users/${id}`
 
-            var form = new FormData();
+            fs.exists(path, exists => {
+                
+                if (!exists) {
 
-            form.append('file', fs.createWriteStream(`/data/${id}/file`));
-
+                    fs.mkdir(path, err => { 
+                        debugger
+                        if (err) throw Error(err.message) })
+                }
+            })
+            
+            await fs.writeFile(`${path}/${file.originalname}`, file.buffer, err => {
+                debugger
+                    if (err) throw Error(err.message)
+                })
         })()
     },
 
@@ -130,10 +142,10 @@ const logic = {
             const user = await User.findById(id, { _id: 0, password: 0, postits: 0, __v: 0 }).lean()
             if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-            var form = new FormData();
+            const path = __dirname + `/../data/users/${id}/`
 
-            form.append('file', fs.createReadStream(`/data/${id}`));
-
+            const files = fs.readdirSync(path)
+            return files[0]
         })()
     },
 
