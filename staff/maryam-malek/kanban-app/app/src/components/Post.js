@@ -49,7 +49,7 @@ class Post extends Component {
         {!this.props.asigned && <article className="postIt" draggable="true" id={this.props.id} onDragStart={this.drag}>
             <textarea defaultValue={this.state.text} onChange={this.handleChange} onBlur={this.handleBlur} />
             {!this.state.colaborator && <select onChange={this.handleSelectChange}>
-            <option value={this.state.colaborator}>{'colaborators'}</option>
+            <option value={this.state.colaborator}>colaborators</option>
                 {this.props.colaborators.map(colaborator => <option value={colaborator}>{colaborator}</option>)}
             </select>}
             <button className="postIt__button" onClick={() => this.props.onDeletePost(this.props.id)}><i className="far fa-trash-alt"></i></button>

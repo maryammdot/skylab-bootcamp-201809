@@ -342,6 +342,7 @@ const logic = {
         })()
     },
 
+    // I should have assigned postit to user, through userId, cause if that user changes it's username, it will lose their asigned postits
     asignPostit(id, postitId, username) {
         if (typeof id !== 'string') throw TypeError(`${id} is not a string`)
 
