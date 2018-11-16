@@ -133,7 +133,7 @@ router.get('/users/:id/file', [bearerTokenParser, jwtVerifier, jsonBodyParser], 
             .then(file => {
                 var bitmap = fs.readFileSync(__dirname + `/../data/users/${req.params.id}/` + `${file}`);
                 let data = new Buffer(bitmap).toString('base64')
-                debugger
+                
                 return data = `data:image/jpeg;base64,${data}`
             })
             .then(file =>
@@ -144,7 +144,7 @@ router.get('/users/:id/file', [bearerTokenParser, jwtVerifier, jsonBodyParser], 
     }, res)
 })
 
-router.post('/users/:id/file', [bearerTokenParser, jwtVerifier, jsonBodyParser, upload.single('file')], (req, res) => {
+router.post('/users/:id/file', [bearerTokenParser, jwtVerifier, upload.single('file')], (req, res) => {
     routeHandler(() => {
         const { params: { id }, sub, file } = req
 
