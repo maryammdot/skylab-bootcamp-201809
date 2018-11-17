@@ -1,0 +1,94 @@
+body
+    margin: 0
+    background-color: antiquewhite
+    // background-color: lightblue
+    // font-family: 'Overlock SC', cursive
+    font-family: 'Patrick Hand', cursive
+    // font-family: 'Caveat', cursive
+
+.container
+    display: grid
+    grid-template-rows: 15% 15% auto 15% auto 15% 15% 15% 15%
+    padding: 2%
+    position: relative
+
+.title
+    grid-row: 1 / 2
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: space-between
+    align-items: center
+.info
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+.help
+    font-size: 1.5em
+    border: 2px solid purple
+    background-color: yellow
+    border-radius: 50%
+    width: 35px
+    height: 35px
+    margin: 1%
+.save, .not-save
+    height: 35px
+    border: 2px solid purple
+    background-color: yellow
+    border-radius: 10%
+    margin: 1%
+.help
+    grid-row: 1 / 2
+.draw-title
+    grid-row: 2 / 3
+.canvas
+    grid-row: 3 / 4
+    background-color: white
+    border-radius: 5%
+.text-title
+    grid-row: 4 / 5
+textarea
+    grid-row: 5 / 6
+    border-radius: 5%
+.audio-title
+    grid-row: 6 / 7
+.audio-container
+    grid-row: 7 / 8
+.audio-container button
+    font-size: 2em
+    color: black
+.rec :hover
+    color: blue
+// make apear some info, as press to begin rec
+.save-back
+    margin-top: 3%
+    grid-row: 8 / 9
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: space-around
+    align-items: center
+.save-back button
+    border: 1px solid black
+    border-radius: 10%
+.navbar
+    position: absolute
+    left: 12%
+    height: 30px
+    width: 75%
+    border-radius: 2%
+    background-color: grey
+    margin-top: 3%
+    grid-row: 9 / 10
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+.navbar button
+    padding: 0 3%
+    font-size: 2em
+    color: black
+
