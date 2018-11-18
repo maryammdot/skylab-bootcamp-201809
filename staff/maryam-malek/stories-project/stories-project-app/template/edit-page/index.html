@@ -13,29 +13,46 @@
 
 <body>
     <div class="container">
+        <!-- This appears in all pages -->
         <div class="title">
             <h1>THE BLUE LITTLE GIRL - PAGE 1</h1>
             <div class="info">
                 <button class="help">?</button>
-                <button class="save">SAVE</button>
+                <button class="save">SAVE / GO TO BOOK</button>
                 <button class="not-save">DON'T SAVE</button>
             </div>
-
         </div>
-        <h4 class="draw-title">PAGE DRAWING</h4>
-        <canvas class="canvas" id="page-draw" width="500" height="300"></canvas>
-        <h4 class="text-title">PAGE TEXT</h4>
-        <textarea name="DRAW" id="DRAW-PAGE" placeholder="WRITE HERE YOUR TEXT..." cols="20" rows="10"></textarea>
-        <h4 class="audio-title">PAGE AUDIO</h4>
+        <!-- This appears only in draw page -->
+        <!-- <h4 class="draw-title">PAGE DRAW</h4>
+        <canvas class="canvas" id="page-draw" width="500" height="300"></canvas> -->
+        <!-- This appears only in text page -->
+        <!-- <h4 class="text-title">PAGE TEXT</h4>
+        <textarea class="textarea" name="DRAW" id="DRAW-PAGE" placeholder="WRITE HERE YOUR TEXT..." cols="20" rows="10"></textarea> -->
+        <!-- This appears only in audio page -->
+        <!-- <h4 class="audio-title">PAGE AUDIO</h4>
         <div class="audio-container">
-            <button class="rec"><i class="fa fa-dot-circle-o"></i></button>
-            <button><i class="fa fa-play-circle"></i></button>
-            <button><i class="fa fa-stop"></i></button>
+            <div class="rec-stop">
+                <button class="rec"><i class="fa fa-dot-circle-o"></i></button>
+                <button><i class="fa fa-stop"></i></button>
+            </div>
+            <div class="play-sec">
+                <button><i class="fa fa-play-circle"></i></button>
+                <span> 10 SECONDS</span>
+            </div>
+        </div> -->
+        <h4 class="preview-title">PREVIEW PAGE</h4>
+        <div class="preview-container">
+            <img src="../images/bat.png" alt="page 1 image">
+            <div class="audio-buttons">
+                <button class="audio"><i class="fa fa-play-circle"></i></button>
+                <button class="audio"><i class="fa fa-volume-up"></i></button>
+            </div>
+            <div class="text-area">
+                <span>ONCE UPON A TIME, A BAT NAMED BATTY WAS FLYING THROUGH BARCELONA</span>
+            </div>
+            <!-- <button class="audio"><i class="fa fa-volume-off"></i></button> -->
         </div>
-        <div class="save-back">
-            <button>SAVE CHANGES</button>
-            <a href="#">GO BACK</a>
-        </div>
+        <!-- This appears in all pages -->
         <div class="navbar">
             <button class="draw"><i class="fa fa-pencil"></i></button>
             <button class="text"><i class="fa fa-text-width"></i></button>
