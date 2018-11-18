@@ -1,6 +1,6 @@
 const { User, Story, Book } = require('../data/index')
 const validate = require('../utils/validate')
-const { AlreadyExistError, AuthError, NotFoundError } = require('../errors')
+const { AlreadyExistsError, AuthError, NotFoundError } = require('../errors')
 
 const logic = {
     register(name, surname, username, password) {
@@ -13,7 +13,7 @@ const logic = {
         return (async () => {
             let user = await User.findOne({ username })
             
-            if (user) throw new AlreadyExistError(`username ${username} already registered`)
+            if (user) throw new AlreadyExistsError(`username ${username} already registered`)
             
             user = new User({ name, surname, username, password })
             
