@@ -49,26 +49,134 @@ router.post('/auth', jsonBodyParser, (req, res) => {
 
 router.get('/users/:id', [bearerTokenParser, jwtVerifier], (req, res) => {
     routHandler(() => {
-        const { params: {id}, sub } = req
+        const { params: { id }, sub } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 
         return logic.retrieveUser(id)
             .then(user => {
-                debugger
                 res.json({
-                    data: {
-                        user   
-                    }
+                    data: user
+
                 })
             })
     }, res)
 })
 
+router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id }, sub, body: {name, surname, username, newPassword, password} } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.updateUser(id, name, surname, username, newPassword, password)
+            .then(() => {
+                res.json({
+                    message: `${username} successfully updated`
+
+                })
+            })
+    }, res)
+})
+
+
 // Routes refered to stories
 
 
+router.post('/users/:id/stories', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id }, sub, body: { title, audioLanguage, textLanguage } } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.addStory(title, id, audioLanguage, textLanguage)
+            .then(() => {
+                res.json({
+                    message: `story with title ${title} of user with user id ${id} correctly added`
+                })
+            })
+    }, res)
+})
+
+router.get('/users/:id/stories', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.listStories(id)
+            .then(stories => {
+                res.json({
+                    data: stories
+                })
+            })
+    }, res)
+})
+
+router.patch('/users/:id/stories/:storyId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id, storyId }, sub, body: { title, audioLanguage, textLanguage } } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.updateStory(storyId, title, id, audioLanguage, textLanguage)
+            .then(() => {
+                res.json({
+                    message: `story with title ${title} of user with user id ${id} correctly updated`
+                })
+            })
+    }, res)
+})
+
+
+
 // Routes refered to pages
+
+
+router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id, storyId }, sub, body: { index, text } } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.addPage(storyId, index, text)
+            .then(() => {
+                res.json({
+                    message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly added`
+                })
+            })
+    }, res)
+})
+
+router.patch('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id, storyId, pageId }, sub, body: { index, text } } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.updatePage(pageId, storyId, index, text)
+            .then(() => {
+                res.json({
+                    message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly updated`
+                })
+            })
+    }, res)
+})
+
+router.delete('/users/:id/stories/:storyId/pages/:pageId', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routHandler(() => {
+        const { params: { id, storyId, pageId }, sub} = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.removePage(pageId, storyId)
+            .then(() => {
+                res.json({
+                    message: `page  with id ${pageId} of story with id ${storyId} correctly removed`
+                })
+            })
+    }, res)
+})
 
 
 module.exports = router

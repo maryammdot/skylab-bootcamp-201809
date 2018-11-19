@@ -25,14 +25,16 @@ const Page = new Schema({
         type: Number,
         required: true
     },
-    // com que es guarda en disc això no ha de constar aquí, oi?
-    // image: {
-    //     type: Image,
-    // },
-    // com que es guarda en disc això no ha de constar aquí, oi?
-    // audio: {
-    //     type: Audio,
-    // },
+    image: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    audio: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     text: {
         type: String,
     }
@@ -55,6 +57,11 @@ const Story = new Schema({
     textLanguage: {
         type: String,
         required: true
+    },
+    cover: {
+        type: Boolean,
+        required: true,
+        default: false
     },
     pages: [Page]
 })
