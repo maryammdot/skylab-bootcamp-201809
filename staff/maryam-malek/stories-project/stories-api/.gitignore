@@ -1,0 +1,11 @@
+# .env
+node_modules
+
+data/stories/**/*.png
+data/stories/**/*.jpg
+data/stories/**/*.jpeg
+data/stories/**/*.gif
+data/stories/**/*.bmp
+data/stories/**/*.svg
+!data/stories/default/cover.png
+!data/stories/default/picture.png
