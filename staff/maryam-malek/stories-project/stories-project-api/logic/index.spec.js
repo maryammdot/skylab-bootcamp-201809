@@ -1,9 +1,7 @@
-const { User, Story, Page } = require('../data')
+const { mongoose, models: { User, Story, Page } } = require('stories-data')
 const logic = require('./index')
 const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('../errors')
-
 const { expect } = require('chai')
-const mongoose = require('mongoose')
 const fs = require('fs-extra')
 const path = require('path')
 const hasha = require('hasha')
@@ -524,7 +522,7 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                
+
                 let id = user.id
 
                 story = await new Story({ title, author: id, audioLanguage, textLanguage }).save()
@@ -576,7 +574,7 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                
+
                 let id = user.id
 
                 story = await new Story({ title, author: id, audioLanguage, textLanguage }).save()
@@ -1036,7 +1034,7 @@ describe('logic', () => {
                     file = 'picture.png'
 
                     fs.writeFileSync(path.join(`data/stories/${story.id}/pages/${page.id}`, file), text2png(':-)', { color: 'blue' }))
-                
+
                     page.hasImage = true
                     debugger
 

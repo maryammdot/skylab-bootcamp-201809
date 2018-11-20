@@ -1,5 +1,6 @@
 // import logic from './logic'
 const logic = require('./logic')
+const { mongoose, models: { User, Story, Page } } = require('stories-data')
 
 require('isomorphic-fetch')
 global.sessionStorage = require('sessionstorage')

@@ -1,4 +1,4 @@
-const { User, Story, Page } = require('../data/index')
+const { models: { User, Story, Page } } = require('stories-data')
 const validate = require('../utils/validate')
 const { AlreadyExistsError, AuthError, NotFoundError } = require('../errors')
 const fs = require('fs')
@@ -444,7 +444,7 @@ const logic = {
 
                         if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
                             if (!fs.existsSync(`${folder}`)) {
-                                
+
                                 fs.mkdirSync(folder)
                             }
                             if (!fs.existsSync(`${folder}pages`)) {
