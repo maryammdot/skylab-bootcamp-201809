@@ -6,7 +6,6 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
-    "stories-data": "file:../stories-data"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,6 +27,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "isomorphic-fetch": "^2.2.1",
-    "sessionstorage": "^0.1.0"
+    "sessionstorage": "^0.1.0",
+    "stories-data": "file:../stories-data"
   }
 }
