@@ -93,8 +93,25 @@ const logic = {
         sessionStorage.removeItem('token')
     },
 
-    addStory() {
-        
+    addStory(title, audioLanguage, textLanguage) {
+        validate([
+            { key: 'title', value: title, type: String },
+            { key: 'audioLanguage', value: audioLanguage, type: String },
+            { key: 'textLanguage', value: textLanguage, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ title, audioLanguage, textLanguage })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
     }
 
 }

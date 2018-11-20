@@ -160,7 +160,7 @@ describe('logic', () => {
 
         describe('add story', () => {
             describe('with existing user', () => {
-                let name, surname, username, password
+                let user, title, audioLanguage, textLanguage
 
                 beforeEach(async () => {
                     name = `n-${Math.random()}`
@@ -168,17 +168,30 @@ describe('logic', () => {
                     username = `u-${Math.random()}`
                     password = `p-${Math.random()}`
 
-                    await logic.register(name, surname, username, password)
-                    await logic.login(username, password)
+                    title = `t-${Math.random()}`
+                    audioLanguage = `a-${Math.random()}`
+                    textLanguage = `tL-${Math.random()}`
+
+                    const user = await new User({name, surname, username, password}).save()
                 })
 
                 it('should succeed on correct data', async () => {
-                    const user = await logic.retrieveUser()
+                    await logic.addStory(title, audioLanguage, textLanguage)
 
-                    expect(user.id).not.to.be.undefined
-                    expect(user.name).to.equal(name)
-                    expect(user.surname).to.equal(surname)
-                    expect(user.username).to.equal(username)
+                    const stories = Story.find()
+
+                    expect(stories.length).to.equal(1)
+
+                    const[story] = stories
+
+                    expect(story.id).not.to.be.undefined
+                    expect(story.title).to.equal(title)
+                    expect(story.audioLanguage).to.equal(audioLanguage)
+                    expect(story.textLanguage).to.equal(textLanguage)
+                    expect(story.author.toString()).to.equal(user.id)
+                    expect(story.hasCover).to.be.false
+                    expect(story.cover).to.be.a(String)
+                    expect(story.inProcess).to.be.true
                 })
 
                 // TODO other test cases
