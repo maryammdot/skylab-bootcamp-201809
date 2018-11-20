@@ -3,9 +3,10 @@ const bodyparser = require('body-parser')
 const jwt = require('jsonwebtoken')
 
 const logic = require('../logic')
-const routHandler = require('./route-handler')
+const routeHandler = require('./route-handler')
 const bearerTokenParser = require('../utils/bearer-token-parser')
 const jwtVerifier = require('./jwt-verifier')
+const Busboy = require('busboy')
 
 const jsonBodyParser = bodyparser.json()
 const router = express.Router()
@@ -15,7 +16,7 @@ const { env: { JWT_SECRET } } = process
 // Routes refered to users
 
 router.post('/users', jsonBodyParser, (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { name, surname, username, password } = req.body
 
         return logic.register(name, surname, username, password)
@@ -30,7 +31,7 @@ router.post('/users', jsonBodyParser, (req, res) => {
 })
 
 router.post('/auth', jsonBodyParser, (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { username, password } = req.body
 
         return logic.authenticate(username, password)
@@ -48,7 +49,7 @@ router.post('/auth', jsonBodyParser, (req, res) => {
 })
 
 router.get('/users/:id', [bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id }, sub } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -64,8 +65,8 @@ router.get('/users/:id', [bearerTokenParser, jwtVerifier], (req, res) => {
 })
 
 router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
-        const { params: { id }, sub, body: {name, surname, username, newPassword, password} } = req
+    routeHandler(() => {
+        const { params: { id }, sub, body: { name, surname, username, newPassword, password } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 
@@ -84,7 +85,7 @@ router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (re
 
 
 router.post('/users/:id/stories', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id }, sub, body: { title, audioLanguage, textLanguage } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -99,7 +100,7 @@ router.post('/users/:id/stories', [jsonBodyParser, bearerTokenParser, jwtVerifie
 })
 
 router.get('/users/:id/stories', [bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id }, sub } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -113,8 +114,23 @@ router.get('/users/:id/stories', [bearerTokenParser, jwtVerifier], (req, res) =>
     }, res)
 })
 
+router.get('/users/:id/stories/:storyId', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.retrieveStory(id, storyId)
+            .then(story => {
+                res.json({
+                    data: story
+                })
+            })
+    }, res)
+})
+
 router.patch('/users/:id/stories/:storyId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id, storyId }, sub, body: { title, audioLanguage, textLanguage } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -128,13 +144,59 @@ router.patch('/users/:id/stories/:storyId', [jsonBodyParser, bearerTokenParser, 
     }, res)
 })
 
+router.post('/users/:id/stories/:storyId/cover', (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }} = req
 
+        return new Promise((resolve, reject) => {
+            const busboy = new Busboy({ headers: req.headers })
+
+            busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+                logic.saveStoryCover(id, storyId, file)
+            })
+
+            busboy.on('finish', () => resolve())
+
+            busboy.on('error', err => reject(err))
+
+            req.pipe(busboy)
+        })
+            .then(() => res.json({
+                message: `cover from story with id ${storyId} correctly saved`
+            }))
+    }, res)
+})
+
+router.get('/users/:id/stories/:storyId/cover', (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }} = req
+
+        return Promise.resolve()
+            .then(() => logic.retrieveStoryCover(id, storyId))
+            .then(coverStream => coverStream.pipe(res))
+    }, res)
+})
+
+router.delete('/users/:id/stories/:storyId', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.removeStory(id, storyId)
+            .then(() => {
+                res.json({
+                    message: `story with id ${storyId} correctly removed`
+                })
+            })
+    }, res)
+})
 
 // Routes refered to pages
 
 
 router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id, storyId }, sub, body: { index, text } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -149,7 +211,7 @@ router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenPar
 })
 
 router.patch('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
+    routeHandler(() => {
         const { params: { id, storyId, pageId }, sub, body: { index, text } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
@@ -163,9 +225,42 @@ router.patch('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, beare
     }, res)
 })
 
+router.post('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
+    routeHandler(() => {
+        const { params: { storyId, pageId }} = req
+
+        return new Promise((resolve, reject) => {
+            const busboy = new Busboy({ headers: req.headers })
+
+            busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+                logic.savePicPage(pageId, storyId, file)
+            })
+
+            busboy.on('finish', () => resolve())
+
+            busboy.on('error', err => reject(err))
+
+            req.pipe(busboy)
+        })
+            .then(() => res.json({
+                message: `picture from page with id ${pageId} of correctly saved`
+            }))
+    }, res)
+})
+
+router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
+    routeHandler(() => {
+        const { params: { storyId, pageId }} = req
+
+        return Promise.resolve()
+            .then(() => logic.retrievePagePic(pageId, storyId))
+            .then(pictureStream => pictureStream.pipe(res))
+    }, res)
+})
+
 router.delete('/users/:id/stories/:storyId/pages/:pageId', [bearerTokenParser, jwtVerifier], (req, res) => {
-    routHandler(() => {
-        const { params: { id, storyId, pageId }, sub} = req
+    routeHandler(() => {
+        const { params: { id, storyId, pageId }, sub } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 

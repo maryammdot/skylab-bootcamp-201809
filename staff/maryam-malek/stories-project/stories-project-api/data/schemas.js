@@ -25,15 +25,21 @@ const Page = new Schema({
         type: Number,
         required: true
     },
+    hasImage: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     image: {
+        type: String,
+    },
+    hasAudio: {
         type: Boolean,
         required: true,
         default: false
     },
     audio: {
-        type: Boolean,
-        required: true,
-        default: false
+        type: String,
     },
     text: {
         type: String,
@@ -58,10 +64,18 @@ const Story = new Schema({
         type: String,
         required: true
     },
-    cover: {
+    hasCover: {
         type: Boolean,
         required: true,
         default: false
+    },
+    cover: {
+        type: String
+    },
+    inProcess: {
+        type: Boolean,
+        required: true,
+        default: true
     },
     pages: [Page]
 })

@@ -154,4 +154,35 @@ describe('logic', () => {
 
     })
 
+
+    describe('stories', () => {
+
+        describe('add story', () => {
+            describe('with existing user', () => {
+                let name, surname, username, password
+
+                beforeEach(async () => {
+                    name = `n-${Math.random()}`
+                    surname = `s-${Math.random()}`
+                    username = `u-${Math.random()}`
+                    password = `p-${Math.random()}`
+
+                    await logic.register(name, surname, username, password)
+                    await logic.login(username, password)
+                })
+
+                it('should succeed on correct data', async () => {
+                    const user = await logic.retrieveUser()
+
+                    expect(user.id).not.to.be.undefined
+                    expect(user.name).to.equal(name)
+                    expect(user.surname).to.equal(surname)
+                    expect(user.username).to.equal(username)
+                })
+
+                // TODO other test cases
+            })
+        })
+    })
+
 })

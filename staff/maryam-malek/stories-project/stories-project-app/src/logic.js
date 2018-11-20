@@ -76,6 +76,10 @@ const logic = {
             })
     },
 
+    updateUser() {
+
+    },
+
     get loggedIn() {
         return !!this._userId
     },
@@ -87,6 +91,10 @@ const logic = {
 
         sessionStorage.removeItem('userId')
         sessionStorage.removeItem('token')
+    },
+
+    addStory() {
+        
     }
 
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node .",
     "debug": "node debug .",
-    "test": "mocha logic/index.spec.js",
+    "test": "mocha logic/index.spec.js --timeout 15000",
     "debug-test": "mocha debug logic/index.spec.js"
   },
   "keywords": [],
@@ -14,12 +14,17 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "busboy": "^0.2.14",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.12"
   },
   "devDependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "fs-extra": "^7.0.1",
+    "hasha": "^3.0.0",
+    "stream-to-array": "^2.3.0",
+    "text2png": "^2.1.0"
   }
 }
