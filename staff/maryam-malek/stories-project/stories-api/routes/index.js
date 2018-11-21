@@ -91,8 +91,9 @@ router.post('/users/:id/stories', [jsonBodyParser, bearerTokenParser, jwtVerifie
         if (id !== sub) throw Error('token sub does not match user id')
 
         return logic.addStory(title, id, audioLanguage, textLanguage)
-            .then(() => {
+            .then(storyId => {
                 res.json({
+                    data: {storyId},
                     message: `story with title ${title} of user with user id ${id} correctly added`
                 })
             })
@@ -233,8 +234,9 @@ router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenPar
         if (id !== sub) throw Error('token sub does not match user id')
 
         return logic.addPage(storyId, index, text)
-            .then(() => {
+            .then(pageId => {
                 res.json({
+                    data: {pageId},
                     message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly added`
                 })
             })

@@ -108,6 +108,8 @@ const logic = {
             story.cover = `http://localhost:${PORT}/api/users/${author}/stories/${story.id}/cover`
 
             await story.save()
+            
+            return story.id
         })()
     },
 
@@ -221,7 +223,7 @@ const logic = {
 
                         return story.save()
                     })
-                    .then(res => {
+                    .then(() => {
                         
                         resolve()
                     })
@@ -388,6 +390,8 @@ const logic = {
             story.pages.push(page)
 
             await story.save()
+
+            return page.id
         })()
     },
 
