@@ -11,4 +11,5 @@ class AlreadyExistsError extends Error {
     }
 }
 
-module.exports = AlreadyExistsError
+// module.exports = AlreadyExistsError
+export default AlreadyExistsError

@@ -201,6 +201,7 @@ const logic = {
                         if (!fs.existsSync(folder)) {
                             fs.mkdirSync(folder)
                             fs.mkdirSync(`${folder}/cover`)
+                            
 
                         } else {
                             // const files = fs.readdirSync(`${folder}/cover`)
@@ -220,11 +221,13 @@ const logic = {
 
                         return story.save()
                     })
-                    .then(() => {
+                    .then(res => {
+                        
                         resolve()
                     })
 
             } catch (err) {
+                
                 reject(err)
             }
         })
@@ -544,28 +547,6 @@ const logic = {
     },
 
     //MAYBE I WILL NEED RETRIEVE PAGE, INSTEAD OF LIST BOOKS, OR RETRIEVE BOOK ALSO!!!!
-
-    addPageImage(storyId, pageId, img) {
-        validate([
-            { key: 'storyId', value: storyId, type: String },
-            { key: 'pageId', value: pageId, type: String },
-            { key: 'img', value: img, type: String } //TYPE¿????
-        ])
-
-        return (async () => {
-
-            let story = await Story.findById(storyId)
-
-            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-            let page = await Page.findById(pageId)
-
-            if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-            //FS!!!!!!!
-
-        })()
-    },
 
     addPageAudio(storyId, pageId, audio) {
         validate([

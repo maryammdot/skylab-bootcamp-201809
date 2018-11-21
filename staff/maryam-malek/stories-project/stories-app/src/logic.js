@@ -110,10 +110,235 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
+                
                 if (res.error) throw Error(res.error)
             })
-    }
+    },
 
+    listStories() {
+
+        return fetch(`${this.url}/users/${this._userId}/stories`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+
+                return res.data
+            })
+    },
+
+    retrieveStory(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+
+                return res.data
+            })
+    },
+
+    updateStory(storyId, title, audioLanguage, textLanguage) {
+        validate([
+            { key: 'storyId', value: storyId, type: String },
+            { key: 'title', value: title, type: String },
+            { key: 'audioLanguage', value: audioLanguage, type: String },
+            { key: 'textLanguage', value: textLanguage, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ title, audioLanguage, textLanguage })
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    finishStory(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/finish`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    workInStory(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/process`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    saveStoryCover(storyId, cover) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+            // { key: 'cover', value: cover, type: String } TYPE??????
+        ])
+
+        let file = new FormData()
+
+        file.append('avatar', cover)
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
+            // },
+            body: file
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    // CREC QUE AQUESTA FUNCIÓ NO LA HE DE FER PERQUÈ HO FARÀ SOL QUAN POSI LA RUTA AL SRC DEL IMAGE DE HTML
+
+    // retrieveStoryCover(storyId) {
+    //     validate([
+    //         { key: 'storyId', value: storyId, type: String }
+    //     ])
+
+    //     return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
+    //         }
+    //     })
+    //         .then(res => res.json())
+    //         .then(res => {
+    //             if (res.error) throw Error(res.error)
+
+    //             return res.data
+    //         })
+    // },
+
+    removeStory(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    addPage(storyId, index, text) {
+        validate([
+            { key: 'storyId', value: storyId, type: String },
+            { key: 'index', value: index, type: Number },
+            { key: 'text', value: text, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages`, {
+            method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': `Bearer ${this._token}`
+                },
+                body: JSON.stringify({ index, text })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    
+                    if (res.error) throw Error(res.error)
+                })
+    },
+
+    updatePage(pageId, storyId, index, text) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String },
+            { key: 'index', value: index, type: Number },
+            { key: 'text', value: text, type: String }
+        ])
+        
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}`, {
+            method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': `Bearer ${this._token}`
+                },
+                body: JSON.stringify({ index, text })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    
+                    if (res.error) throw Error(res.error)
+                })
+    },
+
+    removePage(pageId, storyId) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+        
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}`, {
+            method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this._token}`
+                }
+            })
+                .then(res => res.json())
+                .then(res => {
+                    
+                    if (res.error) throw Error(res.error)
+                })
+    }
 }
 
 // export default logic

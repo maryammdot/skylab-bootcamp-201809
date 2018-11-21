@@ -11,4 +11,5 @@ class NotAllowedError extends Error {
     }
 }
 
-module.exports = NotAllowedError
+// module.exports = NotAllowedError
+export default NotAllowedError

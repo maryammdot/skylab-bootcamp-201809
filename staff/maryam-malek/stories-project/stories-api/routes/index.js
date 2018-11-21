@@ -144,6 +144,36 @@ router.patch('/users/:id/stories/:storyId', [jsonBodyParser, bearerTokenParser, 
     }, res)
 })
 
+router.patch('/users/:id/stories/:storyId/finish', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.finishStory(storyId, id)
+            .then(() => {
+                res.json({
+                    message: `story with id ${storyId} of user with user id ${id} correctly tagged as finished`
+                })
+            })
+    }, res)
+})
+
+router.patch('/users/:id/stories/:storyId/process', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.workInStory(storyId, id)
+            .then(() => {
+                res.json({
+                    message: `story with id ${storyId} of user with user id ${id} correctly tagged as in working process`
+                })
+            })
+    }, res)
+})
+
 router.post('/users/:id/stories/:storyId/cover', (req, res) => {
     routeHandler(() => {
         const { params: { id, storyId }} = req
@@ -152,6 +182,7 @@ router.post('/users/:id/stories/:storyId/cover', (req, res) => {
             const busboy = new Busboy({ headers: req.headers })
 
             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+                
                 logic.saveStoryCover(id, storyId, file)
             })
 
