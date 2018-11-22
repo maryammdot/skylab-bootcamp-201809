@@ -4,7 +4,7 @@ import logic from '../../logic'
 import Error from '../error/Error'
 import Detail from '../detail/Detail'
 
-class CreateStory extends Component {
+class MyStories extends Component {
     state = { error: null, stories: [] }
 
     componentDidMount() {
@@ -19,14 +19,20 @@ class CreateStory extends Component {
         }
     }
 
-    handleNewStoryClick = () => this.props.history.push('/create-story')
+    handleDetailClick = id => {
+        this.props.onDetailClick(id)
+    }
+
+    handleNewStoryClick = () => {
+        this.props.onNewStoryClick()
+    }
 
     render() {
         return <div>
-            <div className='container'>
+            <div className='container-my-stories'>
                 <h1>ELS MEUS CONTES</h1>
-                <ul>
-                    {this.state.stories.map(story => <Detail cover={story.cover} title={story.title} />)}
+                <ul className='my-stories-list'>
+                    {this.state.stories.map(story => <Detail id={story.id} img={story.cover} text={story.title} onDetailClick={this.handleDetailClick} />)}
                 </ul>
                 <button className="newStoryButton" onClick={this.handleNewStoryClick}>+</button>
             </div>
@@ -36,4 +42,4 @@ class CreateStory extends Component {
 
 }
 
-export default CreateStory
+export default MyStories

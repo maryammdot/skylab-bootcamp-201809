@@ -42,7 +42,7 @@ const Page = new Schema({
         type: String,
     },
     text: {
-        type: String,
+        type: String
     }
 })
 

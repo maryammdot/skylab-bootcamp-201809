@@ -4,7 +4,7 @@ body {
   font-family: "Patrick Hand", cursive;
 }
 
-.container {
+.container-story {
   display: grid;
   grid-template-columns: 35% 65%;
   grid-template-rows: 10% 25% 15% 75%;

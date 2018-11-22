@@ -429,6 +429,32 @@ const logic = {
         })()
     },
 
+    retrievePage(pageId, storyId) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return (async () => {
+
+            let story = await Story.findById(storyId)
+
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            let page = await Page.findById(pageId).lean()
+
+            if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+            page.id = page._id.toString()
+            delete page._id
+            delete page.__v
+            delete page.hasImage
+            delete page.hasAudio
+
+            return page
+        })()
+    },
+
     savePicPage(pageId, storyId, picture) {
         validate([
             { key: 'pageId', value: pageId, type: String },

@@ -2,60 +2,135 @@ import React, { Component } from 'react'
 import './style.css'
 import logic from '../../logic'
 import Error from '../error/Error'
-import Detail from '../detail/Detail'
+
 
 class CreatePage extends Component {
-    state = { error: null, draw: true, text: false, audio: false, preview: false }
+    state = { error: null, draw: true, text: false, showAudio: false, preview: false, index: 1, textPh: 'WRITE HERE YOUR TEXT...', storyId: '', pageId: '', image:'../../../public/picture.png' }
 
     componentDidMount() {
         try {
-            logic.retrieveStory(this.props.storyId)
-                .then(({ title, pages }) => {
-                    this.setState({ title, pages, error: null })
-                })
-                .catch(err => this.setState({ error: err.message }))
+            if (!this.props.pageId) {
+                logic.retrieveStory(this.props.storyId)
+                    .then(({ id, title, pages }) => {
+
+                        this.setState({ storyId: this.props.storyId, title, pages, index: (pages.length + 1), error: null })
+                        return logic.addPage(id, this.state.index, null)
+                    })
+                    .then(({ pageId, image }) => {
+
+                        this.setState({ pageId, image })
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            } else {
+                logic.retrieveStory(this.props.storyId)
+                    .then(({ id, title, pages }) => {
+
+                        this.setState({ storyId: this.props.storyId, title, pages, index: (pages.length + 1), error: null })
+                        return logic.retrievePage(this.props.pageId, id)
+                    })
+                    .then(({ id, index, image, audio, text }) => {
+
+                        this.setState({ pageId: id, image, audio, index, textPh: text })
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            }
+
         } catch (err) {
             this.setState({ error: err.message })
         }
     }
 
     handleDrawClick = () => {
-        this.setState({ draw: true, text: false, audio: false, preview: false, error: null })
+        this.setState({ draw: true, text: false, showAudio: false, preview: false, error: null })
     }
 
     handleTextClick = () => {
-        this.setState({ text: true, draw: false, audio: false, preview: false, error: null })
+        this.setState({ text: true, draw: false, showAudio: false, preview: false, error: null })
     }
 
     handleAudioClick = () => {
-        this.setState({ audio: true, text: false, draw: false, preview: false, error: null })
+        this.setState({ showAudio: true, text: false, draw: false, preview: false, error: null })
     }
 
     handlePreviewlick = () => {
-        this.setState({ preview: true, text: false, audio: false, draw: false, error: null })
+        this.setState({ preview: true, text: false, showAudio: false, draw: false, error: null })
+    }
+
+    handleHelpDrawClick = () => {
+        //MODAL WITH INFO
+    }
+
+    handleSaveDrawClick = () => {
+        // logic.savePagePic() 
+    }
+
+    handleHelpTextClick = () => {
+        //MODAL WITH INFO
+    }
+
+    handleChangeText = event => {
+        const textPh = event.target.value
+        this.setState({ textPh })
+    }
+
+    handleSaveTextClick = () => {
+        const { storyId, pageId, index, textPh } = this.state
+debugger
+        logic.updatePage(pageId, storyId, index, textPh)
+    }
+
+    handleHelpAudioClick = () => {
+        //MODAL WITH INFO
+    }
+
+    handleSaveAudioClick = () => {
+        // logic.savePageAudio() 
+    }
+
+    handleHelpPreviewClick = () => {
+        //MODAL WITH INFO
+    }
+
+    handleBackPreviewClick = () => {
+        this.props.onBackClick(this.state.storyId)
     }
 
     render() {
         return <div className='body'>
             <div className='container'>
-                <div class="title">
+                <div className="title">
                     <h1>{this.state.title}</h1>
-                    <div class="info">
+                    {/* <div className="info">
                         <button className="help">?</button>
                         <button className="save">SAVE / GO TO BOOK</button>
                         <button className="not-save">DON'T SAVE</button>
-                    </div>
+                    </div> */}
                 </div>
                 {this.state.draw && <div>
                     <h4 className="draw-title">PAGE DRAW</h4>
+                    <div className="info">
+                        <button className="help" onClick={this.handleHelpDrawClick}>?</button>
+                        <button className="save" onClick={this.handleSaveDrawClick}>GUARDAR</button>
+                        {/* <button className="not-save" onClick={this.handleNotSaveDrawClick}>DESCARTAR</button> */}
+                    </div>
                     <canvas className="canvas" id="page-draw" width="500" height="300"></canvas>
                 </div>}
                 {this.state.text && <div>
                     <h4 className="text-title">PAGE TEXT</h4>
-                    <textarea className="textarea" name="DRAW" id="DRAW-PAGE" placeholder="WRITE HERE YOUR TEXT..." cols="20" rows="10"></textarea>
+                    <div className="info">
+                        <button className="help" onClick={this.handleHelpTextClick}>?</button>
+                        {/* <button className="save" onClick={this.handleSaveTextClick}>GUARDAR</button> */}
+                        {/* <button className="not-save">DON'T SAVE</button> */}
+                    </div>
+                    <textarea className="textarea" name="text" id="text-page" defaultValue={this.state.textPh} onChange={this.handleChangeText} onBlur={this.handleSaveTextClick} cols="20" rows="10"></textarea>
                 </div>}
-                {this.state.audio && <div>
+                {this.state.showAudio && <div>
                     <h4 className="audio-title">PAGE AUDIO</h4>
+                    <div className="info">
+                        <button className="help" onClick={this.handleHelpAudioClick}>?</button>
+                        <button className="save" onClick={this.handleSaveAudioClick}>GUARDAR</button>
+                        {/* <button className="not-save">DON'T SAVE</button> */}
+                    </div>
                     <div className="audio-container">
                         <div className="rec-stop">
                             <button className="rec"><i className="fa fa-dot-circle-o"></i></button>
@@ -69,14 +144,19 @@ class CreatePage extends Component {
                 </div>}
                 {this.state.preview && <div>
                     <h4 className="preview-title">PREVIEW PAGE</h4>
+                    <div className="info">
+                        <button className="help" onClick={this.handleHelpPreviewClick}>?</button>
+                        <button className="save" onClick={this.handleBackPreviewClick}>TORNAR AL LLIBRE</button>
+                        {/* <button className="not-save">DON'T SAVE</button> */}
+                    </div>
                     <div className="preview-container">
-                        <img src="../images/bat.png" alt="page 1 image" />
+                        <img src={this.state.image} alt="page 1 image" />
                         <div className="audio-buttons">
                             <button className="audio"><i className="fa fa-play-circle"></i></button>
                             <button className="audio"><i className="fa fa-volume-up"></i></button>
                         </div>
                         <div className="text-area">
-                            <span>ONCE UPON A TIME, A BAT NAMED BATTY WAS FLYING THROUGH BARCELONA</span>
+                            <span>{this.state.textPh}</span>
                         </div>
                     </div>
                     {/* <button className="audio"><i className="fa fa-volume-off"></i></button> */}

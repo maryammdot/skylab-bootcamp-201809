@@ -282,7 +282,7 @@ const logic = {
         validate([
             { key: 'storyId', value: storyId, type: String },
             { key: 'index', value: index, type: Number },
-            { key: 'text', value: text, type: String }
+            { key: 'text', value: text, type: String, optional: true }
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages`, {
@@ -319,10 +319,33 @@ const logic = {
             })
                 .then(res => res.json())
                 .then(res => {
-                    
+                
                     if (res.error) throw Error(res.error)
                 })
     },
+
+    retrievePage(pageId, storyId) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+
+                return res.data
+            })
+    },
+
 
     removePage(pageId, storyId) {
         validate([

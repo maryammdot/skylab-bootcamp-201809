@@ -258,6 +258,21 @@ router.patch('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, beare
     }, res)
 })
 
+router.get('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId, pageId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.retrievePage(pageId, storyId)
+            .then(page => {
+                res.json({
+                    data: page
+                })
+            })
+    }, res)
+})
+
 router.post('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
     routeHandler(() => {
         const { params: { storyId, pageId }} = req
