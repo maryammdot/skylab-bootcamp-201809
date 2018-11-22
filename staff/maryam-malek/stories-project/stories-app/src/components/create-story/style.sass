@@ -12,13 +12,15 @@ body
     grid-template-rows: 10% 25% 15% 75%
     padding: 2%
 
-.container h1 
+.container-story h1 
     grid-area: 1 / 1 / 2 / 3
-.container h4 
+.container-story h4 
     grid-area: 3 / 1 / 4 / 3
 
-.book-cover
+.book-cover-container
     grid-area: 2 / 1 / 3 / 2
+
+.book-cover
     max-width: 100px
     max-height: 150px
     padding: 1%
@@ -44,6 +46,7 @@ body
     flex-direction: row
     flex-wrap: wrap
     justify-content: center
+    align-items: center
 
 .page
     width: 100px
@@ -52,7 +55,7 @@ body
     display: flex
     flex-direction: column
     flex-wrap: wrap
-    justify-content: center
+    justify-content: space-between
     align-items: center
 
 .page-img
@@ -60,5 +63,11 @@ body
     max-height: 50px
     // margin: 3%
     padding: 1%
+    border: 1px solid black
+    border-radius: 15%
+
+.newPageButton
+    width: 60px
+    height: 40px
     border: 1px solid black
     border-radius: 15%

@@ -33,6 +33,12 @@ const Page = new Schema({
     image: {
         type: String,
     },
+    vectors: {
+        type: String,
+    },
+    dataURL: {
+        type: String,
+    },
     hasAudio: {
         type: Boolean,
         required: true,

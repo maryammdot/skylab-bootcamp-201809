@@ -93,7 +93,7 @@ router.post('/users/:id/stories', [jsonBodyParser, bearerTokenParser, jwtVerifie
         return logic.addStory(title, id, audioLanguage, textLanguage)
             .then(storyId => {
                 res.json({
-                    data: {storyId},
+                    data: { storyId },
                     message: `story with title ${title} of user with user id ${id} correctly added`
                 })
             })
@@ -177,13 +177,13 @@ router.patch('/users/:id/stories/:storyId/process', [bearerTokenParser, jwtVerif
 
 router.post('/users/:id/stories/:storyId/cover', (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId }} = req
+        const { params: { id, storyId } } = req
 
         return new Promise((resolve, reject) => {
             const busboy = new Busboy({ headers: req.headers })
 
             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-                
+
                 logic.saveStoryCover(id, storyId, file)
             })
 
@@ -201,7 +201,7 @@ router.post('/users/:id/stories/:storyId/cover', (req, res) => {
 
 router.get('/users/:id/stories/:storyId/cover', (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId }} = req
+        const { params: { id, storyId } } = req
 
         return Promise.resolve()
             .then(() => logic.retrieveStoryCover(id, storyId))
@@ -236,7 +236,7 @@ router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenPar
         return logic.addPage(storyId, index, text)
             .then(pageId => {
                 res.json({
-                    data: {pageId},
+                    data: { pageId },
                     message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly added`
                 })
             })
@@ -273,36 +273,63 @@ router.get('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerT
     }, res)
 })
 
-router.post('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
+// router.post('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
+//     routeHandler(() => {
+//         const { params: { storyId, pageId }} = req
+
+//         return new Promise((resolve, reject) => {
+//             const busboy = new Busboy({ headers: req.headers })
+
+//             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+//                 logic.savePicPage(pageId, storyId, file)
+//             })
+
+//             busboy.on('finish', () => resolve())
+
+//             busboy.on('error', err => reject(err))
+
+//             req.pipe(busboy)
+//         })
+//             .then(() => res.json({
+//                 message: `picture from page with id ${pageId} of correctly saved`
+//             }))
+//     }, res)
+// })
+
+router.post('/users/:id/stories/:storyId/pages/:pageId/picture', jsonBodyParser, (req, res) => {
     routeHandler(() => {
-        const { params: { storyId, pageId }} = req
+        const { params: { storyId, pageId }, body: { dataURL, vecArr } } = req
 
-        return new Promise((resolve, reject) => {
-            const busboy = new Busboy({ headers: req.headers })
-
-            busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-                logic.savePicPage(pageId, storyId, file)
+        return logic.savePagePicture(pageId, storyId, dataURL, vecArr)
+            .then(() => {
+                res.json({
+                    message: `picture of page with id ${pageId} of story with id ${storyId} correctly added`
+                })
             })
-
-            busboy.on('finish', () => resolve())
-
-            busboy.on('error', err => reject(err))
-
-            req.pipe(busboy)
-        })
-            .then(() => res.json({
-                message: `picture from page with id ${pageId} of correctly saved`
-            }))
     }, res)
 })
 
+
+// router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
+//     routeHandler(() => {
+//         const { params: { storyId, pageId }} = req
+
+//         return Promise.resolve()
+//             .then(() => logic.retrievePagePic(pageId, storyId))
+//             .then(pictureStream => pictureStream.pipe(res))
+//     }, res)
+// })
+
 router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
     routeHandler(() => {
-        const { params: { storyId, pageId }} = req
+        const { params: { storyId, pageId } } = req
 
-        return Promise.resolve()
-            .then(() => logic.retrievePagePic(pageId, storyId))
-            .then(pictureStream => pictureStream.pipe(res))
+        return logic.retrievePagePic(pageId, storyId)
+            .then(({dataURL, vecArr}) => {
+                res.json({
+                    data: {dataURL, vecArr}
+                })
+            })
     }, res)
 })
 

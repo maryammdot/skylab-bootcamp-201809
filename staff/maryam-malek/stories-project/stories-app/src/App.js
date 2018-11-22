@@ -6,6 +6,7 @@ import Error from './components/error/Error'
 import CreateStory from './components/create-story/CreateStory'
 import CreatePage from './components/create-page/CreatePage'
 import MyStories from './components/my-stories/MyStories'
+import Canvas from './components/canvas/Canvas'
 import logic from './logic'
 
 
@@ -87,6 +88,7 @@ class App extends Component {
             <Route exact path="/story/:id/page" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} onBackClick={this.handleBackToBookClick} /> : <Redirect to="/" />} />
             <Route exact path="/story/:id/page/:pageId" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} pageId={props.match.params.pageId} onBackClick={this.handleBackToBookClick} /> : <Redirect to="/" />} />
             {error && <Error message={error} />}
+            <Route exact path="/canvas" render={() => <Canvas />} />
 
         </div>
     }

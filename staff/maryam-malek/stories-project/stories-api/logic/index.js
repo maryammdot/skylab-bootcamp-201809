@@ -455,6 +455,32 @@ const logic = {
         })()
     },
 
+    savePagePicture(pageId, storyId, dataURL, vecArr) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String },
+            { key: 'dataURL', value: dataURL, type: String },
+            // { key: 'vecArr', value: vecArr, type: String }
+        ])
+
+        return (async () => {
+
+            let story = await Story.findById(storyId)
+
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            let page = await Page.findById(pageId)
+
+            if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+            page.dataURL = dataURL
+
+            page.vecArr = vecArr
+
+            await page.save()
+        })()        
+    },
+
     savePicPage(pageId, storyId, picture) {
         validate([
             { key: 'pageId', value: pageId, type: String },

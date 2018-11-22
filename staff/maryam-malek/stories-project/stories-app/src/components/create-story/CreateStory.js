@@ -5,7 +5,7 @@ import Error from '../error/Error'
 import Detail from '../detail/Detail'
 
 class CreateStory extends Component {
-    state = { error: null, editCover: false, id: '', cover: './../../../public/cover.png', title: 'ESCRIU EL TÍTOL DEL CONTE', audioLanguage: `ESCRIU LA LLENGUA DE L'AUDIO DEL CONTE`, textLanguage: 'ESCRIU LA LLENGUA DEL TEXT DEL CONTE', pages: [] }
+    state = { error: null, editCover: false, id: '', cover: '../../images/cover.png', title: 'ESCRIU EL TÍTOL DEL CONTE', audioLanguage: `ESCRIU LA LLENGUA DE L'AUDIO DEL CONTE`, textLanguage: 'ESCRIU LA LLENGUA DEL TEXT DEL CONTE', pages: [] }
 
     componentDidMount() {
         if (this.props.storyId) {
@@ -99,7 +99,7 @@ class CreateStory extends Component {
         return <div className='body'>
             <div className='container-story'>
                 <h1>EL TEU CONTE</h1>
-                {!this.state.editCover && <a onClick={this.handleCoverClick}><img className="book-cover" src={this.state.cover} alt="book cover"></img></a>}
+                {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.cover} alt="book cover"></img></a>}
                 {this.state.editCover && <canvas class="canvas" id="cover-draw" width="200" height="300"></canvas>}
                 <form className="book-details" onSubmit={this.handleSubmit}>
                     <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />
@@ -111,7 +111,7 @@ class CreateStory extends Component {
                 <h3>PÀGINES</h3>
                 <ul className="pages-section">
                     {this.state.pages.map(page => <Detail img={page.image} text={page.index} id={page.id} onDetailClick={this.handleDetailClick} />)}
-                    <button className="newPageButton" onClick={this.handleNewPageClick}>+</button>
+                    <button className="newPageButton" onClick={this.handleNewPageClick}>AFEGIR PÀGINA</button>
                 </ul>
             </div>
             {this.state.error && <Error message={this.state.error} />}

@@ -301,6 +301,48 @@ const logic = {
                 })
     },
 
+    savePagePicture(pageId, storyId, dataURL, vecArr) {
+        debugger
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String },
+            // { key: 'dataURL', value: dataURL, type: String},
+            // { key: 'vecArr', value: vecArr, type: String}
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
+            method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify({ dataURL, vecArr })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.error) throw Error(res.error)
+
+                })
+    },
+
+    retrievePagePicture(pageId, storyId) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
+            method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${this._token}`
+                },
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.error) throw Error(res.error)
+                    return res.data
+                })
+    },
+
     updatePage(pageId, storyId, index, text) {
         validate([
             { key: 'pageId', value: pageId, type: String },
