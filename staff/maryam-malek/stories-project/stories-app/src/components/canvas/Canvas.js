@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import logic from '../../logic'
+import swal from 'sweetalert2'
 
 class Canvas extends Component {
 
@@ -14,15 +14,29 @@ class Canvas extends Component {
         this.ctx.lineJoin = 'round'
         this.ctx.lineCap = 'round'
         this.ctx.lineWidth = 4
+        if(this.props.vectors.length !== 0) {
+            debugger
+            this.setState({line: this.props.vectors})
+            this.paintComplete(this.props.vectors)
+        }
     }
 
+    handleHelpDrawClick = () => {
+        swal({
+            title: 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
+            width: 300,
+            padding: '3em',
+            background: '#fff url(/images/trees.png)',
+            confirmButtonText: 'ESTIC PREPARADA',
+            confirmButtonColor: '#0097A7'
+        })
+    }
 
     onMouseDown = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent
         this.state.isPainting = true
         this.state.prevPos = { offsetX, offsetY }
     }
-
 
     onMouseMove = ({ nativeEvent }) => {
         if (this.state.isPainting) {
@@ -35,7 +49,7 @@ class Canvas extends Component {
             }
             // Add the position to the line array
             this.state.line = this.state.line.concat(positionData)
-            this.state.line2 = this.state.line
+            // this.state.line2 = this.state.line
             this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle)
         }
     }
@@ -49,7 +63,7 @@ class Canvas extends Component {
             this.setState({dataURL})
             // this.props.onEnd(dataURL)
 
-            logic.savePagePicture(this.props.pageId, this.props.storyId, dataURL, this.state.line)
+            this.props.onChange(dataURL, this.state.line)
         }
     }
 
@@ -68,21 +82,20 @@ class Canvas extends Component {
         this.state.prevPos = { offsetX, offsetY }
     }
 
-    paintComplete = () => {
+    paintComplete = (vectors) => {
 
-        this.state.line2.forEach(el => {
+        vectors.forEach(el => {
 
-            this.paint(el.start, el.stop, '#0097A7')
+            this.paint(el.start, el.stop, this.state.userStrokeStyle)
         })
     }
 
-
-
-
-
-
     render() {
-        return (
+        return <div>
+            <h4 className="draw-title">PAGE DRAW</h4>
+            <div className="info">
+                <button className="help" onClick={this.handleHelpDrawClick}>?</button>
+            </div>
             <canvas className='canvas'
                 id="page-draw"
                 width="500"
@@ -94,7 +107,7 @@ class Canvas extends Component {
                 onMouseUp={this.endPaintEvent}
                 onMouseMove={this.onMouseMove}
             />
-        )
+        </div>
     }
 }
 export default Canvas

@@ -161,7 +161,7 @@ const logic = {
             story.id = story._id.toString()
             delete story._id
             delete story.__v
-            delete story.hasCover
+            // delete story.hasCover
 
             story.author = story.author.toString()
 
@@ -170,7 +170,7 @@ const logic = {
                     page.id = page._id.toString()
                     delete page._id
                     delete page.__v
-                    delete page.hasImage
+                    // delete page.hasImage
                     delete page.hasAudio
                     return page
                 })
@@ -448,19 +448,19 @@ const logic = {
             page.id = page._id.toString()
             delete page._id
             delete page.__v
-            delete page.hasImage
+            // delete page.hasImage
             delete page.hasAudio
 
             return page
         })()
     },
 
-    savePagePicture(pageId, storyId, dataURL, vecArr) {
+    savePagePicture(pageId, storyId, dataURL, vectors) {
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
             { key: 'dataURL', value: dataURL, type: String },
-            // { key: 'vecArr', value: vecArr, type: String }
+            // { key: 'vectors', value: vectors, type: String }
         ])
 
         return (async () => {
@@ -475,104 +475,143 @@ const logic = {
 
             page.dataURL = dataURL
 
-            page.vecArr = vecArr
+            page.vectors = vectors
+
+            page.hasImage = true
 
             await page.save()
+
+            const _page = story.pages.find(page => page.id === pageId)
+
+            _page.dataURL = dataURL
+
+            _page.vectors = vectors
+
+            _page.hasImage = true
+
+            await story.save()
         })()        
     },
 
-    savePicPage(pageId, storyId, picture) {
-        validate([
-            { key: 'pageId', value: pageId, type: String },
-            { key: 'storyId', value: storyId, type: String }
-            // { key: 'picture', value: picture, type: String }
-        ])
-
-        const folder = `data/stories/${storyId}`
-
-        return new Promise((resolve, reject) => {
-            try {
-                Story.findById(storyId)
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-                        return Page.findById(pageId)
-                    })
-                    .then(page => {
-                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-                        if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
-                            if (!fs.existsSync(`${folder}`)) {
-
-                                fs.mkdirSync(folder)
-                            }
-                            if (!fs.existsSync(`${folder}pages`)) {
-
-                                fs.mkdirSync(`${folder}/pages`)
-                            }
-                            fs.mkdirSync(`${folder}/pages/${pageId}`)
-
-                        } else {
-                            // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
-
-                            // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
-                            fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, 'picture.png'))
-                        }
-
-                        const pathToFile = path.join(`${folder}/pages/${pageId}`, 'picture.png')
-
-                        const ws = fs.createWriteStream(pathToFile)
-
-                        picture.pipe(ws)
-
-                        page.hasImage = true
-
-                        return page.save()
-                    })
-                    .then(() => {
-                        resolve()
-                    })
-
-            } catch (err) {
-                reject(err)
-            }
-        })
-    },
-
-    retrievePagePic(pageId, storyId) {
+    retrievePagePicture(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String }
         ])
 
-        return new Promise((resolve, reject) => {
-            try {
-                Story.findById(storyId)
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+        return (async () => {
 
-                        return Page.findById(pageId)
-                    })
-                    .then(page => {
-                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+            let story = await Story.findById(storyId)
 
-                        if (page.hasImage) {
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                            file = `data/stories/${storyId}/pages/${pageId}/picture.png`
+            let page = await Page.findById(pageId).lean()
 
-                        } else {
-                            file = `data/stories/default/picture.png`
-                        }
+            if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-                        const rs = fs.createReadStream(file)
-
-                        resolve(rs)
-                    })
-            } catch (err) {
-                reject(err)
-            }
-        })
+            delete page._id
+            delete page.__v
+            delete page.hasAudio
+            delete page.audio
+            delete page.image
+            delete page.text
+            
+            return page
+        })()
     },
+
+    // savePicPage(pageId, storyId, picture) {
+    //     validate([
+    //         { key: 'pageId', value: pageId, type: String },
+    //         { key: 'storyId', value: storyId, type: String }
+    //         // { key: 'picture', value: picture, type: String }
+    //     ])
+
+    //     const folder = `data/stories/${storyId}`
+
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             Story.findById(storyId)
+    //                 .then(story => {
+    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+    //                     return Page.findById(pageId)
+    //                 })
+    //                 .then(page => {
+    //                     if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+    //                     if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
+    //                         if (!fs.existsSync(`${folder}`)) {
+
+    //                             fs.mkdirSync(folder)
+    //                         }
+    //                         if (!fs.existsSync(`${folder}pages`)) {
+
+    //                             fs.mkdirSync(`${folder}/pages`)
+    //                         }
+    //                         fs.mkdirSync(`${folder}/pages/${pageId}`)
+
+    //                     } else {
+    //                         // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
+
+    //                         // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
+    //                         fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, 'picture.png'))
+    //                     }
+
+    //                     const pathToFile = path.join(`${folder}/pages/${pageId}`, 'picture.png')
+
+    //                     const ws = fs.createWriteStream(pathToFile)
+
+    //                     picture.pipe(ws)
+
+    //                     page.hasImage = true
+
+    //                     return page.save()
+    //                 })
+    //                 .then(() => {
+    //                     resolve()
+    //                 })
+
+    //         } catch (err) {
+    //             reject(err)
+    //         }
+    //     })
+    // },
+
+    // retrievePagePic(pageId, storyId) {
+    //     validate([
+    //         { key: 'pageId', value: pageId, type: String },
+    //         { key: 'storyId', value: storyId, type: String }
+    //     ])
+
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             Story.findById(storyId)
+    //                 .then(story => {
+    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+    //                     return Page.findById(pageId)
+    //                 })
+    //                 .then(page => {
+    //                     if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+    //                     if (page.hasImage) {
+
+    //                         file = `data/stories/${storyId}/pages/${pageId}/picture.png`
+
+    //                     } else {
+    //                         file = `data/stories/default/picture.png`
+    //                     }
+
+    //                     const rs = fs.createReadStream(file)
+
+    //                     resolve(rs)
+    //                 })
+    //         } catch (err) {
+    //             reject(err)
+    //         }
+    //     })
+    // },
 
     removePage(pageId, storyId) {
         validate([

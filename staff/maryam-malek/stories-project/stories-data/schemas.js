@@ -33,9 +33,7 @@ const Page = new Schema({
     image: {
         type: String,
     },
-    vectors: {
-        type: String,
-    },
+    vectors: [],
     dataURL: {
         type: String,
     },

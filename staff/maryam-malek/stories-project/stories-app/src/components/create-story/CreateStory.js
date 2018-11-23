@@ -12,6 +12,7 @@ class CreateStory extends Component {
             try {
                 logic.retrieveStory(this.props.storyId)
                     .then(({ title, pages, cover }) => {
+                        
                         this.setState({ title, pages, cover, id: this.props.storyId, error: null })
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -20,6 +21,21 @@ class CreateStory extends Component {
             }
         }
     }
+
+    // componentDidUpdate() {
+    //     if (this.props.storyId) {
+    //         try {
+    //             logic.retrieveStory(this.props.storyId)
+    //                 .then(({ title, pages, cover }) => {
+    //                     debugger
+    //                     this.setState({ title, pages, cover, id: this.props.storyId, error: null })
+    //                 })
+    //                 .catch(err => this.setState({ error: err.message }))
+    //         } catch (err) {
+    //             this.setState({ error: err.message })
+    //         }
+    //     }
+    // }
 
     handleCoverClick = () => {
         this.setState({ editCover: true })
@@ -110,7 +126,7 @@ class CreateStory extends Component {
                 </form>
                 <h3>PÀGINES</h3>
                 <ul className="pages-section">
-                    {this.state.pages.map(page => <Detail img={page.image} text={page.index} id={page.id} onDetailClick={this.handleDetailClick} />)}
+                    {this.state.pages.map(page => <Detail img={page.dataURL} text={page.index} id={page.id} onDetailClick={this.handleDetailClick} />)}
                     <button className="newPageButton" onClick={this.handleNewPageClick}>AFEGIR PÀGINA</button>
                 </ul>
             </div>

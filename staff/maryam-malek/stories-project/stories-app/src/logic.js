@@ -1,6 +1,6 @@
 const validate = require('./utils/validate')
 
-const { AlreadyExistsError, AuthError, NotFoundError } = require('./errors')
+const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('./errors')
 
 //If I don't require sessionstorage here it doesn't work!!!!
 
@@ -10,6 +10,7 @@ const logic = {
     _userId: sessionStorage.getItem('userId') || null,
     _token: sessionStorage.getItem('token') || null,
     url: 'http://localhost:5000/api',
+    //POSAR AQUESTA URL EN EL .ENV!!!!!!!!!
 
     register(name, surname, username, password) {
         validate([
@@ -279,6 +280,7 @@ const logic = {
     },
 
     addPage(storyId, index, text) {
+        
         validate([
             { key: 'storyId', value: storyId, type: String },
             { key: 'index', value: index, type: Number },
@@ -301,13 +303,13 @@ const logic = {
                 })
     },
 
-    savePagePicture(pageId, storyId, dataURL, vecArr) {
-        debugger
+    savePagePicture(pageId, storyId, dataURL, vectors) {
+        
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
             // { key: 'dataURL', value: dataURL, type: String},
-            // { key: 'vecArr', value: vecArr, type: String}
+            // { key: 'vectors', value: vectors, type: String}
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
@@ -315,7 +317,7 @@ const logic = {
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                 },
-                body: JSON.stringify({ dataURL, vecArr })
+                body: JSON.stringify({ dataURL, vectors })
             })
                 .then(res => res.json())
                 .then(res => {
@@ -332,18 +334,17 @@ const logic = {
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
             method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${this._token}`
-                },
             })
                 .then(res => res.json())
                 .then(res => {
+                    
                     if (res.error) throw Error(res.error)
                     return res.data
                 })
     },
 
     updatePage(pageId, storyId, index, text) {
+        
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },

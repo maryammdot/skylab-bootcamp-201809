@@ -298,9 +298,9 @@ router.get('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerT
 
 router.post('/users/:id/stories/:storyId/pages/:pageId/picture', jsonBodyParser, (req, res) => {
     routeHandler(() => {
-        const { params: { storyId, pageId }, body: { dataURL, vecArr } } = req
-
-        return logic.savePagePicture(pageId, storyId, dataURL, vecArr)
+        const { params: { storyId, pageId }, body: { dataURL, vectors } } = req
+debugger
+        return logic.savePagePicture(pageId, storyId, dataURL, vectors)
             .then(() => {
                 res.json({
                     message: `picture of page with id ${pageId} of story with id ${storyId} correctly added`
@@ -324,10 +324,11 @@ router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
     routeHandler(() => {
         const { params: { storyId, pageId } } = req
 
-        return logic.retrievePagePic(pageId, storyId)
-            .then(({dataURL, vecArr}) => {
+        return logic.retrievePagePicture(pageId, storyId)
+            .then(({dataURL, vectors, hasImage}) => {
+                debugger
                 res.json({
-                    data: {dataURL, vecArr}
+                    data: {dataURL, vectors, hasImage}
                 })
             })
     }, res)
