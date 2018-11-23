@@ -9,7 +9,7 @@ import Error from '../error/Error'
 
 
 class CreatePage extends Component {
-    state = { error: null, draw: true, showText: false, showAudio: false, preview: false, index: 1, text: undefined, storyId: '', pageId: '', image: '../../images/picture.png', hasImage: false, dataURL: '', vectors: [] }
+    state = { error: null, draw: false, showText: false, showAudio: false, preview: true, index: 1, text: undefined, storyId: '', pageId: '', image: '../../images/picture.png', hasImage: false, dataURL: '', vectors: [] }
 
     componentDidMount() {
         try {

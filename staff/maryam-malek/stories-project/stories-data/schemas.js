@@ -73,6 +73,10 @@ const Story = new Schema({
         required: true,
         default: false
     },
+    vectors: [],
+    dataURL: {
+        type: String,
+    },
     cover: {
         type: String
     },

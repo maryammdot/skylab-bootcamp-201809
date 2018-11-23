@@ -11,7 +11,7 @@ class MyStories extends Component {
         try {
             logic.listStories()
                 .then(stories => {
-                    this.setState({stories})
+                    this.setState({stories, error: null})
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {

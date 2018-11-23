@@ -8,28 +8,39 @@ class Canvas extends Component {
 
     componentDidMount() {
         // Here we set up the properties of the canvas element. 
-        this.canvas.width = 500
-        this.canvas.height = 300
+        if (this.props.cover) {
+            this.canvas.width = 150
+            this.canvas.height = 250
+
+        } else {
+
+            this.canvas.width = 500
+            this.canvas.height = 300
+        }
         this.ctx = this.canvas.getContext('2d')
         this.ctx.lineJoin = 'round'
         this.ctx.lineCap = 'round'
         this.ctx.lineWidth = 4
-        if(this.props.vectors.length !== 0) {
-            debugger
-            this.setState({line: this.props.vectors})
+        if (this.props.vectors.length !== 0) {
+
+            this.setState({ line: this.props.vectors })
             this.paintComplete(this.props.vectors)
         }
     }
 
     handleHelpDrawClick = () => {
         swal({
-            title: 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
+            title: this.props.cover ? 'ARROSSEGANT EL DIT DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
             width: 300,
             padding: '3em',
             background: '#fff url(/images/trees.png)',
-            confirmButtonText: 'ESTIC PREPARADA',
+            confirmButtonText: 'ESTIC PREPARAT',
             confirmButtonColor: '#0097A7'
         })
+    }
+
+    handleCloseDrawClick = () => {
+        this.props.onCloseDrawClick()
     }
 
     onMouseDown = ({ nativeEvent }) => {
@@ -60,7 +71,7 @@ class Canvas extends Component {
             //   this.sendPaintData()
             // this.paintComplete()
             const dataURL = this.canvas.toDataURL()
-            this.setState({dataURL})
+            this.setState({ dataURL })
             // this.props.onEnd(dataURL)
 
             this.props.onChange(dataURL, this.state.line)
@@ -95,6 +106,7 @@ class Canvas extends Component {
             <h4 className="draw-title">PAGE DRAW</h4>
             <div className="info">
                 <button className="help" onClick={this.handleHelpDrawClick}>?</button>
+                {this.props.cover && <button className="save" onClick={this.handleCloseDrawClick}>FET</button>}
             </div>
             <canvas className='canvas'
                 id="page-draw"

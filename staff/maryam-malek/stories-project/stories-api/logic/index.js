@@ -180,94 +180,143 @@ const logic = {
         })()
     },
 
-    saveStoryCover(author, storyId, cover) {
+    saveStoryCover(storyId, dataURL, vectors) {
         validate([
-            { key: 'authorId', value: author, type: String },
-            { key: 'storyId', value: storyId, type: String }
-            // { key: 'coverUrl', value: cover, type: String }
+            { key: 'storyId', value: storyId, type: String },
+            { key: 'dataURL', value: dataURL, type: String },
+            // { key: 'vectors', value: vectors, type: String }
         ])
 
-        const folder = `data/stories/${storyId}`
+        return (async () => {
 
-        return new Promise((resolve, reject) => {
-            try {
-                User.findById(author)
-                    .then(user => {
-                        if (!user) throw new NotFoundError(`user with id ${author} not found`)
+            let story = await Story.findById(storyId)
 
-                        return Story.findById(storyId)
-                    })
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                        if (!fs.existsSync(folder)) {
-                            fs.mkdirSync(folder)
-                            fs.mkdirSync(`${folder}/cover`)
+            story.dataURL = dataURL
+
+            story.vectors = vectors
+
+            story.hasCover = true
+
+            await story.save()
+
+        })()        
+    },
+
+    retrieveStoryCover(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return (async () => {
+
+            let story = await Story.findById(storyId).lean()
+
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            delete story._id
+            delete story.__v
+            delete story.title
+            delete story.author
+            delete story.audioLanguage
+            delete story.textLanguage
+            delete story.cover
+            delete story.inProcess
+            delete story.pages
+            
+            return story
+        })()
+    },
+
+    // saveStoryCover(author, storyId, cover) {
+    //     validate([
+    //         { key: 'authorId', value: author, type: String },
+    //         { key: 'storyId', value: storyId, type: String }
+    //         // { key: 'coverUrl', value: cover, type: String }
+    //     ])
+
+    //     const folder = `data/stories/${storyId}`
+
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             User.findById(author)
+    //                 .then(user => {
+    //                     if (!user) throw new NotFoundError(`user with id ${author} not found`)
+
+    //                     return Story.findById(storyId)
+    //                 })
+    //                 .then(story => {
+    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+
+    //                     if (!fs.existsSync(folder)) {
+    //                         fs.mkdirSync(folder)
+    //                         fs.mkdirSync(`${folder}/cover`)
                             
 
-                        } else {
-                            // const files = fs.readdirSync(`${folder}/cover`)
+    //                     } else {
+    //                         // const files = fs.readdirSync(`${folder}/cover`)
 
-                            // files.forEach(file => fs.unlinkSync(path.join(`${folder}/cover`, file)))
+    //                         // files.forEach(file => fs.unlinkSync(path.join(`${folder}/cover`, file)))
 
-                            fs.unlinkSync(path.join(`${folder}/cover`, 'cover.png'))
-                        }
+    //                         fs.unlinkSync(path.join(`${folder}/cover`, 'cover.png'))
+    //                     }
 
-                        const pathToFile = path.join(`${folder}/cover`, 'cover.png')
+    //                     const pathToFile = path.join(`${folder}/cover`, 'cover.png')
 
-                        const ws = fs.createWriteStream(pathToFile)
+    //                     const ws = fs.createWriteStream(pathToFile)
 
-                        cover.pipe(ws)
+    //                     cover.pipe(ws)
 
-                        story.hasCover = true
+    //                     story.hasCover = true
 
-                        return story.save()
-                    })
-                    .then(() => {
+    //                     return story.save()
+    //                 })
+    //                 .then(() => {
                         
-                        resolve()
-                    })
+    //                     resolve()
+    //                 })
 
-            } catch (err) {
+    //         } catch (err) {
                 
-                reject(err)
-            }
-        })
-    },
+    //             reject(err)
+    //         }
+    //     })
+    // },
 
-    retrieveStoryCover(author, storyId) {
-        validate([
-            { key: 'authorId', value: author, type: String },
-            { key: 'storyId', value: storyId, type: String }
-        ])
+    // retrieveStoryCover(author, storyId) {
+    //     validate([
+    //         { key: 'authorId', value: author, type: String },
+    //         { key: 'storyId', value: storyId, type: String }
+    //     ])
 
-        return new Promise((resolve, reject) => {
-            try {
-                User.findById(author)
-                    .then(user => {
-                        if (!user) throw new NotFoundError(`user with id ${author} not found`)
-                        return Story.findById(storyId)
-                    })
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             User.findById(author)
+    //                 .then(user => {
+    //                     if (!user) throw new NotFoundError(`user with id ${author} not found`)
+    //                     return Story.findById(storyId)
+    //                 })
+    //                 .then(story => {
+    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
 
-                        if (story.hasCover) {
+    //                     if (story.hasCover) {
 
-                            file = `data/stories/${story.id}/cover/cover.png`
+    //                         file = `data/stories/${story.id}/cover/cover.png`
 
-                        } else {
-                            file = `data/stories/default/cover.png`
-                        }
+    //                     } else {
+    //                         file = `data/stories/default/cover.png`
+    //                     }
 
-                        const rs = fs.createReadStream(file)
+    //                     const rs = fs.createReadStream(file)
 
-                        resolve(rs)
-                    })
-            } catch (err) {
-                reject(err)
-            }
-        })
-    },
+    //                     resolve(rs)
+    //                 })
+    //         } catch (err) {
+    //             reject(err)
+    //         }
+    //     })
+    // },
 
     updateStory(id, title, author, audioLanguage, textLanguage) {
         validate([

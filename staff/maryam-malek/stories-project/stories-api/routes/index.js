@@ -175,39 +175,66 @@ router.patch('/users/:id/stories/:storyId/process', [bearerTokenParser, jwtVerif
     }, res)
 })
 
-router.post('/users/:id/stories/:storyId/cover', (req, res) => {
+router.post('/users/:id/stories/:storyId/cover', jsonBodyParser, (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId } } = req
+        const { params: { storyId }, body: { dataURL, vectors } } = req
 
-        return new Promise((resolve, reject) => {
-            const busboy = new Busboy({ headers: req.headers })
-
-            busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-
-                logic.saveStoryCover(id, storyId, file)
+        return logic.saveStoryCover(storyId, dataURL, vectors)
+            .then(() => {
+                res.json({
+                    message: `cover of story with id ${storyId} correctly added`
+                })
             })
-
-            busboy.on('finish', () => resolve())
-
-            busboy.on('error', err => reject(err))
-
-            req.pipe(busboy)
-        })
-            .then(() => res.json({
-                message: `cover from story with id ${storyId} correctly saved`
-            }))
     }, res)
 })
 
 router.get('/users/:id/stories/:storyId/cover', (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId } } = req
+        const { params: { storyId } } = req
 
-        return Promise.resolve()
-            .then(() => logic.retrieveStoryCover(id, storyId))
-            .then(coverStream => coverStream.pipe(res))
+        return logic.retrieveStoryCover(storyId)
+            .then(({dataURL, vectors, hasCover}) => {
+    
+                res.json({
+                    data: {dataURL, vectors, hasCover}
+                })
+            })
     }, res)
 })
+
+// router.post('/users/:id/stories/:storyId/cover', (req, res) => {
+//     routeHandler(() => {
+//         const { params: { id, storyId } } = req
+
+//         return new Promise((resolve, reject) => {
+//             const busboy = new Busboy({ headers: req.headers })
+
+//             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+
+//                 logic.saveStoryCover(id, storyId, file)
+//             })
+
+//             busboy.on('finish', () => resolve())
+
+//             busboy.on('error', err => reject(err))
+
+//             req.pipe(busboy)
+//         })
+//             .then(() => res.json({
+//                 message: `cover from story with id ${storyId} correctly saved`
+//             }))
+//     }, res)
+// })
+
+// router.get('/users/:id/stories/:storyId/cover', (req, res) => {
+//     routeHandler(() => {
+//         const { params: { id, storyId } } = req
+
+//         return Promise.resolve()
+//             .then(() => logic.retrieveStoryCover(id, storyId))
+//             .then(coverStream => coverStream.pipe(res))
+//     }, res)
+// })
 
 router.delete('/users/:id/stories/:storyId', [bearerTokenParser, jwtVerifier], (req, res) => {
     routeHandler(() => {

@@ -216,28 +216,68 @@ const logic = {
             })
     },
 
-    saveStoryCover(storyId, cover) {
+    saveStoryCover(storyId, dataURL, vectors) {
+        
         validate([
-            { key: 'storyId', value: storyId, type: String }
-            // { key: 'cover', value: cover, type: String } TYPE??????
+            { key: 'storyId', value: storyId, type: String },
+            // { key: 'dataURL', value: dataURL, type: String},
+            // { key: 'vectors', value: vectors, type: String}
         ])
-
-        let file = new FormData()
-
-        file.append('avatar', cover)
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
             method: 'POST',
-            // headers: {
-            //     'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
-            // },
-            body: file
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.error) throw Error(res.error)
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify({ dataURL, vectors })
             })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.error) throw Error(res.error)
+
+                })
     },
+
+    retrieveStoryCover(storyId) {
+        
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
+            method: 'GET',
+            })
+                .then(res => res.json())
+                .then(res => {
+                    
+                    if (res.error) throw Error(res.error)
+
+                    return res.data
+                })
+    },
+
+    // saveStoryCover(storyId, cover) {
+    //     validate([
+    //         { key: 'storyId', value: storyId, type: String }
+    //         // { key: 'cover', value: cover, type: String } TYPE??????
+    //     ])
+
+    //     let file = new FormData()
+
+    //     file.append('avatar', cover)
+
+    //     return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
+    //         method: 'POST',
+    //         // headers: {
+    //         //     'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
+    //         // },
+    //         body: file
+    //     })
+    //         .then(res => res.json())
+    //         .then(res => {
+    //             if (res.error) throw Error(res.error)
+    //         })
+    // },
 
     // CREC QUE AQUESTA FUNCIÓ NO LA HE DE FER PERQUÈ HO FARÀ SOL QUAN POSI LA RUTA AL SRC DEL IMAGE DE HTML
 

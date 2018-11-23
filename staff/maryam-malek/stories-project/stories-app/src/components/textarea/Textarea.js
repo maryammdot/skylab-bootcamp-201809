@@ -4,13 +4,21 @@ import swal from 'sweetalert2'
 
 class Textarea extends Component {
 
-    state = { text: 'null' }
+    state = { text: this.props.text }
 
     componentDidMount() {
         if (this.props.text) {
+            
             this.setState({ text: this.props.text })
         }
     }
+
+    // componentWillReceiveProps(nextProps) {
+    //     if (this.props !== nextProps) {
+    //         debugger
+    //         this.setState({ text: nextProps.text })
+    //     }
+    // }
 
     handleHelpTextClick = () => {
         swal({
@@ -42,7 +50,6 @@ class Textarea extends Component {
             <textarea required className="textarea" name="text" id="text-page" maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols="20" rows="10" ></textarea>
         </div>
     }
-
 }
 
 export default Textarea
