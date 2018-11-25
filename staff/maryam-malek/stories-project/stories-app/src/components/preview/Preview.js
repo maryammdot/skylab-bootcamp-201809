@@ -21,13 +21,14 @@ class Preview extends Component {
         return <div className='container-preview'>
             <div className='header-preview'>
                 <h4 className="preview-title">AIXÍ QUEDA LA PÀGINA DEL TEU CONTE</h4>
-                <div className="info">
+                <div className="info-preview">
                     <button className='help-preview-button' onClick={this.handleHelpPreviewClick}><i class="fa fa-question"></i></button>
                     <button className='back-preview-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
                 </div>
             </div>
-            <div className="preview-container">
-                <img src={this.props.dataURL} alt="page 1 image" />
+            <div className="preview-book-page">
+                {this.props.dataURL && <img src={this.props.dataURL} alt="page image" />}
+                {!this.props.dataURL && <img src='./images/picture.png' alt="page image" />}
                 <div className="audio-buttons">
                     <button className="audio"><i className="fa fa-play-circle"></i></button>
                     <button className="audio"><i className="fa fa-volume-up"></i></button>

@@ -8,7 +8,7 @@ class Textarea extends Component {
 
     componentDidMount() {
         if (this.props.text) {
-            
+
             this.setState({ text: this.props.text })
         }
     }
@@ -42,12 +42,17 @@ class Textarea extends Component {
     }
 
     render() {
-        return <div>
-            <h4 className="text-title">PAGE TEXT</h4>
-            <div className="info">
-                <button className="help" onClick={this.handleHelpTextClick}>?</button>
+        return <div className='container-text'>
+            <div className='header-text'>
+                <h4>TEXT DE LA PÀGINA</h4>
+                <div className='info-text'>
+                    <button className='help-text-button' onClick={this.handleHelpTextClick}>?</button>
+                    <button className='back-text-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
+                </div>
             </div>
-            <textarea required className="textarea" name="text" id="text-page" maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols="20" rows="10" ></textarea>
+            <div className='text-area-space'>
+                <textarea required className='textarea-page' name='text' id='text-page' maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols='20' rows='10' ></textarea>
+            </div>
         </div>
     }
 }

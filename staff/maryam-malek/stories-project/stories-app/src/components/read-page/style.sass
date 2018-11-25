@@ -1,52 +1,57 @@
-.container-preview
+.container-read-page
     display: grid
     grid-template-rows: 15% auto
     position: relative
     width: 500px
     height: 70%
     margin-bottom: 7%
-.header-preview
+.header-read-page
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content: space-between
     align-items: center
-.info-preview
+.info-read-page
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content: center
     align-items: center
-.help-preview-button
+.help-read-page-button
     background-color: transparent 
     border: none
     margin: 3% 0
     font-size: 1.5em
-.back-preview-button
+.back-read-page-button
     font-size: 0.8em
     width: 8em
     height: 2em
     border: solid 1px black
     border-radius: 10% 10%
     background-color: transparent 
-.preview-book-page
+.read-page-book-area
     background-color: lavender
     border-radius: 20% 20% 20% 20%
     border: 0.5px solid powderblue
     // height: 300px
-.preview-book-page img
+    position: relative
+.read-page-book-page img
     width: 100%
     height: 300px
     margin-top: 5%
     border-radius:  19% 19% 17% 17%
     background-color: transparent
-.text-area
+.text-area-read-page
     display: flex
     flex-direction: column
-    justify-content: center
+    justify-content: space-around
     align-items: center
     height: 100px
     width: 100%
+.text-area-read-page :first-child
+    font-size: 1.3em
+.text-area-read-page :last-child
+    font-size: 0.8em
 .audio-buttons
     display: flex
     flex-direction: row
@@ -59,5 +64,17 @@
     border: none
     margin: 3% 0
     font-size: 1.5em
-
+.next, .last
+    background-color: transparent 
+    border: none
+    margin: 3% 0
+    font-size: 1.5em
+.next
+    position: absolute
+    right: -1.5em
+    bottom: 50%
+.last
+    position: absolute
+    left: -1.5em
+    bottom: 50%
 

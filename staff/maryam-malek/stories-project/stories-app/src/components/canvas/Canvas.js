@@ -103,21 +103,26 @@ class Canvas extends Component {
     }
 
     render() {
-        return <div>
-            {!this.props.cover && <h4 className="draw-title">PAGE DRAW</h4>}
-            <div className="info-canvas">
-                <button onClick={this.handleHelpDrawClick}><i class="fa fa-question"></i></button>
-                {this.props.cover && <button onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
+        return <div className='container-canvas'>
+            <div className='header-canvas'>
+                {!this.props.cover && <h4 className="draw-title">DIBUIXA LA PÀGINA</h4>}
+                <div className="info-canvas">
+                    <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question"></i></button>
+                    {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
+                    {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>}
+                </div>
             </div>
-            <canvas className='canvas'
-                id="page-draw"
-                // We use the ref attribute to get direct access to the canvas element. 
-                ref={(ref) => (this.canvas = ref)}
-                onMouseDown={this.onMouseDown}
-                onMouseLeave={this.endPaintEvent}
-                onMouseUp={this.endPaintEvent}
-                onMouseMove={this.onMouseMove}
-            />
+            <div className='canvas-area'>
+                <canvas className='canvas'
+                    id="page-draw"
+                    // We use the ref attribute to get direct access to the canvas element. 
+                    ref={(ref) => (this.canvas = ref)}
+                    onMouseDown={this.onMouseDown}
+                    onMouseLeave={this.endPaintEvent}
+                    onMouseUp={this.endPaintEvent}
+                    onMouseMove={this.onMouseMove}
+                />
+            </div>
         </div>
     }
 }

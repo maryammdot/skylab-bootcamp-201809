@@ -25,13 +25,15 @@ class Audio extends Component {
 
 
     render() {
-        return <div>
-            <h4 className="audio-title">PAGE AUDIO</h4>
-            <div className="info">
-                <button className="help" onClick={this.handleHelpAudioClick}>?</button>
-                {/* <button className="save" onClick={this.handleSaveAudioClick}>GUARDAR</button> */}
+        return <div className='container-audio'>
+            <div className='header-audio'>
+            <h4 className="audio-title">AUDIO DE LA PÀGINA</h4>
+            <div className="info-audio">
+                <button className="help-audio-button" onClick={this.handleHelpAudioClick}>?</button>
+                <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
             </div>
-            <div className="audio-container">
+            </div>
+            <div className="audio-displays">
                 <div className="rec-stop">
                     <button className="rec"><i className="fa fa-dot-circle-o"></i></button>
                     <button><i className="fa fa-stop"></i></button>

@@ -9,6 +9,11 @@ class Detail extends Component {
         this.props.onDetailClick(this.props.id)
     }
 
+    handleEditClick = () => {
+        
+        this.props.onEditClick(this.props.id)
+    }
+
     handleRemoveClick = () => {
         this.props.onRemoveClick(this.props.id)
     }

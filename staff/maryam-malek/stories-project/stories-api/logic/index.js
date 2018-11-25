@@ -131,7 +131,7 @@ const logic = {
                 delete story._id
                 delete story.__v
                 delete story.pages
-                delete story.hasCover
+                // delete story.hasCover
 
                 story.author = story.author.toString()
 

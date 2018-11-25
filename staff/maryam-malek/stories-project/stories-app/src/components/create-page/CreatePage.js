@@ -96,7 +96,7 @@ class CreatePage extends Component {
     }
 
     //Preview component
-    handleBackPreviewClick = () => {
+    handleBackClick = () => {
 
         this.props.onBackClick(this.state.storyId)
     }
@@ -106,10 +106,10 @@ class CreatePage extends Component {
         return <div className='container-create-page'>
             <h1 className="title-create-page">{this.state.title}</h1>
             <div className='content'>
-                {this.state.draw && <Canvas storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} />}
-                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} />}
-                {this.state.showAudio && <Audio />}
-                {this.state.preview && <Preview dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackPreviewClick} />}
+                {this.state.draw && <Canvas storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}
+                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick}/>}
+                {this.state.showAudio && <Audio onBackClick={this.handleBackClick} />}
+                {this.state.preview && <Preview dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
             </div>
             <div className="navbar-pages">
                 <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
