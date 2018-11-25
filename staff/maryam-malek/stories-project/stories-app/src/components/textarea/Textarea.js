@@ -22,11 +22,11 @@ class Textarea extends Component {
 
     handleHelpTextClick = () => {
         swal({
-            title: 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
+            title: 'ESCRIU EL TEXT QUE VOLS QUE APAREGUI A LA PÀGINA DEL TEU CONTE',
             width: 300,
             padding: '3em',
             background: '#fff url(/images/trees.png)',
-            confirmButtonText: 'ESTIC PREPARADA',
+            confirmButtonText: 'SOM-HI',
             confirmButtonColor: '#0097A7'
         })
     }

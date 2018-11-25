@@ -6,11 +6,10 @@ class Preview extends Component {
 
     handleHelpPreviewClick = () => {
         swal({
-            title: 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
-            width: 300,
+            text: `AIXÍ ÉS COM QUEDA LA PÀGINA DEL TEU CONTE. SI LA VOLS MODIFICAR APRETA EL LLÀPIS PER DIBUIXAR, LA T PER ESCRIURE I EL TRIANGLE PER GRAVAR I AIXÍ AFEGIR TOT ALLÒ QUE HI VULGUIS POSAR`,
+            width: 400,
             padding: '3em',
-            background: '#fff url(/images/trees.png)',
-            confirmButtonText: 'ESTIC PREPARADA',
+            confirmButtonText: 'SOM-HI',
             confirmButtonColor: '#0097A7'
         })
     }

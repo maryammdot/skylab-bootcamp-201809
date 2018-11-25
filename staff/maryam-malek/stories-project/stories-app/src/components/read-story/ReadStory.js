@@ -28,10 +28,10 @@ class ReadStory extends Component {
 
     handleHelpClick = () => {
         swal({
-            title: `TODO`,
+            title: `APRETA EL BOTÓ DE 'COMENÇAR A LLEGIR' PER INICIAR EL CONTE. SI T'AGRADA, TE'L POTS GUARDAR A LA TEVA PÀGINA APRETANT EL COR`,
             width: 400,
             padding: '3em',
-            confirmButtonText: 'ESTIC PREPARAT',
+            confirmButtonText: 'SOM-HI',
             confirmButtonColor: '#0097A7'
         })
     }

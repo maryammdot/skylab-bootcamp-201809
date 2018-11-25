@@ -68,6 +68,16 @@ class ReadPage extends Component {
         }
     }
 
+    handleHelpPageClick = () => {
+        swal({
+            text: `APRETA LES FLETXES DE LA DRETA O L'ESQUERRA PER ANAR ENDAVANT O ENDARRERE EN LES PÀGINES DEL CONTE APRETA EL TRIANGLE PER TORNAR A SENTIR L'AUDIO DE LA PÀGINA O EL BOTÓ DE VOLUM PER DEIXAR-LO DE SENTIR`,
+            width: 400,
+            padding: '3em',
+            confirmButtonText: 'SOM-HI',
+            confirmButtonColor: '#0097A7'
+        })
+    }
+
     handleBackClick = () => {
         this.props.onBackClick(this.props.storyId)
     }

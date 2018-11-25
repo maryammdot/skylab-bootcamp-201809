@@ -9,6 +9,8 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+  background-image: url("../../images/back-lines.png");
+  background-position: bottom;
 }
 
 .container-login {
@@ -67,6 +69,8 @@
   font-weight: 400;
   position: absolute;
   left: 6em;
+  background-color: transparent;
+  border: none;
 }
 
 .login-form a {

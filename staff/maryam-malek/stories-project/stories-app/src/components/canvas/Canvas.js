@@ -31,11 +31,11 @@ class Canvas extends Component {
 
     handleHelpDrawClick = () => {
         swal({
-            title: this.props.cover ? 'ARROSSEGANT EL DIT DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
+            title: this.props.cover ? 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PÀGINA DEL TEU CONTE',
             width: 300,
             padding: '3em',
             // background: '#fff url(/images/trees.png)',
-            confirmButtonText: 'ESTIC PREPARAT',
+            confirmButtonText: 'SOM-HI',
             confirmButtonColor: '#0097A7'
         })
     }
@@ -49,6 +49,12 @@ class Canvas extends Component {
         this.state.isPainting = true
         this.state.prevPos = { offsetX, offsetY }
     }
+
+    // onTouchStart = ({ nativeEvent }) => {
+    //     const { offsetX, offsetY } = nativeEvent
+    //     this.state.isPainting = true
+    //     this.state.prevPos = { offsetX, offsetY }
+    // }
 
     onMouseMove = ({ nativeEvent }) => {
         if (this.state.isPainting) {
@@ -66,6 +72,22 @@ class Canvas extends Component {
         }
     }
 
+    // onTouchMove = ({ nativeEvent }) => {
+    //     if (this.state.isPainting) {
+    //         const { offsetX, offsetY } = nativeEvent
+    //         const offSetData = { offsetX, offsetY }
+    //         // Set the start and stop position of the paint event.
+    //         const positionData = {
+    //             start: { ...this.state.prevPos },
+    //             stop: { ...offSetData },
+    //         }
+    //         // Add the position to the line array
+    //         this.state.line = this.state.line.concat(positionData)
+    //         // this.state.line2 = this.state.line
+    //         this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle)
+    //     }
+    // }
+
     endPaintEvent = () => {
         if (this.state.isPainting) {
             this.state.isPainting = false
@@ -78,6 +100,19 @@ class Canvas extends Component {
             this.props.onChange(dataURL, this.state.line)
         }
     }
+
+    // onTouchEnd = () => {
+    //     if (this.state.isPainting) {
+    //         this.state.isPainting = false
+    //         //   this.sendPaintData()
+    //         // this.paintComplete()
+    //         const dataURL = this.canvas.toDataURL()
+    //         this.setState({ dataURL })
+    //         // this.props.onEnd(dataURL)
+
+    //         this.props.onChange(dataURL, this.state.line)
+    //     }
+    // }
 
     paint(prevPos, currPos, strokeStyle) {
         const { offsetX, offsetY } = currPos
@@ -121,6 +156,9 @@ class Canvas extends Component {
                     onMouseLeave={this.endPaintEvent}
                     onMouseUp={this.endPaintEvent}
                     onMouseMove={this.onMouseMove}
+                    // onTouchStart={this.onTouchStart}
+                    // onTouchEnd={this.onTouchEnd}
+                    // onTouchMove={this.onTouchMove}
                 />
             </div>
         </div>

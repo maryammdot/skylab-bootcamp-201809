@@ -69,6 +69,8 @@
   font-weight: 400;
   position: absolute;
   left: 6em;
+  background-color: transparent;
+  border: none;
 }
 
 .register-form a {
