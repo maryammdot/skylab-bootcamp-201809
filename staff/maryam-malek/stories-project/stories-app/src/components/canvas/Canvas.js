@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
+import './style.css'
 
 class Canvas extends Component {
 
@@ -33,7 +34,7 @@ class Canvas extends Component {
             title: this.props.cover ? 'ARROSSEGANT EL DIT DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
             width: 300,
             padding: '3em',
-            background: '#fff url(/images/trees.png)',
+            // background: '#fff url(/images/trees.png)',
             confirmButtonText: 'ESTIC PREPARAT',
             confirmButtonColor: '#0097A7'
         })
@@ -103,15 +104,13 @@ class Canvas extends Component {
 
     render() {
         return <div>
-            <h4 className="draw-title">PAGE DRAW</h4>
-            <div className="info">
-                <button className="help" onClick={this.handleHelpDrawClick}>?</button>
-                {this.props.cover && <button className="save" onClick={this.handleCloseDrawClick}>FET</button>}
+            {!this.props.cover && <h4 className="draw-title">PAGE DRAW</h4>}
+            <div className="info-canvas">
+                <button onClick={this.handleHelpDrawClick}><i class="fa fa-question"></i></button>
+                {this.props.cover && <button onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
             </div>
             <canvas className='canvas'
                 id="page-draw"
-                width="500"
-                height="300"
                 // We use the ref attribute to get direct access to the canvas element. 
                 ref={(ref) => (this.canvas = ref)}
                 onMouseDown={this.onMouseDown}

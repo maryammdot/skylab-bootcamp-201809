@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import './style.css'
 
 class Login extends Component {
     state = { username: '', password: '' }
@@ -24,11 +25,14 @@ class Login extends Component {
     }
 
     render() {
-        return <form onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Username" onChange={this.handleUsernameChange} />
-            <input type="password" placeholder="Password" onChange={this.handlePasswordChange} />
-            <button type="submit">Inicia Sessió</button> <a href="#" onClick={this.props.onGoBack}>Endarrere</a>
-        </form>
+        return <div className='container-login'>
+            <h3>INICIA SESSIÓ</h3>
+            <form className='login-form' onSubmit={this.handleSubmit}>
+                <input type="text" placeholder="NOM D'USUARI" onChange={this.handleUsernameChange} />
+                <input type="password" placeholder="CONTRASENYA" onChange={this.handlePasswordChange} />
+                <div className='buttons'><button type="submit">INICIA SESSIÓ</button> <a href="#" onClick={this.props.onGoBack}>ENDARRERE</a></div>
+            </form>
+        </div>
     }
 }
 

@@ -40,7 +40,7 @@ class CreatePage extends Component {
                         }
                     })
                     .then(({ dataURL, vectors }) => {
-                        
+
                         this.setState({ dataURL, vectors })
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -71,13 +71,12 @@ class CreatePage extends Component {
 
     //Canvas component
     handleCanvasChange = (dataURL, vectors) => {
-        // logic.savePagePic() 
         logic.savePagePicture(this.state.pageId, this.state.storyId, dataURL, vectors)
             .then(() => {
                 return logic.retrievePagePicture(this.state.pageId, this.state.storyId)
             })
             .then(({ dataURL, vectors }) => {
-                
+
                 this.setState({ dataURL, vectors })
             })
     }
@@ -98,43 +97,25 @@ class CreatePage extends Component {
 
     //Preview component
     handleBackPreviewClick = () => {
-        
+
         this.props.onBackClick(this.state.storyId)
     }
 
 
-
-
-
-    // clearContents = (element) =>{
-    //     element.value = ''
-    // onFocus={() => this.clearContents(this)}
-    // }
-
-    // handleEnd = dataURL => {
-    //     this.setState({dataURL})
-    // onEnd={this.handleEnd}
-    // }
-
-
-
-
     render() {
-        return <div className='body'>
-            <div className='container'>
-                <div className="title">
-                    <h1>{this.state.title}</h1>
-                </div>
+        return <div className='container-create-page'>
+            <h1 className="title-create-page">{this.state.title}</h1>
+            <div className='content'>
                 {this.state.draw && <Canvas storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} />}
-                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText}/>}
+                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} />}
                 {this.state.showAudio && <Audio />}
-                {this.state.preview && <Preview dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackPreviewClick}/>}
-                <div className="navbar">
-                    <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
-                    <button className="text" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
-                    <button className="audio" onClick={this.handleAudioClick}><i className="fa fa-youtube-play"></i></button>
-                    <button className="preview" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
-                </div>
+                {this.state.preview && <Preview dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackPreviewClick} />}
+            </div>
+            <div className="navbar-pages">
+                <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
+                <button className="text" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
+                <button className="audio" onClick={this.handleAudioClick}><i className="fa fa-youtube-play"></i></button>
+                <button className="preview" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

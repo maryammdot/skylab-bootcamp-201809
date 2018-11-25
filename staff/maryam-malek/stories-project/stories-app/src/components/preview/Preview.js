@@ -15,14 +15,16 @@ class Preview extends Component {
         })
     }
 
-    
+
 
     render() {
-        return <div>
-            <h4 className="preview-title">PREVIEW PAGE</h4>
-            <div className="info">
-                <button className="help" onClick={this.handleHelpPreviewClick}>?</button>
-                <button className="save" onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
+        return <div className='container-preview'>
+            <div className='header-preview'>
+                <h4 className="preview-title">AIXÍ QUEDA LA PÀGINA DEL TEU CONTE</h4>
+                <div className="info">
+                    <button className='help-preview-button' onClick={this.handleHelpPreviewClick}><i class="fa fa-question"></i></button>
+                    <button className='back-preview-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
+                </div>
             </div>
             <div className="preview-container">
                 <img src={this.props.dataURL} alt="page 1 image" />

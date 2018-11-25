@@ -20,9 +20,13 @@ class Detail extends Component {
                 <img className='detail-img' src={this.props.img} alt="detail image"></img>
                 <span className='detail-text'>{this.props.text}</span>
             </div></button>
-                { this.props.pages &&<div className='buttons-bar'>
-                    <button className="delete" onClick={this.handleRemoveClick}>X</button>
+                { this.props.pages && <div className='buttons-bar'>
+                    <button className="delete" onClick={this.handleRemoveClick}><i class="fa fa-trash-o"></i></button>
                 </div>}
+                {!this.props.pages && <div className='buttons-bar'>
+                    <button className="edit" onClick={this.handleEditClick}><i class="fa fa-edit"></i></button>
+                </div>}
+
         </div>
     }
 

@@ -4,15 +4,14 @@
   font-family: "Patrick Hand", cursive;
 }
 
-.container {
+.container-preview {
   display: grid;
-  grid-template-rows: 15% 15% auto 15%;
+  grid-template-rows: 15% auto;
   padding: 2%;
   position: relative;
 }
 
-.title {
-  grid-row: 1/2;
+.header-preview {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -20,64 +19,12 @@
   align-items: center;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.help {
-  grid-row: 1/2;
-  font-size: 1.5em;
-  border: 2px solid purple;
-  background-color: yellow;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  margin: 1%;
-}
-
-.save, .not-save {
-  height: 35px;
-  border: 2px solid purple;
-  background-color: yellow;
-  border-radius: 10%;
-  margin: 1%;
-}
-
 .container h4 {
   grid-row: 2/3;
 }
 
-.canvas, .audio-container, .text, .preview-container {
-  grid-row: 3/4;
-}
-
-.canvas {
-  background-color: white;
-  border-radius: 5%/8%;
-}
-
-.textarea {
-  border-radius: 3%/11%;
-}
-
-.audio-container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.audio-container button {
-  font-size: 2em;
-  color: black;
-}
-
-.rec-stop, .play-sec {
+.info {
+  grid-row: 2/3;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -85,11 +32,24 @@
   align-items: center;
 }
 
-.rec :hover {
-  color: blue;
+.help-preview-button {
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
+}
+
+.back-preview-button {
+  font-size: 0.8em;
+  width: 8em;
+  height: 2em;
+  border: solid 1px black;
+  border-radius: 10% 10%;
+  background-color: transparent;
 }
 
 .preview-container {
+  grid-row: 3/4;
   background-color: lavender;
   border-radius: 20% 20% 20% 20%;
   border: 0.5px solid powderblue;
@@ -100,7 +60,7 @@
   height: 300px;
   margin-top: 5%;
   border-radius: 19% 19% 17% 17%;
-  background-color: antiquewhite;
+  background-color: transparent;
 }
 
 .text-area {
@@ -122,30 +82,10 @@
 }
 
 .audio-buttons button {
-  font-size: 2em;
-  color: black;
-}
-
-.navbar {
-  grid-row: 4/5;
-  position: absolute;
-  left: 12%;
-  height: 30px;
-  width: 75%;
-  border-radius: 2%/12%;
-  background-color: grey;
-  margin-top: 3%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.navbar button {
-  padding: 0 3%;
-  font-size: 2em;
-  color: black;
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
 }
 
 /*# sourceMappingURL=style.css.map */

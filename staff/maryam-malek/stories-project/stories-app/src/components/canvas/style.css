@@ -1,6 +1,16 @@
-.canvas {
-  width: 500px;
-  height: 300px;
+.info-canvas {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-canvas button {
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -7,7 +7,7 @@ import Canvas from '../canvas/Canvas'
 import swal from 'sweetalert2'
 
 class CreateStory extends Component {
-    state = { error: null, editCover: false, id: '', cover: '../../images/cover.png', title: 'ESCRIU EL TÍTOL DEL CONTE', audioLanguage: `ESCRIU LA LLENGUA DE L'AUDIO DEL CONTE`, textLanguage: 'ESCRIU LA LLENGUA DEL TEXT DEL CONTE', pages: [], dataURL: '', vectors: [] }
+    state = { error: null, editCover: false, id: '', cover: '../../images/cover.png', title: 'TÍTOL DEL CONTE', audioLanguage: `IDIOMA DE L'AUDIO`, textLanguage: 'IDIOMA DEL TEXT', pages: [], dataURL: '', vectors: [] }
 
     componentDidMount() {
         if (this.props.storyId) {
@@ -183,6 +183,17 @@ class CreateStory extends Component {
 
     //Story methods
 
+    handleHelpClick = () => {
+        swal({
+            title: `APRETA EL CUBELL D'ESCOMBRSRIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL TEU CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI VOLS VEURE NOMÉS TU EL TEU CONTE`,
+            width: 300,
+            padding: '3em',
+            background: '#fff url(/images/trees.png)',
+            confirmButtonText: 'ESTIC PREPARAT',
+            confirmButtonColor: '#0097A7'
+        })
+    }
+
     handleRemoveClick = () => {
         swal({
             title: 'ESTÀS SEGUR?',
@@ -276,30 +287,30 @@ class CreateStory extends Component {
     }
 
     render() {
-        return <div className='body'>
-            <div className='container-story'>
-                <h1>EL TEU CONTE</h1>
+        return <div className='container-story'>
+                <h1>{this.state.title}</h1>
+                <button className="back-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button>
                 {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.dataURL} alt="book cover"></img></a>}
-                {this.state.editCover && <Canvas cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} />}
-                <form className="book-details" onSubmit={this.handleSubmit}>
+                {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
+                {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
                     <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />
                     <input type="text" disabled placeholder={logic._userId} />
                     <input type="text" placeholder={this.state.audioLanguage} onChange={this.handleAudioLanguageChange} />
                     <input type="text" placeholder={this.state.textLanguage} onChange={this.handleTextLanguageChange} />
                     <button type="submit">GUARDA</button>
-                </form>
-                <div>
-                    <button className="back" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button>
-                    <button className="delete" onClick={this.handleRemoveClick}>X</button>
-                    {this.state.inProcess && <button className="finish" onClick={this.handleFinishClick}>COMPARTIR</button>}
-                    {!this.state.inProcess && <button className="finish" onClick={this.handleWorkingClick}>DESCOMPARTIR</button>}
-                </div>
-                <h3>PÀGINES</h3>
-                <ul className="pages-section">
+                </form>}
+                {!this.state.editCover && <div className='buttons-story'>
+                    <button className="help-story" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
+                    <div><button className="delete-story" onClick={this.handleRemoveClick}><i class="fa fa-trash-o"></i></button>
+                    {this.state.inProcess && <button className="finish" onClick={this.handleFinishClick}><i class="fa fa-rocket"></i></button>}
+                    {!this.state.inProcess && <button className="finish" onClick={this.handleWorkingClick}><i class="fa fa-child"></i></button>}
+                    </div>
+                </div>}
+                {!this.state.editCover && <h3>PÀGINES</h3>}
+                {!this.state.editCover && <ul className="pages-section">
                     {this.state.pages.map(page => <Detail pages={true} img={page.dataURL} text={page.index} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
-                    <button className="newPageButton" onClick={this.handleNewPageClick}>AFEGIR PÀGINA</button>
-                </ul>
-            </div>
+                    {this.state.pages.length? <button className="newPageButton" onClick={this.handleNewPageClick}><i class="fa fa-plus-circle"></i></button>: <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
+                </ul>}
             {this.state.error && <Error message={this.state.error} />}
         </div>
     }

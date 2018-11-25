@@ -1,20 +1,28 @@
-body
-    margin: 0
-    background-color: antiquewhite
+*
+    // background-color: antiquewhite
     // background-color: lightblue
     // font-family: 'Overlock SC', cursive
-    font-family: 'Patrick Hand', cursive
+    // font-family: 'Patrick Hand', cursive
     // font-family: 'Caveat', cursive
 
 .container-story
     display: grid
-    grid-template-columns:  35% 65% 
+    grid-template-columns:  35% 35% 30% 
     grid-template-rows: 10% 25% 15% 75%
     padding: 2%
+    width: 500px
+    height: 70%
 
 .container-story h1 
     grid-area: 1 / 1 / 2 / 3
-.container-story h4 
+.back-story
+    width: 8em
+    height: 3em
+    background-color: transparent 
+    border-color: grey
+    font-size: 0.8em
+    border-radius: 15%
+.container-story h3 
     grid-area: 3 / 1 / 4 / 3
 
 .book-cover-container
@@ -25,29 +33,50 @@ body
     max-height: 150px
     padding: 1%
     margin-left: 5%
-    border: 1px solid black
+    border: 0.5px solid black 
     border-radius: 15%
-
+.canvas-cover
+    grid-area: 2 / 2 / 3 / 3
 .book-details
     grid-area: 2 / 2 / 3 / 3
     display: flex
     flex-direction: column
     flex-wrap: wrap
     justify-content: center
+    align-items: center
     max-width: 150px
 
 .book-details input
-    margin: 3%
-
+    width: 95%
+    height: 18px
+    margin: 3% 0
+    border: 1px solid #bdbdbd
+.book-details button
+    width: 50%
+    height: 18px
+    background-color: #bdbdbd
+    border-color: #bdbdbd
+    border-radius: 15% 15%
+.buttons-story
+    grid-area: 2 / 3 / 3 / 4
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+.buttons-story button
+    background-color: transparent 
+    border: none
+    margin: 3% 0
+    font-size: 1.5em
 
 .pages-section
-    grid-area: 4 / 1 / 5 / 3
+    grid-area: 4 / 1 / 5 / 4
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content: center
     align-items: center
-
 .page
     width: 100px
     height: 75px
@@ -66,8 +95,20 @@ body
     border: 1px solid black
     border-radius: 15%
 
+// .newPageButton
+//     width: 60px
+//     height: 40px
+//     border: 1px solid black
+//     border-radius: 15%
+
 .newPageButton
-    width: 60px
-    height: 40px
-    border: 1px solid black
-    border-radius: 15%
+    font-size: 1.5em
+    background-color: transparent 
+    border: none
+.firstPageButton
+    font-size: 1em
+    width: 8em
+    height: 5em
+    border: solid 1px black
+    border-radius: 10% 10%
+    background-color: transparent 
