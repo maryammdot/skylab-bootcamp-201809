@@ -80,6 +80,50 @@ router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (re
     }, res)
 })
 
+router.post('/users/:id/stories/:storyId/favourites', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.addFavourites(id, storyId)
+            .then(() => {
+                res.json({
+                    message: ` story with id ${storyId} successfully added to favourites`
+                })
+            })
+    }, res)
+})
+
+router.delete('/users/:id/stories/:storyId/favourites', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.removeFavourites(id, storyId)
+            .then(() => {
+                res.json({
+                    message: ` story with id ${storyId} successfully removed from favourites`
+                })
+            })
+    }, res)
+})
+
+router.get('/users/:id/favourites', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.listFavourites(id)
+            .then(stories => {
+                res.json({
+                    data: stories
+                })
+            })
+    }, res)
+})
 
 // Routes refered to stories
 
@@ -250,6 +294,37 @@ router.delete('/users/:id/stories/:storyId', [bearerTokenParser, jwtVerifier], (
             })
     }, res)
 })
+
+router.get('/users/:id/stories/find/:query', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, query }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.searchStoriesByTitle(query)
+            .then(stories => {
+                res.json({
+                    data: stories
+                })
+            })
+    }, res)
+})
+
+router.get('/users/:id/stories/findByAuthor/:query', [bearerTokenParser, jwtVerifier], (req, res) => {
+    routeHandler(() => {
+        const { params: { id, query }, sub } = req
+
+        if (id !== sub) throw Error('token sub does not match user id')
+
+        return logic.searchStoriesByAuthor(query)
+            .then(stories => {
+                res.json({
+                    data: stories
+                })
+            })
+    }, res)
+})
+
 
 // Routes refered to pages
 

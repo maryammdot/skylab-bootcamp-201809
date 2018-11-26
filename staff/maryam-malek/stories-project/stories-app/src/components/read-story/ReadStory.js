@@ -5,7 +5,7 @@ import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
 
 class ReadStory extends Component {
-    state = { pages: [], dataURL: './images/cover.png' }
+    state = { pages: [], dataURL: './images/cover.png', favourite: false }
 
     componentDidMount() {
         try {
@@ -44,6 +44,28 @@ class ReadStory extends Component {
         this.props.onReadClick(this.props.storyId, this.state.pages[0].id)
     }
 
+    handleFavouritesClick = () => {
+    
+        try {
+            if (this.state.favourite === false) {
+                
+                logic.addFavourite(this.props.storyId)
+                    .then(() => {
+                        this.setState({ favourite: true, error: null })
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            } else {
+                logic.removeFavourite(this.props.storyId)
+                    .then(() => {
+                        this.setState({ favourite: false, error: null })
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            }
+        } catch (err) {
+            this.setState({ error: err.message })
+        }
+    }
+
 
     render() {
         return <div className='container-read-story'>
@@ -51,7 +73,8 @@ class ReadStory extends Component {
                 <h1>{this.state.title}</h1>
                 <div className='buttons-story-read'>
                     <button className="help-story-read-button" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
-                    <button className="favourites-story-button" onClick={this.handleHelpClick}><i class="fa fa-heart-o"></i></button>
+                    {!this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart-o"></i></button>}
+                    {this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart"></i></button>}
                     <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button>
                 </div>
             </div>

@@ -94,6 +94,58 @@ const logic = {
         sessionStorage.removeItem('token')
     },
 
+    addFavourite(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    removeFavourite(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    listFavourites() {
+
+        return fetch(`${this.url}/users/${this._userId}/favourites`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+                
+                return res.data
+            })
+    },
+
     addStory(title, audioLanguage, textLanguage) {
         validate([
             { key: 'title', value: title, type: String },
@@ -316,6 +368,44 @@ const logic = {
             .then(res => {
                 
                 if (res.error) throw Error(res.error)
+            })
+    },
+
+    searchStory(query) {
+        validate([
+            { key: 'query', value: query, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/find/${query}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+                
+                return res.data
+            })
+    },
+
+    searchStoryByAuthor(query) {
+        validate([
+            { key: 'query', value: query, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/findByAuthor/${query}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+                
+                return res.data
             })
     },
 

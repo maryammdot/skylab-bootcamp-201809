@@ -28,7 +28,7 @@ class Detail extends Component {
                 { this.props.pages && <div className='buttons-bar'>
                     <button className="delete" onClick={this.handleRemoveClick}><i class="fa fa-trash-o"></i></button>
                 </div>}
-                {!this.props.pages && <div className='buttons-bar'>
+                {this.props.edit && <div className='buttons-bar'>
                     <button className="edit" onClick={this.handleEditClick}><i class="fa fa-edit"></i></button>
                 </div>}
 

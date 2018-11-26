@@ -82,6 +82,95 @@ const logic = {
 
     },
 
+    addFavourites(userId, storyId) {
+        validate([
+            { key: 'userId', value: userId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return (async () => {
+
+            let user = await User.findById(userId)
+
+            if (!user) throw new NotFoundError(`user with id ${author} not found`)
+
+            let story = await Story.findById(storyId)
+
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            if(story.inProcess === true) throw Error(`story with id ${storyId} still in process`)
+
+            const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
+
+            if(index >= 0) throw new AlreadyExistsError(`story with id ${storyId} already marked as favourite`)
+
+            user.favourites.push(story.id)
+
+            await user.save()
+        })()
+    },
+
+    removeFavourites(userId, storyId) {
+        validate([
+            { key: 'userId', value: userId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return (async () => {
+
+            let user = await User.findById(userId)
+
+            if (!user) throw new NotFoundError(`user with id ${author} not found`)
+
+            let story = await Story.findById(storyId)
+
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
+
+            if(index < 0) throw new NotFoundError(`story with id ${storyId} not found as favourite`)
+
+            story.pages.splice(index, 1)
+
+            user.favourites.splice(index, 1)
+            debugger
+            await user.save()
+        })()
+    },
+
+    listFavourites(userId) {
+        validate([
+            { key: 'userId', value: userId, type: String }
+        ])
+
+        return (async () => {
+
+            let user = await User.findById(userId).populate('favourites').lean().exec()
+
+            if (!user) throw new NotFoundError(`user with id ${userId} not found`)
+
+            let favourites = []
+
+            user.favourites.forEach(async story => {
+                debugger
+                story.id = story._id.toString()
+                delete story._id
+                delete story.__v
+                // delete story.pages
+                delete story.vectors
+                delete story.cover
+                delete story.inProcess
+                story.author = story.author.toString()
+
+                return favourites.push(story)
+            })
+            
+            return favourites
+        })()
+
+    },
+
+
     addStory(title, author, audioLanguage, textLanguage) {
         validate([
             { key: 'title', value: title, type: String },
@@ -108,7 +197,7 @@ const logic = {
             story.cover = `http://localhost:${PORT}/api/users/${author}/stories/${story.id}/cover`
 
             await story.save()
-            
+
             return story.id
         })()
     },
@@ -201,7 +290,7 @@ const logic = {
 
             await story.save()
 
-        })()        
+        })()
     },
 
     retrieveStoryCover(storyId) {
@@ -224,7 +313,7 @@ const logic = {
             delete story.cover
             delete story.inProcess
             delete story.pages
-            
+
             return story
         })()
     },
@@ -252,7 +341,7 @@ const logic = {
     //                     if (!fs.existsSync(folder)) {
     //                         fs.mkdirSync(folder)
     //                         fs.mkdirSync(`${folder}/cover`)
-                            
+
 
     //                     } else {
     //                         // const files = fs.readdirSync(`${folder}/cover`)
@@ -273,12 +362,12 @@ const logic = {
     //                     return story.save()
     //                 })
     //                 .then(() => {
-                        
+
     //                     resolve()
     //                 })
 
     //         } catch (err) {
-                
+
     //             reject(err)
     //         }
     //     })
@@ -407,6 +496,70 @@ const logic = {
 
             await story.remove()
 
+        })()
+    },
+
+    searchStoriesByTitle(query) {
+        validate([
+            { key: 'query', value: query, type: String }
+        ])
+        return (async () => {
+
+            let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "")
+            
+            const regQuery= {
+                title: {$regex : newQuery},
+                inProcess: false
+            }
+
+            let stories = await Story.find(regQuery).lean()
+            
+            if (!stories.length) throw new NotFoundError(`stories with query ${query} not found`)
+
+            stories.forEach(story => {
+                story.id = story._id.toString()
+                delete story._id
+                delete story.__v
+                delete story.pages
+                story.author = story.author.toString()
+
+                return story
+            })
+
+            return stories
+
+        })()
+    },
+
+    searchStoriesByAuthor(query) {
+        validate([
+            { key: 'query', value: query, type: String }
+        ])
+        return (async () => {
+
+            let users = User.find({ username: { "$regex": query, "$options": "i" } }).lean()
+
+            if (!users.length) throw new NotFoundError(`stories with query ${query} not found`)
+
+            let matchingStories = []
+
+            users.forEach(async user => {
+
+                let stories = await Story.find({ $and: [{ author: user.id }, { inProcess: false }] }).lean()
+                if (stories.length) {
+                    stories.forEach(story => {
+                        delete story._id
+                        delete story.__v
+                        delete story.pages
+                        story.author = story.author.toString()
+
+                        return story
+                    })
+                }
+                return matchingStories.concat(stories)
+            })
+
+            return matchingStories
         })()
     },
 
@@ -539,7 +692,7 @@ const logic = {
             _page.hasImage = true
 
             await story.save()
-        })()        
+        })()
     },
 
     retrievePagePicture(pageId, storyId) {
@@ -564,7 +717,7 @@ const logic = {
             delete page.audio
             delete page.image
             delete page.text
-            
+
             return page
         })()
     },

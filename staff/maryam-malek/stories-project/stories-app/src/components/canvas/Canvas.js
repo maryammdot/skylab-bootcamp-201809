@@ -5,7 +5,7 @@ import './style.css'
 
 class Canvas extends Component {
 
-    state = { isPainting: false, userStrokeStyle: '#EE92C2', line: [], prevPos: { offsetX: 0, offsetY: 0 } }
+    state = { isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last:false, prevPos: { offsetX: 0, offsetY: 0 } }
 
     componentDidMount() {
         // Here we set up the properties of the canvas element. 
@@ -24,9 +24,21 @@ class Canvas extends Component {
         this.ctx.lineWidth = 4
         if (this.props.vectors.length !== 0) {
 
-            this.setState({ line: this.props.vectors })
+            this.setState({ line: this.props.vectors, storage: this.props.vectors })
             this.paintComplete(this.props.vectors)
         }
+    }
+
+    handleColor1 = () => {
+        this.setState({ userStrokeStyle: '#0097A7' })
+    }
+
+    handleColor2 = () => {
+        this.setState({ userStrokeStyle: '#CDDC39' })
+    }
+
+    handleColor3 = () => {
+        this.setState({ userStrokeStyle: '#EE92C2' })
     }
 
     handleHelpDrawClick = () => {
@@ -44,7 +56,47 @@ class Canvas extends Component {
         this.props.onCloseDrawClick()
     }
 
+    handleUndoClick = () => {
+
+        // const line = this.state.line
+        // const lastLength = this.state.length
+
+        // const paint = line.slice(0, lastLength)
+
+        // this.setState({ line: paint })
+        // DOING THAT THIS WAY WE CAN NOT MAINTAIN DIFFERENT COLORS!
+
+        const last = this.state.storage.pop()
+        this.setState({last})
+        this.clear()
+
+        this.paintComplete(this.state.storage)
+
+        const dataURL = this.canvas.toDataURL()
+        this.setState({ dataURL })
+        
+        this.props.onChange(dataURL, this.state.storage)
+    }
+
+    handleRedoClick = () => {
+
+        this.state.last.forEach(el => {
+
+            this.paint(el.start, el.stop, el.strokeStyle, el.width)
+        })
+        
+        let stg = this.state.storage.push(this.state.last)
+        
+        const dataURL = this.canvas.toDataURL()
+        
+        this.setState({last: false, storage: stg})
+        
+        this.props.onChange(dataURL, this.state.storage, dataURL)
+    }
+
     onMouseDown = ({ nativeEvent }) => {
+        const length = this.state.line.length
+        this.setState({ length })
         const { offsetX, offsetY } = nativeEvent
         this.state.isPainting = true
         this.state.prevPos = { offsetX, offsetY }
@@ -56,6 +108,10 @@ class Canvas extends Component {
     //     this.state.prevPos = { offsetX, offsetY }
     // }
 
+    clear() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    }
+
     onMouseMove = ({ nativeEvent }) => {
         if (this.state.isPainting) {
             const { offsetX, offsetY } = nativeEvent
@@ -64,12 +120,31 @@ class Canvas extends Component {
             const positionData = {
                 start: { ...this.state.prevPos },
                 stop: { ...offSetData },
+                strokeStyle: this.state.userStrokeStyle,
+                width: this.state.width
             }
             // Add the position to the line array
             this.state.line = this.state.line.concat(positionData)
             // this.state.line2 = this.state.line
-            this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle)
+            this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle, this.state.width)
         }
+    }
+
+    onMouseUp = ({ nativeEvent }) => {
+        if (this.state.isPainting) {
+            this.state.isPainting = false
+            this.sendPaintData()
+        }
+    }
+
+    sendPaintData = () => {
+        let stg = this.state.storage
+
+        stg.push(this.state.line)
+
+        this.setState({ storage: stg, line: [] })
+
+
     }
 
     // onTouchMove = ({ nativeEvent }) => {
@@ -93,11 +168,13 @@ class Canvas extends Component {
             this.state.isPainting = false
             //   this.sendPaintData()
             // this.paintComplete()
+            // const length = this.state.line.length
             const dataURL = this.canvas.toDataURL()
             this.setState({ dataURL })
             // this.props.onEnd(dataURL)
+            this.sendPaintData()
 
-            this.props.onChange(dataURL, this.state.line)
+            this.props.onChange(dataURL, this.state.storage)
         }
     }
 
@@ -114,12 +191,13 @@ class Canvas extends Component {
     //     }
     // }
 
-    paint(prevPos, currPos, strokeStyle) {
+    paint(prevPos, currPos, strokeStyle, width) {
         const { offsetX, offsetY } = currPos
         const { offsetX: x, offsetY: y } = prevPos
 
         this.ctx.beginPath()
         this.ctx.strokeStyle = strokeStyle
+        this.ctx.lineWidth = width
         // Move the the prevPosition of the mouse
         this.ctx.moveTo(x, y)
         // Draw a line to the current position of the mouse
@@ -130,10 +208,13 @@ class Canvas extends Component {
     }
 
     paintComplete = (vectors) => {
+        
+        vectors.forEach(arr => {
 
-        vectors.forEach(el => {
+            arr.forEach(el => {
 
-            this.paint(el.start, el.stop, this.state.userStrokeStyle)
+                this.paint(el.start, el.stop, el.strokeStyle, el.width)
+            })
         })
     }
 
@@ -146,6 +227,13 @@ class Canvas extends Component {
                     {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
                     {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>}
                 </div>
+                <div className="utils-canvas">
+                    <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
+                    {this.state.last && <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>}
+                    <button className='color1-canvas-button' onClick={this.handleColor1}><i class="fa fa-circle"></i></button>
+                    <button className='color2-canvas-button' onClick={this.handleColor2}><i class="fa fa-circle"></i></button>
+                    <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button>
+                </div>
             </div>
             <div className='canvas-area'>
                 <canvas className='canvas'
@@ -156,9 +244,9 @@ class Canvas extends Component {
                     onMouseLeave={this.endPaintEvent}
                     onMouseUp={this.endPaintEvent}
                     onMouseMove={this.onMouseMove}
-                    // onTouchStart={this.onTouchStart}
-                    // onTouchEnd={this.onTouchEnd}
-                    // onTouchMove={this.onTouchMove}
+                // onTouchStart={this.onTouchStart}
+                // onTouchEnd={this.onTouchEnd}
+                // onTouchMove={this.onTouchMove}
                 />
             </div>
         </div>

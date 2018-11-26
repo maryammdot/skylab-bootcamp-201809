@@ -48,4 +48,31 @@
   border-radius: 20%;
 }
 
+.color1-canvas-button {
+  color: #0097A7;
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
+  outline: 0;
+}
+
+.color2-canvas-button {
+  color: #CDDC39;
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
+  outline: 0;
+}
+
+.color3-canvas-button {
+  color: #EE92C2;
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1.5em;
+  outline: 0;
+}
+
 /*# sourceMappingURL=style.css.map */

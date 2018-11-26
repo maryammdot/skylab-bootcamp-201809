@@ -40,7 +40,7 @@ class CreatePage extends Component {
                         }
                     })
                     .then(({ dataURL, vectors }) => {
-
+debugger
                         this.setState({ dataURL, vectors })
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -71,12 +71,12 @@ class CreatePage extends Component {
 
     //Canvas component
     handleCanvasChange = (dataURL, vectors) => {
+
         logic.savePagePicture(this.state.pageId, this.state.storyId, dataURL, vectors)
             .then(() => {
                 return logic.retrievePagePicture(this.state.pageId, this.state.storyId)
             })
             .then(({ dataURL, vectors }) => {
-
                 this.setState({ dataURL, vectors })
             })
     }

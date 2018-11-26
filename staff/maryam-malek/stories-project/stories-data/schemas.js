@@ -17,7 +17,11 @@ const User = new Schema({
     password: {
         type: String,
         required: true
-    }
+    }, 
+    favourites: [{
+        type: ObjectId,
+        ref: 'Story'
+    }]
 })
 
 const Page = new Schema({
