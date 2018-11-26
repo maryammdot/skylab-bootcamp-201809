@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import './style.css'
+import './style.css'
 import logic from '../../logic'
 import Error from '../error/Error'
 import Detail from '../detail/Detail'

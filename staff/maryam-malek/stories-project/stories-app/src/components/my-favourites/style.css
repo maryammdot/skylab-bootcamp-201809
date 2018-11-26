@@ -1,4 +1,4 @@
-.container-my-stories {
+.container-my-favourites {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -8,7 +8,7 @@
   height: 70%;
 }
 
-.my-stories-list {
+.my-favourites-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

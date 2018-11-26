@@ -23,11 +23,15 @@ class MyFavourites extends Component {
         this.props.onReadClick(id)
     }
 
+    handleFirstSearchClick = () => {
+        this.props.onFirstSearchClick()
+    }
+
     render() {
         return <div>
-            <div className='container-my-stories'>
+            <div className='container-my-favourites'>
                 <h1>ELS MEUS CONTES PREFERITS</h1>
-                <ul className='my-stories-list'>
+                <ul className='my-favourites-list'>
                     {this.state.stories.map(story => <div className='detail-my-stories'><Detail id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} edit={false} /></div>)}
                     {!this.state.stories.length && <button className="first-search-button" onClick={this.handleFirstSearchClick}>BUSCAR CONTES</button>}
                 </ul>

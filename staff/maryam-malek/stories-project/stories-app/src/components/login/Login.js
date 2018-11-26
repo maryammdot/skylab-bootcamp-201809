@@ -25,13 +25,15 @@ class Login extends Component {
     }
 
     render() {
-        return <div className='container-login'>
+        return <div className='container-log-reg'>
+        <div className='container-login'>
             <h3>INICIA SESSIÓ</h3>
             <form className='login-form' onSubmit={this.handleSubmit}>
                 <input type="text" placeholder="NOM D'USUARI" onChange={this.handleUsernameChange} />
                 <input type="password" placeholder="CONTRASENYA" onChange={this.handlePasswordChange} />
                 <div className='buttons'><button type="submit">INICIA SESSIÓ</button> <a href="#" onClick={this.props.onGoBack}>ENDARRERE</a></div>
             </form>
+        </div>
         </div>
     }
 }

@@ -19,6 +19,14 @@ class ReadStory extends Component {
 
                             })
                     }
+                    return logic.listFavourites()
+                })
+                .then(stories => {
+                    stories.forEach(story => {
+                        if (story.id === this.state.storyId) {
+                            this.setState({ favourite: true })
+                        }
+                    })
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {
@@ -45,10 +53,10 @@ class ReadStory extends Component {
     }
 
     handleFavouritesClick = () => {
-    
+
         try {
             if (this.state.favourite === false) {
-                
+
                 logic.addFavourite(this.props.storyId)
                     .then(() => {
                         this.setState({ favourite: true, error: null })
@@ -96,7 +104,8 @@ class ReadStory extends Component {
                     <p>{this.state.pages.length}</p>
                 </div>
             </div>
-            <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>
+            {this.state.pages.length && <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>}
+            {!this.state.pages.length && <h3 className="begin-story-read-h3">AQUEST CONTE NO TÉ CAP PÀGINA</h3>}
             {this.state.error && <Error message={this.state.error} />}
         </div >
     }
