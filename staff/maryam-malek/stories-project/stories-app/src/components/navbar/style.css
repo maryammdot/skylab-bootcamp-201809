@@ -4,18 +4,22 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 90%;
   height: 40px;
   border-bottom: solid 1px black;
+  position: absolute;
+  top: 0;
+  left: 5%;
 }
 
-.favourit-stories-button, .logout-button, .my-stories-button, .register-button, .login-button {
+.favourit-stories-button, .logout-button, .my-stories-button, .register-button, .login-button, .search-stories-button {
   font-size: 0.9em;
   width: 9em;
   height: 2em;
   border: solid 1px black;
   border-radius: 10% 10%;
   background-color: transparent;
+  outline: 0;
 }
 
 /*# sourceMappingURL=style.css.map */

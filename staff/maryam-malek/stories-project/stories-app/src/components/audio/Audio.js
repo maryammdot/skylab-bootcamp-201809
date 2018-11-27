@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './style.css'
 import swal from 'sweetalert2'
+import logic from '../../logic'
 
 class Audio extends Component {
 
@@ -24,23 +25,77 @@ class Audio extends Component {
     }
 
 
+    recordAudio = () => {
+        return new Promise(resolve => {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    const mediaRecorder = new MediaRecorder(stream)
+                    const audioChunks = []
+
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data)
+                    })
+
+                    const start = () => {
+                        mediaRecorder.start()
+                    }
+
+                    const stop = () => {
+                        return new Promise(resolve => {
+                            mediaRecorder.addEventListener("stop", () => {
+                                const audioBlob = new Blob(audioChunks)
+                                const audioUrl = URL.createObjectURL(audioBlob)
+                                const audio = new Audio(audioUrl)
+                                const play = () => {
+                                    audio.play()
+                                }
+
+                                resolve({ audioBlob, audioUrl, play })
+                            })
+                            mediaRecorder.stop()
+                        })
+                    }
+                    resolve({ start, stop })
+                })
+        })
+    }
+
+    start = async () => {
+        const recorder = await this.recordAudio()
+
+        recorder.start()
+
+        this.setState({ recorder })
+    }
+
+    stop = async () => {
+
+        const audio = await this.state.recorder.stop()
+        const { audioUrl, audioBlob } = audio
+
+        this.setState({ audioUrl })
+
+        this.props.onSaveAudio(audioBlob)
+
+    }
+
+
     render() {
         return <div className='container-audio'>
             <div className='header-audio'>
-            <h4 className="audio-title">AUDIO DE LA PÀGINA</h4>
-            <div className="info-audio">
-                <button className="help-audio-button" onClick={this.handleHelpAudioClick}>?</button>
-                <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
-            </div>
+                <h4 className="audio-title">AUDIO DE LA PÀGINA</h4>
+                <div className="info-audio">
+                    <button className="help-audio-button" onClick={this.handleHelpAudioClick}><i class="fa fa-question"></i></button>
+                    <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
+                </div>
             </div>
             <div className="audio-displays">
                 <div className="rec-stop">
-                    <button className="rec"><i className="fa fa-dot-circle-o"></i></button>
-                    <button><i className="fa fa-stop"></i></button>
+                    <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
+                    <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
                 </div>
                 <div className="play-sec">
-                    <button><i className="fa fa-play-circle"></i></button>
-                    <span> 10 SECONDS</span>
+                    <audio ref="audioSource" controls="controls" src={this.state.audioUrl}></audio>
                 </div>
             </div>
         </div>

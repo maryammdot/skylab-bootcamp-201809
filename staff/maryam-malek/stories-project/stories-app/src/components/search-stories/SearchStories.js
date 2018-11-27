@@ -21,7 +21,7 @@ class SearchStories extends Component {
 
             logic.searchStory(query)
                 .then((stories) => {
-                    debugger
+                    
                     this.setState({ stories, error: null })
                 })
                 .catch(err => this.setState({ error: err.message }))
@@ -39,7 +39,7 @@ class SearchStories extends Component {
                 <h1>CERCA CONTES</h1>
                 <form className='search-form' onSubmit={this.handleSubmit}>
                     <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} />
-                    <button type="submit"><i class="fa fa-search"></i></button>
+                    <button type="submit"><i className="fa fa-search"></i></button>
                 </form>
                 <ul className='search-stories-list'>
                     {this.state.stories.map(story => <div className='detail-search-stories'><Detail edit={false} id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} /></div>)}

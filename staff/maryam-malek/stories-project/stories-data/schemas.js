@@ -25,10 +25,6 @@ const User = new Schema({
 })
 
 const Page = new Schema({
-    index: {
-        type: Number,
-        required: true
-    },
     hasImage: {
         type: Boolean,
         required: true,
@@ -46,9 +42,12 @@ const Page = new Schema({
         required: true,
         default: false
     },
-    audio: {
+    audioURL: {
         type: String,
     },
+    // audioBlob: {
+    //     type: Blob
+    // },
     text: {
         type: String
     }

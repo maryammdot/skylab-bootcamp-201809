@@ -256,7 +256,7 @@ class CreateStory extends Component {
     render() {
         return <div className='container-story'>
             <h1>{this.state.title}</h1>
-            <button className="back-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button>
+            {/* <button className="back-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.dataURL} alt="book cover"></img></a>}
             {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
             {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
@@ -275,7 +275,7 @@ class CreateStory extends Component {
             </div>}
             {!this.state.editCover && <h3>PÀGINES</h3>}
             {!this.state.editCover && <ul className="pages-section">
-                {this.state.pages.map(page => <Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={page.index} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
+                {this.state.pages.map((page, i) => <Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i+1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
                 {this.state.pages.length ? <button className="newPageButton" onClick={this.handleNewPageClick}><i class="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
             </ul>}
             {this.state.error && <Error message={this.state.error} />}

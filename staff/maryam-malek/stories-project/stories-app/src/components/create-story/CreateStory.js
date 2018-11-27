@@ -65,7 +65,7 @@ class CreateStory extends Component {
             <div className='create-story-header'>
                 <h1>CREA UN NOU CONTE</h1>
                 <button className="help-create-story" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
-                <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button>
+                {/* <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             </div>
             <form className="book-details-create" onSubmit={this.handleSubmit}>
                 <h3>TÍTOL DEL CONTE</h3>

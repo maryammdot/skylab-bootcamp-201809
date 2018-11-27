@@ -48,7 +48,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
 
                 this._userId = res.data.id
@@ -70,7 +70,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
 
                 return res.data
@@ -107,7 +107,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
@@ -125,7 +125,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
@@ -141,7 +141,7 @@ const logic = {
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
-                
+
                 return res.data
             })
     },
@@ -163,9 +163,9 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
-                
+
                 return res.data
             })
     },
@@ -181,7 +181,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
 
                 return res.data
@@ -202,7 +202,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
 
                 return res.data
@@ -227,7 +227,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
@@ -245,7 +245,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
@@ -263,13 +263,13 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
 
     saveStoryCover(storyId, dataURL, vectors) {
-        
+
         validate([
             { key: 'storyId', value: storyId, type: String },
             // { key: 'dataURL', value: dataURL, type: String},
@@ -278,34 +278,34 @@ const logic = {
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
             method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({ dataURL, vectors })
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.error) throw Error(res.error)
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+            },
+            body: JSON.stringify({ dataURL, vectors })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
 
-                })
+            })
     },
 
     retrieveStoryCover(storyId) {
-        
+
         validate([
             { key: 'storyId', value: storyId, type: String }
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
             method: 'GET',
-            })
-                .then(res => res.json())
-                .then(res => {
-                    
-                    if (res.error) throw Error(res.error)
+        })
+            .then(res => res.json())
+            .then(res => {
 
-                    return res.data
-                })
+                if (res.error) throw Error(res.error)
+
+                return res.data
+            })
     },
 
     // saveStoryCover(storyId, cover) {
@@ -366,7 +366,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
             })
     },
@@ -385,7 +385,7 @@ const logic = {
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
-                
+
                 return res.data
             })
     },
@@ -404,37 +404,36 @@ const logic = {
             .then(res => res.json())
             .then(res => {
                 if (res.error) throw Error(res.error)
-                
+
                 return res.data
             })
     },
 
-    addPage(storyId, index, text) {
-        
+    addPage(storyId, text) {
+
         validate([
             { key: 'storyId', value: storyId, type: String },
-            { key: 'index', value: index, type: Number },
             { key: 'text', value: text, type: String, optional: true }
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages`, {
             method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': `Bearer ${this._token}`
-                },
-                body: JSON.stringify({ index, text })
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.error) throw Error(res.error)
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ text })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
 
-                    return res.data
-                })
+                return res.data
+            })
     },
 
     savePagePicture(pageId, storyId, dataURL, vectors) {
-        
+
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
@@ -444,16 +443,16 @@ const logic = {
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
             method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({ dataURL, vectors })
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.error) throw Error(res.error)
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+            },
+            body: JSON.stringify({ dataURL, vectors })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
 
-                })
+            })
     },
 
     retrievePagePicture(pageId, storyId) {
@@ -464,37 +463,80 @@ const logic = {
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
             method: 'GET',
+        })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.error) throw Error(res.error)
+                return res.data
             })
-                .then(res => res.json())
-                .then(res => {
-                    
-                    if (res.error) throw Error(res.error)
-                    return res.data
-                })
     },
 
-    updatePage(pageId, storyId, index, text) {
-        
+    savePageAudio(pageId, storyId, audioBlob) {
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
-            { key: 'index', value: index, type: Number },
+            // { key: 'adioBlob', value: adioBlob, type: String}
+        ])
+
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/audio`, {
+            method: 'POST',
+            headers: {
+                // 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
+            },
+            body: formData
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+//     retrievePageAudio(pageId, storyId) {
+//         validate([
+//             { key: 'pageId', value: pageId, type: String },
+//             { key: 'storyId', value: storyId, type: String }
+//         ])
+// debugger
+//         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/audio`, {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
+//             }
+//         })
+//             .then(res => res.json())
+//             .then(res => {
+// debugger
+//                 if (res.error) throw Error(res.error)
+//                 return res.data
+//             })
+//     },
+
+
+    updatePage(pageId, storyId, text) {
+
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String },
             { key: 'text', value: text, type: String }
         ])
-        
+
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}`, {
             method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': `Bearer ${this._token}`
-                },
-                body: JSON.stringify({ index, text })
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${this._token}`
+            },
+            body: JSON.stringify({ text })
+        })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.error) throw Error(res.error)
             })
-                .then(res => res.json())
-                .then(res => {
-                
-                    if (res.error) throw Error(res.error)
-                })
     },
 
     retrievePage(pageId, storyId) {
@@ -512,7 +554,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
-                
+
                 if (res.error) throw Error(res.error)
 
                 return res.data
@@ -525,18 +567,18 @@ const logic = {
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String }
         ])
-        
+
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}`, {
             method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${this._token}`
-                }
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.error) throw Error(res.error)
             })
-                .then(res => res.json())
-                .then(res => {
-                    
-                    if (res.error) throw Error(res.error)
-                })
     }
 }
 

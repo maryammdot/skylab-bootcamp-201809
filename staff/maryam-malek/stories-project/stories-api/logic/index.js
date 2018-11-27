@@ -133,7 +133,7 @@ const logic = {
             story.pages.splice(index, 1)
 
             user.favourites.splice(index, 1)
-            debugger
+            
             await user.save()
         })()
     },
@@ -152,7 +152,7 @@ const logic = {
             let favourites = []
 
             user.favourites.forEach(async story => {
-                debugger
+                
                 story.id = story._id.toString()
                 delete story._id
                 delete story.__v
@@ -505,7 +505,7 @@ const logic = {
         ])
         return (async () => {
 
-            let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "")
+            let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\i]/g, "")
             
             const regQuery= {
                 title: {$regex : newQuery},
@@ -563,10 +563,9 @@ const logic = {
         })()
     },
 
-    addPage(storyId, index, text) {
+    addPage(storyId, text) {
         validate([
             { key: 'storyId', value: storyId, type: String },
-            { key: 'index', value: index, type: Number },
             { key: 'text', value: text, type: String, optional: true }
         ])
 
@@ -576,16 +575,11 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            if (story.pages) {
-                story.pages.forEach(page => {
-                    if (page.index === index) throw new AlreadyExistsError(`page ${index} already exists`)
-                })
-            }
-            page = new Page({ index, text })
+            page = new Page({ text })
 
             page.image = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
 
-            page.audio = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
+            page.audioURL = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
 
             await page.save()
 
@@ -597,11 +591,10 @@ const logic = {
         })()
     },
 
-    updatePage(pageId, storyId, index, text) {
+    updatePage(pageId, storyId, text) {
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
-            { key: 'index', value: index, type: Number },
             { key: 'text', value: text, type: String }
         ])
 
@@ -614,8 +607,6 @@ const logic = {
             let page = await Page.findById(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-            if (page.index !== index) throw Error(`page with id ${pageId} not found`)
 
             //THINK ABOUT KIND OF ERROR I WANT TO THROW!!
 
@@ -651,7 +642,7 @@ const logic = {
             delete page._id
             delete page.__v
             // delete page.hasImage
-            delete page.hasAudio
+            // delete page.hasAudio
 
             return page
         })()
@@ -845,27 +836,168 @@ const logic = {
 
     //MAYBE I WILL NEED RETRIEVE PAGE, INSTEAD OF LIST BOOKS, OR RETRIEVE BOOK ALSO!!!!
 
-    addPageAudio(storyId, pageId, audio) {
+//     addPageAudio(storyId, pageId, audioUrl, audioBlob) {
+//         validate([
+//             { key: 'pageId', value: pageId, type: String },
+//             { key: 'storyId', value: storyId, type: String },
+//             { key: 'audioUrl', value: audioUrl, type: String },
+//             // { key: 'audioBlob', value: audioBlob, type: String }
+//         ])
+
+//         return (async () => {
+
+//             let story = await Story.findById(storyId)
+
+//             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+//             let page = await Page.findById(pageId)
+
+//             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+// debugger
+//             page.audioURL = audioUrl
+
+//             page.audioBlob = audioBlob
+
+//             page.hasAudio = true
+
+//             await page.save()
+
+//             const _page = story.pages.find(page => page.id === pageId)
+
+//             _page.audioURL = audioURL
+
+//             _page.audioBlob = audioBlob
+
+//             _page.hasAudio = true
+
+//             await story.save()
+//         })()
+//     },
+
+//     retrievePageAudio(pageId, storyId) {
+//         validate([
+//             { key: 'pageId', value: pageId, type: String },
+//             { key: 'storyId', value: storyId, type: String }
+//         ])
+
+//         return (async () => {
+
+//             let story = await Story.findById(storyId)
+
+//             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+//             let page = await Page.findById(pageId).lean()
+
+//             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+//             page.id = page._id.toString()
+//             delete page._id
+//             delete page.__v
+//             delete page.hasImage
+//             delete page.dataURL
+//             delete page.vectors
+//             delete page.image
+//             delete page.text
+// debugger
+//             return page
+//         })()
+//     }
+
+savePageAudio(userId, pageId, storyId, audioFile) {
+    
         validate([
-            { key: 'storyId', value: storyId, type: String },
+            { key: 'userId', value: userId, type: String },
             { key: 'pageId', value: pageId, type: String },
-            { key: 'audio', value: audio, type: String } //TYPE???
+            { key: 'storyId', value: storyId, type: String }
+            // { key: 'audioFile', value: audioFile, type: String }
         ])
 
-        return (async () => {
+        const folder = `data/stories/${storyId}`
 
-            let story = await Story.findById(storyId)
+        const pathToFile = path.join(`${folder}/pages/${pageId}`, 'audio.ogg')
 
-            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+        return new Promise((resolve, reject) => {
+            try {
+                Story.findById(storyId)
+                    .then(story => {
+                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId)
+                        return Page.findById(pageId)
+                    })
+                    .then(page => {
+                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-            if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+                        if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
+                            if (!fs.existsSync(`${folder}`)) {
 
-            //FS!!!!!!!
+                                fs.mkdirSync(folder)
+                            }
+                            if (!fs.existsSync(`${folder}/pages`)) {
 
-        })()
-    }
+                                fs.mkdirSync(`${folder}/pages`)
+                            }
+                            fs.mkdirSync(`${folder}/pages/${pageId}`)
+
+                        } else {
+                            // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
+
+                            // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
+                            fs.unlinkSync(pathToFile)
+                        }
+
+                        const ws = fs.createWriteStream(pathToFile)
+
+                        audioFile.pipe(ws)
+
+                        page.hasAudio = true
+
+                        return page.save()
+                    })
+                    .then(()=> {
+                        resolve()
+                    })
+
+            } catch (err) {
+                reject(err)
+            }
+        })
+    },
+
+    retrievePageAudio(pageId, storyId) {
+        validate([
+            { key: 'pageId', value: pageId, type: String },
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return new Promise((resolve, reject) => {
+            try {
+                Story.findById(storyId)
+                    .then(story => {
+                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+                        return Page.findById(pageId)
+                    })
+                    .then(page => {
+                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+
+                        let file
+
+                        if (page.hasAudio) {
+
+                            file = `data/stories/${storyId}/pages/${pageId}/audio.ogg`
+                        } else {
+                            file = null
+                        }
+
+                        const rs = fs.createReadStream(file)
+
+                        resolve(rs)
+                    })
+            } catch (err) {
+                reject(err)
+            }
+        })
+    },
 
 }
 

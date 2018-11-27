@@ -5,18 +5,18 @@ import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
 
 class ReadPage extends Component {
-    state = {pages:[], next: false, last: false}
+    state = { pages: [], next: false, last: false }
 
     componentDidMount() {
         try {
-            
+
             logic.retrieveStory(this.props.storyId)
                 .then(({ id, title, pages }) => {
-                    this.setState({ error: null, index:Number(this.props.index), storyId: id, title, pages })
+                    this.setState({ error: null, index: Number(this.props.index), storyId: id, title, pages })
                     return logic.retrievePage(this.props.pageId, id)
                 })
-                .then(({ text, hasImage, hasAudio }) => {
-                    this.setState({ error: null, text, hasImage, hasAudio })
+                .then(({ text, hasImage, hasAudio, audioURL }) => {
+                    this.setState({ error: null, text, hasImage, hasAudio, audioURL })
                     if (hasImage) {
                         return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
                     }
@@ -24,12 +24,13 @@ class ReadPage extends Component {
                 .then(({ dataURL }) => {
                     this.setState({ error: null, dataURL })
 
-                    if(this.state.pages.length > this.state.index +1) {
+                    if (this.state.pages.length > this.state.index + 1) {
                         this.setState({ error: null, next: true })
                     }
-                    if(this.state.index > 0) {
+                    if (this.state.index > 0) {
                         this.setState({ error: null, last: true })
                     }
+                    this.audioPlayer.play()
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {
@@ -38,34 +39,34 @@ class ReadPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.props !== nextProps)
-        try {
+        if (this.props !== nextProps)
+            try {
 
-            logic.retrieveStory(nextProps.storyId)
-                .then(({ id, title, pages }) => {
-                    this.setState({ error: null, index:Number(nextProps.index), storyId: id, title, pages })
-                    return logic.retrievePage(nextProps.pageId, id)
-                })
-                .then(({ text, hasImage, hasAudio }) => {
-                    this.setState({ error: null, text, hasImage, hasAudio })
-                    if (hasImage) {
-                        return logic.retrievePagePicture(nextProps.pageId, nextProps.storyId)
-                    }
-                })
-                .then(({ dataURL }) => {
-                    this.setState({ error: null, dataURL })
+                logic.retrieveStory(nextProps.storyId)
+                    .then(({ id, title, pages }) => {
+                        this.setState({ error: null, index: Number(nextProps.index), storyId: id, title, pages })
+                        return logic.retrievePage(nextProps.pageId, id)
+                    })
+                    .then(({ text, hasImage, hasAudio, audioURL }) => {
+                        this.setState({ error: null, text, hasImage, hasAudio, audioURL })
+                        if (hasImage) {
+                            return logic.retrievePagePicture(nextProps.pageId, nextProps.storyId)
+                        }
+                    })
+                    .then(({ dataURL }) => {
+                        this.setState({ error: null, dataURL })
 
-                    if(this.state.pages.length > this.state.index +1) {
-                        this.setState({ error: null, next: true })
-                    }
-                    if(this.state.index > 0) {
-                        this.setState({ error: null, last: true })
-                    }
-                })
-                .catch(err => this.setState({ error: err.message }))
-        } catch (err) {
-            this.setState({ error: err.message })
-        }
+                        if (this.state.pages.length > this.state.index + 1) {
+                            this.setState({ error: null, next: true })
+                        }
+                        if (this.state.index > 0) {
+                            this.setState({ error: null, last: true })
+                        }
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            } catch (err) {
+                this.setState({ error: err.message })
+            }
     }
 
     handleHelpPageClick = () => {
@@ -81,15 +82,24 @@ class ReadPage extends Component {
     handleBackClick = () => {
         this.props.onBackClick(this.props.storyId)
     }
-    
-    handleNextPageClick = () => {        
+
+    handleNextPageClick = () => {
         const nextPageId = this.state.pages[this.state.index + 1].id
-        this.props.onNextPageClick(this.props.storyId, nextPageId, ++ this.state.index)
+        this.props.onNextPageClick(this.props.storyId, nextPageId, ++this.state.index)
     }
 
     handleLastPageClick = () => {
-        const lastPageId = this.state.pages[this.state.index -1].id
-        this.props.onLastPageClick(this.props.storyId, lastPageId, -- this.state.index)
+        const lastPageId = this.state.pages[this.state.index - 1].id
+        this.props.onLastPageClick(this.props.storyId, lastPageId, --this.state.index)
+    }
+
+    handlePlayClick = () => {
+        this.audioPlayer.play()
+    }
+    
+    handleStopClick = () => {
+        this.audioPlayer.currentTime = 0
+        this.audioPlayer.pause()
     }
 
     render() {
@@ -104,13 +114,17 @@ class ReadPage extends Component {
             <div className="read-page-book-area">
                 <img src={this.state.dataURL} alt="page image" />
                 <div className="audio-buttons">
-                    <button className="audio"><i className="fa fa-play-circle"></i></button>
-                    <button className="audio"><i className="fa fa-volume-up"></i></button>
-                    {/* <button className="audio"><i className="fa fa-volume-off"></i></button> */}
+                    <button onClick={this.handlePlayClick} className="audio"><i className="fa fa-play-circle"></i></button>
+                    <button onClick={this.handleStopClick} className="audio"><i className="fa fa-stop"></i></button>
+                    {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
+                    <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                 </div>
+                {this.state.hasAudio && <div>
+                    <audio ref={(ref) => (this.audioPlayer = ref)} src={this.state.audioURL}></audio>
+                </div>}
                 <div className="text-area-read-page">
                     <span className='text-read-story'>{this.state.text}</span>
-                    <span>PÀGINA {this.state.index +1}</span>
+                    <span>PÀGINA {this.state.index + 1}</span>
                 </div>
                 {this.state.next && <button className="next" onClick={this.handleNextPageClick}><i className="fa fa-chevron-right"></i></button>}
                 {this.state.last && <button className="last" onClick={this.handleLastPageClick}><i className="fa fa-chevron-left"></i></button>}

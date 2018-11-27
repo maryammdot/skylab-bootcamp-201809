@@ -18,6 +18,11 @@ class Navbar extends Component {
         this.props.onFavouritesClick()
     }
 
+    handleSearchClick = () => {
+
+        this.props.onSearchClick()
+    }
+
     handleRegisterClick = () => {
 
         this.props.onRegisterClick()
@@ -35,6 +40,7 @@ class Navbar extends Component {
                 <button className='logout-button' onClick={this.handleLogoutClick}>TANCAR SESSIÓ</button>
                 <button className='my-stories-button' onClick={this.handleMyStoriesClick}>ELS MEUS CONTES</button>
                 <button className='favourit-stories-button' onClick={this.handleMyFavouritesClick}>CONTES PREFERITS</button>
+                <button className='search-stories-button' onClick={this.handleSearchClick}>BUSCAR CONTES</button>
             </div>}
             {!this.props.loggedIn && <div className='navbar-container'>
                 <button className='register-button' onClick={this.handleRegisterClick}>REGISTRA'T</button>

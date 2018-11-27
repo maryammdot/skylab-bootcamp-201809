@@ -9,7 +9,7 @@ import Error from '../error/Error'
 
 
 class CreatePage extends Component {
-    state = { error: null, draw: false, showText: false, showAudio: false, preview: true, index: 1, text: undefined, storyId: '', pageId: '', image: '../../images/picture.png', hasImage: false, dataURL: '', vectors: [] }
+    state = { error: null, draw: false, showText: false, showAudio: false, preview: true, text: undefined, storyId: '', pageId: '', image: '../../images/picture.png', hasImage: false, hasAudio: false, audioURL: '', dataURL: '', vectors: [] }
 
     componentDidMount() {
         try {
@@ -17,8 +17,8 @@ class CreatePage extends Component {
                 logic.retrieveStory(this.props.storyId)
                     .then(({ id, title, pages }) => {
 
-                        this.setState({ storyId: this.props.storyId, title, pages, index: (pages.length + 1), error: null })
-                        return logic.addPage(id, this.state.index, null)
+                        this.setState({ storyId: this.props.storyId, title, pages, error: null })
+                        return logic.addPage(id, null)
                     })
                     .then(({ pageId, image }) => {
 
@@ -29,18 +29,18 @@ class CreatePage extends Component {
                 logic.retrieveStory(this.props.storyId)
                     .then(({ id, title, pages }) => {
 
-                        this.setState({ storyId: this.props.storyId, title, pages, index: (pages.length + 1), error: null })
+                        this.setState({ storyId: this.props.storyId, title, pages, error: null })
                         return logic.retrievePage(this.props.pageId, id)
                     })
-                    .then(({ id, index, image, audio, text, hasImage }) => {
+                    .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
 
-                        this.setState({ pageId: id, image, audio, index, text, hasImage })
+                        this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio })
                         if (hasImage) {
                             return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
                         }
                     })
                     .then(({ dataURL, vectors }) => {
-debugger
+
                         this.setState({ dataURL, vectors })
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -83,16 +83,25 @@ debugger
 
     //Textarea component
     handleSaveText = text => {
-        const { storyId, pageId, index } = this.state
+        const { storyId, pageId } = this.state
 
         this.setState({ text })
 
-        logic.updatePage(pageId, storyId, index, text)
+        logic.updatePage(pageId, storyId, text)
     }
 
     //Audio component
-    handleSaveAudioClick = () => {
-        // logic.savePageAudio() 
+    handleSaveAudio = (audioBlob) => {
+
+        try {
+            logic.savePageAudio(this.state.pageId, this.state.storyId, audioBlob)
+                .then(() => {
+                    this.setState({ error: null, hasAudio: true })
+                })
+                .catch(err => this.setState({ error: err.message }))
+        } catch (err) {
+            this.setState({ error: err.message })
+        }
     }
 
     //Preview component
@@ -107,9 +116,9 @@ debugger
             <h1 className="title-create-page">{this.state.title}</h1>
             <div className='content'>
                 {this.state.draw && <Canvas storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}
-                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick}/>}
-                {this.state.showAudio && <Audio onBackClick={this.handleBackClick} />}
-                {this.state.preview && <Preview dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
+                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick} />}
+                {this.state.showAudio && <Audio storyId={this.state.storyId} pageId={this.state.pageId} onBackClick={this.handleBackClick} onSaveAudio={this.handleSaveAudio} />}
+                {this.state.preview && <Preview hasAudio={this.state.hasAudio} audioURL={this.state.audioURL} dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
             </div>
             <div className="navbar-pages">
                 <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>

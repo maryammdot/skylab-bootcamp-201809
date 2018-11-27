@@ -36,9 +36,9 @@
 
 .audio-displays {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   height: 450px;
 }
@@ -54,11 +54,17 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  margin: 6%;
+  font-size: 2em;
 }
 
 .rec :hover {
+  color: blue;
+}
+
+.stop :hover {
   color: blue;
 }
 

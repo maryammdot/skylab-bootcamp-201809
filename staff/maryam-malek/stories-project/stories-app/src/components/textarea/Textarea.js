@@ -46,7 +46,7 @@ class Textarea extends Component {
             <div className='header-text'>
                 <h4>TEXT DE LA PÀGINA</h4>
                 <div className='info-text'>
-                    <button className='help-text-button' onClick={this.handleHelpTextClick}>?</button>
+                    <button className='help-text-button' onClick={this.handleHelpTextClick}><i class="fa fa-question"></i></button>
                     <button className='back-text-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
                 </div>
             </div>

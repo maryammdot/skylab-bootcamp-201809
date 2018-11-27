@@ -237,10 +237,10 @@ router.get('/users/:id/stories/:storyId/cover', (req, res) => {
         const { params: { storyId } } = req
 
         return logic.retrieveStoryCover(storyId)
-            .then(({dataURL, vectors, hasCover}) => {
-    
+            .then(({ dataURL, vectors, hasCover }) => {
+
                 res.json({
-                    data: {dataURL, vectors, hasCover}
+                    data: { dataURL, vectors, hasCover }
                 })
             })
     }, res)
@@ -331,15 +331,15 @@ router.get('/users/:id/stories/findByAuthor/:query', [bearerTokenParser, jwtVeri
 
 router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId }, sub, body: { index, text } } = req
+        const { params: { id, storyId }, sub, body: { text } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.addPage(storyId, index, text)
+        return logic.addPage(storyId, text)
             .then(pageId => {
                 res.json({
                     data: { pageId },
-                    message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly added`
+                    message: `page of story with id ${storyId} of user with user id ${id} correctly added`
                 })
             })
     }, res)
@@ -347,14 +347,14 @@ router.post('/users/:id/stories/:storyId/pages', [jsonBodyParser, bearerTokenPar
 
 router.patch('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
     routeHandler(() => {
-        const { params: { id, storyId, pageId }, sub, body: { index, text } } = req
+        const { params: { id, storyId, pageId }, sub, body: { text } } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.updatePage(pageId, storyId, index, text)
+        return logic.updatePage(pageId, storyId, text)
             .then(() => {
                 res.json({
-                    message: `page ${index} of story with id ${storyId} of user with user id ${id} correctly updated`
+                    message: `page of story with id ${storyId} of user with user id ${id} correctly updated`
                 })
             })
     }, res)
@@ -401,7 +401,7 @@ router.get('/users/:id/stories/:storyId/pages/:pageId', [jsonBodyParser, bearerT
 router.post('/users/:id/stories/:storyId/pages/:pageId/picture', jsonBodyParser, (req, res) => {
     routeHandler(() => {
         const { params: { storyId, pageId }, body: { dataURL, vectors } } = req
-debugger
+
         return logic.savePagePicture(pageId, storyId, dataURL, vectors)
             .then(() => {
                 res.json({
@@ -427,12 +427,77 @@ router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
         const { params: { storyId, pageId } } = req
 
         return logic.retrievePagePicture(pageId, storyId)
-            .then(({dataURL, vectors, hasImage}) => {
+            .then(({ dataURL, vectors, hasImage }) => {
                 debugger
                 res.json({
-                    data: {dataURL, vectors, hasImage}
+                    data: { dataURL, vectors, hasImage }
                 })
             })
+    }, res)
+})
+
+// router.post('/users/:id/stories/:storyId/pages/:pageId/audio', jsonBodyParser, (req, res) => {
+//     routeHandler(() => {
+//         const { params: { storyId, pageId }, body: { audioBlob } } = req
+// debugger
+//         return logic.savePageAudio(pageId, storyId, audioBlob)
+//             .then(() => {
+//                 res.json({
+//                     message: `audio of page with id ${pageId} of story with id ${storyId} correctly added`
+//                 })
+//             })
+//     }, res)
+// })
+
+router.post('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
+    routeHandler(() => {
+        const { params: { id, storyId, pageId } } = req
+
+        return new Promise((resolve, reject) => {
+            const busboy = new Busboy({ headers: req.headers })
+
+            busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+                debugger
+                logic.savePageAudio(id, pageId, storyId, file)
+            })
+
+            busboy.on('finish', () => resolve())
+
+            busboy.on('error', err => reject(err))
+
+            req.pipe(busboy)
+        })
+            .then((audioURL) => {
+                debugger
+                res.json({
+                    data: audioURL,
+                    message: `picture from page with id ${pageId} of correctly saved`
+                })
+            })
+    }, res)
+})
+
+// router.get('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
+//     routeHandler(() => {
+//         const { params: { storyId, pageId } } = req
+
+//         return logic.retrievePagePicture(pageId, storyId)
+//             .then(({audioUrl, audioBlob, hasAudio}) => {
+
+//                 res.json({
+//                     data: {audioUrl, audioBlob, hasAudio}
+//                 })
+//             })
+//     }, res)
+// })
+
+router.get('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
+    routeHandler(() => {
+        const { params: { storyId, pageId } } = req
+
+        return Promise.resolve()
+            .then(() => logic.retrievePageAudio(pageId, storyId))
+            .then(audioStream => audioStream.pipe(res))
     }, res)
 })
 
