@@ -90,7 +90,6 @@ class CreateStory extends Component {
 
     handleCloseDrawClick = () => {
         this.setState({ editCover: false, error: null })
-
     }
 
 
@@ -159,7 +158,7 @@ class CreateStory extends Component {
                     .then(({ pageId }) => {
                         this.props.onNewPageClick(this.state.storyId, pageId)
 
-                        this.setState({ pageId })
+                        this.setState({ pageId, error: null })
 
                         // this.props.onNewPageClick(this.state.storyId, pageId)
                     })
@@ -193,7 +192,6 @@ class CreateStory extends Component {
     handleDetailClick = id => {
         this.props.onDetailClick(id)
     }
-
 
     handleRemovePageClick = pageId => {
         swal({
@@ -245,7 +243,6 @@ class CreateStory extends Component {
                 }
             }
         })
-
     }
 
     //Story methods

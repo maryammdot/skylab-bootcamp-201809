@@ -32,32 +32,39 @@ class App extends Component {
     
     handleFavouritesClick = () => this.props.history.push(`/my-favourites`)
     
-    handleMyStoriesClick = () => this.props.history.push(`/my-stories`)
+    // handleMyStoriesClick = () => this.props.history.push(`/my-stories`)
     handleBackStoryClick = () => this.props.history.push(`/my-stories`)
     // handleBackTaleClick = () => this.props.history.push(`/my-stories`)
     
     handleSearchClick = () => this.props.history.push('search')
     
-    handleRegister = (name, surname, username, password) => {
-        try {
-            logic.register(name, surname, username, password)
-                .then(() => this.setState({ error: null }))
-                .then(() => this.props.history.push('/login'))
-                .catch(err => this.setState({ error: err.message }))
-        } catch (err) {
-            this.setState({ error: err.message })
-        }
+    // handleRegister = (name, surname, username, password) => {
+    //     try {
+    //         logic.register(name, surname, username, password)
+    //             .then(() => this.setState({ error: null }))
+    //             .then(() => this.props.history.push('/login'))
+    //             .catch(err => this.setState({ error: err.message }))
+    //     } catch (err) {
+    //         this.setState({ error: err.message })
+    //     }
+    // }
+    handleRegister = () => {
+        this.props.history.push('/login')
     }
 
-    handleLogin = (username, password) => {
-        try {
-            logic.login(username, password)
-                .then(() => this.setState({ error: null }))
-                .then(() => this.props.history.push('/my-stories'))
-                .catch(err => this.setState({ error: err.message }))
-        } catch (err) {
-            this.setState({ error: err.message })
-        }
+    // handleLogin = (username, password) => {
+    //     try {
+    //         logic.login(username, password)
+    //             .then(() => this.setState({ error: null }))
+    //             .then(() => this.props.history.push('/my-stories'))
+    //             .catch(err => this.setState({ error: err.message }))
+    //     } catch (err) {
+    //         this.setState({ error: err.message })
+    //     }
+    // }
+
+    handleLogin = () => {
+        this.props.history.push('/my-stories')
     }
 
 
@@ -78,14 +85,10 @@ class App extends Component {
     handleNewStoryClick = () => this.props.history.push('/story')
 
     handleNewStory = (id) => this.props.history.push(`/story/${id}`)
-    
-
     handleEditClick = (id) => this.props.history.push(`/story/${id}`)
-    
     handleBackToBookClick = (id) => this.props.history.push(`/story/${id}`)
     
     handleReadClick = (id) => this.props.history.push(`/tales/${id}`)
-    
     handleBackTalePageClick = storyId => this.props.history.push(`/tales/${storyId}`)
 
     handleDetailPageClick = (id, pageId) => this.props.history.push(`/story/${id}/pages/${pageId}`)
@@ -106,7 +109,7 @@ class App extends Component {
         return <div>
             {/* <Route exact path="/" render={() => <div><button onClick={this.onRegisterClick}>Register</button> or <button onClick={this.onLoginClick}>Login </button></div>} /> */}
             <Route path="/" render={() => !logic.loggedIn && <Navbar loggedIn={false} onLoginClick={this.handleLoginClick} onRegisterClick={this.handleRegisterClick} /> }/>
-            <Route path="/" render={() => logic.loggedIn && <Navbar loggedIn={true} onLogoutClick={this.handleLogoutClick} onMyStoriesClick={this.handleMyStoriesClick} onFavouritesClick={this.handleFavouritesClick} onSearchClick={this.handleSearchClick}/> } />
+            <Route path="/" render={() => logic.loggedIn && <Navbar loggedIn={true} onLogoutClick={this.handleLogoutClick} onMyStoriesClick={this.handleBackStoryClick} onFavouritesClick={this.handleFavouritesClick} onSearchClick={this.handleSearchClick}/> } />
             <Route path="/register" render={() => !logic.loggedIn ? <Register onRegister={this.handleRegister} onGoBack={this.handleGoBack} /> : <Redirect to="/" />} />
             <Route path="/login" render={() => !logic.loggedIn ? <Login onLogin={this.handleLogin} onGoBack={this.handleGoBack} /> : <Redirect to="/" />} />
             <Route path="/my-stories" render={() => logic.loggedIn ? <MyStories onNewStoryClick={this.handleNewStoryClick} onBackClick={this.handleBackStoryClick} onReadClick={this.handleReadClick} onEditClick={this.handleEditClick} /> : <Redirect to="/" />} />
@@ -114,7 +117,7 @@ class App extends Component {
             <Route exact path="/story/:id" render={(props) => logic.loggedIn ? <UpdateStory onNewPageClick={this.handleNewPageClick} storyId={props.match.params.id} onBackClick={this.handleBackStoryClick} onDetailClick={pageId => this.handleDetailPageClick(props.match.params.id, pageId)} /> : <Redirect to="/" />} />
             {/* <Route exact path="/story/:id/pages" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} onBackClick={this.handleBackToBookClick} onNewPage={this.handleNewPageId}/> : <Redirect to="/" />} /> */}
             <Route exact path="/story/:id/pages/:pageId" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} pageId={props.match.params.pageId} onBackClick={this.handleBackToBookClick} /> : <Redirect to="/" />} />
-            <Route exact path="/tales/:id" render={(props) => logic.loggedIn ? <ReadStory storyId={props.match.params.id} onBackClick={this.handleBackStoryClick} onReadClick={this.handleReadTaleClick} /> : <Redirect to="/" />} />
+            <Route exact path="/tales/:id" render={(props) => logic.loggedIn ? <ReadStory storyId={props.match.params.id} onReadClick={this.handleReadTaleClick} /> : <Redirect to="/" />} />
             <Route exact path="/tales/:id/pages/:index/:pageId" render={(props) => logic.loggedIn ? <ReadPage storyId={props.match.params.id} pageId={props.match.params.pageId} index={props.match.params.index} onBackClick={this.handleBackTalePageClick} onNextPageClick={this.handleNextPageClick} onLastPageClick={this.handleLastPageClick} /> : <Redirect to="/" />} />
             <Route exact path="/search" render={() => logic.loggedIn ? <SearchStories onReadClick={this.handleReadClick} /> : <Redirect to="/" />} />
             <Route exact path="/my-favourites" render={() => logic.loggedIn ? <MyFavourites onReadClick={this.handleReadClick} onFirstSearchClick={this.handleSearchClick} /> : <Redirect to="/" />} />

@@ -98,7 +98,9 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            if(story.inProcess === true) throw Error(`story with id ${storyId} still in process`)
+            // Si és un conte del mateix usuari, si que l'ha de poder posar com a preferit, encara que no estigui acabat, no?
+
+            // if(story.inProcess === true) throw Error(`story with id ${storyId} still in process`)
 
             const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
 

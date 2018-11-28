@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import './style.css'
+import logic from '../../logic'
+import Error from '../error/Error'
 
 class Register extends Component {
-    state = { name: '', surname: '', username: '', password: '' }
+    state = { name: '', surname: '', username: '', password: '', error: null }
 
     handleNameChange = event => {
         const name = event.target.value
@@ -33,7 +35,18 @@ class Register extends Component {
 
         const { name, surname, username, password } = this.state
 
-        this.props.onRegister(name, surname, username, password)
+        // handleRegister = (name, surname, username, password) => {
+            try {
+                logic.register(name, surname, username, password)
+                    .then(() => this.setState({ error: null }))
+                    .then(() => this.props.onRegister())
+                    .catch(err => this.setState({ error: err.message }))
+            } catch (err) {
+                this.setState({ error: err.message })
+            }
+        // }
+
+        // this.props.onRegister(name, surname, username, password)
     }
 
     render() {
@@ -48,6 +61,7 @@ class Register extends Component {
                     <div className='buttons'><a href="#" onClick={this.props.onGoBack}>ENDARRERE</a> <button type="submit">REGISTRA'T</button></div>
                 </form>
             </div>
+            {this.state.error && <Error message={this.state.error} />}
         </div>
     }
 }

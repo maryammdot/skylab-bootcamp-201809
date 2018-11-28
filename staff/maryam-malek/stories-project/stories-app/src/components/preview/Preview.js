@@ -7,10 +7,10 @@ class Preview extends Component {
     state={hasAudio: false, audioURL: ''}
 
     componentDidMount(){
-        
         const {hasAudio, audioURL} = this.props
         
         this.setState({hasAudio, audioURL})
+
         if(this.state.hasAudio) {
             this.audioPlayer.play()
         }
@@ -44,10 +44,9 @@ class Preview extends Component {
     
     handleStopClick = () => {
         this.audioPlayer.currentTime = 0
+
         this.audioPlayer.pause()
     }
-
-
 
     render() {
         return <div className='container-preview'>
@@ -68,7 +67,7 @@ class Preview extends Component {
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                 </div>
                 {this.state.hasAudio && <div>
-                    <audio ref={(ref) => (this.audioPlayer = ref)} src={this.state.audioURL}></audio>
+                    <audio ref={(ref) => (this.audioPlayer = ref)} autoPlay src={this.state.audioURL}></audio>
                 </div>}
                 <div className="text-area">
                     <span>{this.props.text}</span>

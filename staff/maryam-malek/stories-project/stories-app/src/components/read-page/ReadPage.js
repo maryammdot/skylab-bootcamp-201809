@@ -18,23 +18,33 @@ class ReadPage extends Component {
                     this.setState({ error: null, text, hasImage, hasAudio, audioURL })
                     if (hasImage) {
                         return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
+                            .then(({ dataURL }) => {
+                                this.setState({ error: null, dataURL })
+                            })
                     }
+                    // if (hasAudio) {
+                    //     let audioPlay = this.audioPlayer
+                    //     audioPlay.oncanplay = (e) => {
+                    //         let audioDuration = audioPlay.duration
+                    //         let ev = e
+                    //         debugger
+                    //         this.setState({audioDuration})
+                    //     }
+                    // }
                 })
-                .then(({ dataURL }) => {
-                    this.setState({ error: null, dataURL })
-
+                .then(() => {
                     if (this.state.pages.length > this.state.index + 1) {
 
                         this.setState({ error: null, next: true })
                     } else {
-                        
+
                         this.setState({ error: null, next: false })
                     }
                     if (this.state.index > 0) {
-                        
+
                         this.setState({ error: null, last: true })
                     } else {
-                        
+
                         this.setState({ error: null, last: false })
                     }
                     this.audioPlayer.play()
@@ -48,7 +58,6 @@ class ReadPage extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps)
             try {
-
                 logic.retrieveStory(nextProps.storyId)
                     .then(({ id, title, pages }) => {
                         this.setState({ error: null, index: Number(nextProps.index), storyId: id, title, pages })
@@ -58,11 +67,21 @@ class ReadPage extends Component {
                         this.setState({ error: null, text, hasImage, hasAudio, audioURL })
                         if (hasImage) {
                             return logic.retrievePagePicture(nextProps.pageId, nextProps.storyId)
+                                .then(({ dataURL }) => {
+                                    this.setState({ error: null, dataURL })
+                                })
                         }
+                        // if (hasAudio) {
+                        //     let audioPlay = this.audioPlayer
+                        //     audioPlay.oncanplay = (e) => {
+                        //         let audioDuration = audioPlay.duration
+                        //         let event = e
+                        //         debugger
+                        //         this.setState({audioDuration})
+                        //     }
+                        // }
                     })
-                    .then(({ dataURL }) => {
-                        this.setState({ error: null, dataURL })
-
+                    .then(() => {
                         if (this.state.pages.length > this.state.index + 1) {
 
                             this.setState({ error: null, next: true })
@@ -75,6 +94,7 @@ class ReadPage extends Component {
                         } else {
                             this.setState({ error: null, last: false })
                         }
+                        this.audioPlayer.play()
                     })
                     .catch(err => this.setState({ error: err.message }))
             } catch (err) {
@@ -98,11 +118,13 @@ class ReadPage extends Component {
 
     handleNextPageClick = () => {
         const nextPageId = this.state.pages[this.state.index + 1].id
+
         this.props.onNextPageClick(this.props.storyId, nextPageId, ++this.state.index)
     }
 
     handleLastPageClick = () => {
         const lastPageId = this.state.pages[this.state.index - 1].id
+
         this.props.onLastPageClick(this.props.storyId, lastPageId, --this.state.index)
     }
 
@@ -112,8 +134,20 @@ class ReadPage extends Component {
 
     handleStopClick = () => {
         this.audioPlayer.currentTime = 0
+
         this.audioPlayer.pause()
     }
+
+    // handleLoadedMetadata = () => {
+    //     let audioPlay = this.audioPlayer
+    //     let audioDuration
+    //     audioPlay.addEventListener('loadedmetadata', function() {
+    //         // debugger
+    //         // audioDuration = audioPlay.duration
+    //         // debugger
+    //     })
+    //     debugger
+    // }
 
     render() {
         return <div className='container-read-page'>
@@ -126,14 +160,12 @@ class ReadPage extends Component {
             </div>
             <div className="read-page-book-area">
                 <img src={this.state.dataURL} alt="page image" />
-                <div className="audio-buttons">
+                {this.state.hasAudio && <div className="audio-buttons">
                     <button onClick={this.handlePlayClick} className="audio"><i className="fa fa-play-circle"></i></button>
                     <button onClick={this.handleStopClick} className="audio"><i className="fa fa-stop"></i></button>
                     {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
-                </div>
-                {this.state.hasAudio && <div>
-                    <audio ref={(ref) => (this.audioPlayer = ref)} src={this.state.audioURL}></audio>
+                    <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
                 </div>}
                 <div className="text-area-read-page">
                     <span className='text-read-story'>{this.state.text}</span>
@@ -142,9 +174,9 @@ class ReadPage extends Component {
                 {this.state.next && <button className="next" onClick={this.handleNextPageClick}><i className="fa fa-chevron-right"></i></button>}
                 {this.state.last && <button className="last" onClick={this.handleLastPageClick}><i className="fa fa-chevron-left"></i></button>}
             </div>
+            {this.state.error && <Error message={this.state.error} />}
         </div>
     }
-
 }
 
 export default ReadPage

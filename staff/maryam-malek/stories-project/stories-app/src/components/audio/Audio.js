@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import './style.css'
 import swal from 'sweetalert2'
-import logic from '../../logic'
+import Error from '../error/Error'
 
 class Audio extends Component {
 
-    state = { text: '' }
+    state = { text: '', error: null }
 
     componentDidMount() {
         if (this.props.audio) {
-            this.setState({ audio: this.props.audio })
+            this.setState({ audio: this.props.audio, error: null })
         }
     }
 
@@ -46,6 +46,7 @@ class Audio extends Component {
                                 const audioBlob = new Blob(audioChunks)
                                 const audioUrl = URL.createObjectURL(audioBlob)
                                 const audio = new Audio(audioUrl)
+                                
                                 const play = () => {
                                     audio.play()
                                 }
@@ -61,24 +62,30 @@ class Audio extends Component {
     }
 
     start = async () => {
-        const recorder = await this.recordAudio()
-
-        recorder.start()
-
-        this.setState({ recorder })
+        try {
+            const recorder = await this.recordAudio()
+            
+            recorder.start()
+            
+            this.setState({ recorder, error: null })
+        } catch (err) {
+            this.setState({error: err.message})
+        }
     }
 
     stop = async () => {
-
-        const audio = await this.state.recorder.stop()
-        const { audioUrl, audioBlob } = audio
-
-        this.setState({ audioUrl })
-
-        this.props.onSaveAudio(audioBlob)
-
+        try {
+            const audio = await this.state.recorder.stop()
+            
+            const { audioUrl, audioBlob } = audio
+            
+            this.setState({ audioUrl, error: null })
+            
+            this.props.onSaveAudio(audioBlob)
+        } catch (err) {
+            this.setState({error: err.message})
+        }
     }
-
 
     render() {
         return <div className='container-audio'>
@@ -95,12 +102,12 @@ class Audio extends Component {
                     <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
                 </div>
                 <div className="play-sec">
-                    <audio ref="audioSource" controls="controls" src={this.state.audioUrl}></audio>
+                    <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
                 </div>
             </div>
+            {this.state.error && <Error message={this.state.error} />}
         </div>
     }
-
 }
 
 export default Audio

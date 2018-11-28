@@ -13,44 +13,24 @@ class CreatePage extends Component {
 
     componentDidMount() {
         try {
-            // if (!this.props.pageId) {
-            //     logic.retrieveStory(this.props.storyId)
-            //         .then(({ id, title, pages }) => {
-
-            //             this.setState({ storyId: this.props.storyId, title, pages, error: null })
-            //             return logic.addPage(id, null)
-            //         })
-            //         //                     .then(({ pageId, image }) => {
-            //         // debugger
-            //         //                         this.setState({ pageId, image })
-            //         //                     })
-            //         .then(({ pageId }) => {
-            //             this.props.onNewPage(this.state.storyId, pageId)
-
-            //             this.setState({ pageId })
-            //         })
-            //         .catch(err => this.setState({ error: err.message }))
-            // } else {
             logic.retrieveStory(this.props.storyId)
                 .then(({ id, title, pages }) => {
-
                     this.setState({ storyId: this.props.storyId, title, pages, error: null })
+
                     return logic.retrievePage(this.props.pageId, id)
                 })
                 .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
-                    // debugger
-                    this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio })
+                    this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio, error: null })
+
                     if (hasImage) {
                         return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
                             .then(({ dataURL, vectors }) => {
 
-                                this.setState({ dataURL, vectors })
+                                this.setState({ dataURL, vectors, error: null })
                             })
                     }
                 })
                 .catch(err => this.setState({ error: err.message }))
-            // }
-
         } catch (err) {
             this.setState({ error: err.message })
         }
@@ -76,29 +56,42 @@ class CreatePage extends Component {
 
     //Canvas component
     handleCanvasChange = (dataURL, vectors) => {
-        // debugger
+        try {
+            logic.savePagePicture(this.state.pageId, this.state.storyId, dataURL, vectors)
+                .then(() => {
+                    this.setState({ error: null })
+                    return logic.retrievePagePicture(this.state.pageId, this.state.storyId)
+                })
+                .then(({ dataURL, vectors }) => {
+                    this.setState({ dataURL, vectors, error: null })
+                })
+                .catch(err => this.setState({ error: err.message }))
+            // }
 
-        logic.savePagePicture(this.state.pageId, this.state.storyId, dataURL, vectors)
-            .then(() => {
-                return logic.retrievePagePicture(this.state.pageId, this.state.storyId)
-            })
-            .then(({ dataURL, vectors }) => {
-                this.setState({ dataURL, vectors })
-            })
+        } catch (err) {
+            this.setState({ error: err.message })
+        }
     }
 
     //Textarea component
     handleSaveText = text => {
         const { storyId, pageId } = this.state
 
-        this.setState({ text })
-
-        logic.updatePage(pageId, storyId, text)
+        this.setState({ text, error: null })
+        try {
+            logic.updatePage(pageId, storyId, text)
+                .then(() => {
+                    this.setState({ error: null })
+                })
+                .catch(err => this.setState({ error: err.message }))
+        } catch (err) {
+            this.setState({ error: err.message })
+        }
     }
+
 
     //Audio component
     handleSaveAudio = (audioBlob) => {
-
         try {
             logic.savePageAudio(this.state.pageId, this.state.storyId, audioBlob)
                 .then(() => {
@@ -112,7 +105,6 @@ class CreatePage extends Component {
 
     //Preview component
     handleBackClick = () => {
-
         this.props.onBackClick(this.state.storyId)
     }
 

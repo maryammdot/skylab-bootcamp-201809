@@ -15,16 +15,18 @@ class ReadStory extends Component {
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
                             .then(({ dataURL }) => {
-                                this.setState({ dataURL })
-
+                                this.setState({ dataURL, error: null })
                             })
                     }
+                })
+                .then(() => {
+                    this.setState({error: null})
                     return logic.listFavourites()
                 })
                 .then(stories => {
                     stories.forEach(story => {
                         if (story.id === this.state.storyId) {
-                            this.setState({ favourite: true })
+                            this.setState({ favourite: true, error: null })
                         }
                     })
                 })
@@ -44,9 +46,9 @@ class ReadStory extends Component {
         })
     }
 
-    handleBackClick = () => {
-        this.props.onBackClick()
-    }
+    // handleBackClick = () => {
+    //     this.props.onBackClick()
+    // }
 
     handleReadClick = () => {
         this.props.onReadClick(this.props.storyId, this.state.pages[0].id)
@@ -83,7 +85,7 @@ class ReadStory extends Component {
                     <button className="help-story-read-button" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
                     {!this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart-o"></i></button>}
                     {this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart"></i></button>}
-                    <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button>
+                    {/* <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button> */}
                 </div>
             </div>
             <div className='read-story-body'>
@@ -103,7 +105,7 @@ class ReadStory extends Component {
                     <p>{this.state.pages.length}</p>
                 </div>
             </div>
-            {this.state.pages.length && <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>}
+            {!!this.state.pages.length && <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>}
             {!this.state.pages.length && <h3 className="begin-story-read-h3">AQUEST CONTE NO TÉ CAP PÀGINA</h3>}
             {this.state.error && <Error message={this.state.error} />}
         </div >

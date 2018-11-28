@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import './style.css'
 import swal from 'sweetalert2'
+import Error from '../error/Error'
 
 class Textarea extends Component {
 
-    state = { text: this.props.text }
+    state = { text: this.props.text, error: null }
 
     componentDidMount() {
         if (this.props.text) {
-
-            this.setState({ text: this.props.text })
+            this.setState({ text: this.props.text, error: null })
         }
     }
 
@@ -33,11 +33,13 @@ class Textarea extends Component {
 
     handleChangeText = event => {
         const text = event.target.value
-        this.setState({ text })
+        
+        this.setState({ text, error: null })
     }
 
     handleOnBlur = event => {
         event.preventDefault()
+
         this.props.onSaveText(this.state.text)
     }
 
@@ -53,6 +55,7 @@ class Textarea extends Component {
             <div className='text-area-space'>
                 <textarea required className='textarea-page' name='text' id='text-page' maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols='20' rows='10' ></textarea>
             </div>
+            {this.state.error && <Error message={this.state.error} />}
         </div>
     }
 }

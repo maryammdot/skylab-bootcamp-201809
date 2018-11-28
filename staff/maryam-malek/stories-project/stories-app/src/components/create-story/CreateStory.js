@@ -10,19 +10,19 @@ class CreateStory extends Component {
     handleTitleChange = event => {
         const title = event.target.value
 
-        this.setState({ title })
+        this.setState({ title, error: null })
     }
 
     handleAudioLanguageChange = event => {
         const audioLanguage = event.target.value
 
-        this.setState({ audioLanguage })
+        this.setState({ audioLanguage, error: null })
     }
 
     handleTextLanguageChange = event => {
         const textLanguage = event.target.value
 
-        this.setState({ textLanguage })
+        this.setState({ textLanguage, error: null })
     }
 
     handleSubmit = event => {
@@ -49,7 +49,6 @@ class CreateStory extends Component {
                     this.setState({ error: message })
                 })
         } catch (err) {
-
             this.setState({ error: `OMPLE TOTS ELS CAMPS PER A CREAR EL CONTE` })
         }
     }

@@ -10,7 +10,7 @@ class SearchStories extends Component {
     handleInputChange = event => {
         const query = event.target.value
 
-        this.setState({ query })
+        this.setState({ query, error: null })
     }
 
     handleSubmit = event => {
@@ -18,7 +18,6 @@ class SearchStories extends Component {
 
         const { query } = this.state
         try {
-
             logic.searchStory(query)
                 .then((stories) => {
                     

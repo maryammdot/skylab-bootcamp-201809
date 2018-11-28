@@ -2,55 +2,63 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
 import './style.css'
+import Error from '../error/Error'
 
 class Canvas extends Component {
 
-    state = { isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last: [], prevPos: { offsetX: 0, offsetY: 0 }, width: 4 }
+    state = { error: null, isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last: [], prevPos: { offsetX: 0, offsetY: 0 }, width: 4 }
 
     componentDidMount() {
         // Here we set up the properties of the canvas element. 
         if (this.props.cover) {
             this.canvas.width = 150
+            
             this.canvas.height = 250
-
         } else {
-
             this.canvas.width = 500
+            
             this.canvas.height = 300
         }
+        
         this.ctx = this.canvas.getContext('2d')
         this.ctx.lineJoin = 'round'
         this.ctx.lineCap = 'round'
         this.ctx.lineWidth = 4
+
         if (this.props.vectors.length !== 0) {
 
-            this.setState({ line: [], storage: this.props.vectors })
-            this.paintComplete(this.props.vectors)
+            try {
+                this.paintComplete(this.props.vectors)
+                
+                this.setState({ line: [], storage: this.props.vectors, error: null })
+            } catch (err) {
+                this.setState({error: err.message})
+            }
         }
     }
 
     handleColor1 = () => {
-        this.setState({ userStrokeStyle: '#0097A7' })
+        this.setState({ userStrokeStyle: '#0097A7', error: null })
     }
 
     handleColor2 = () => {
-        this.setState({ userStrokeStyle: '#CDDC39' })
+        this.setState({ userStrokeStyle: '#CDDC39', error: null })
     }
 
     handleColor3 = () => {
-        this.setState({ userStrokeStyle: '#EE92C2' })
+        this.setState({ userStrokeStyle: '#EE92C2', error: null })
     }
 
     handleWidth1 = () => {
-        this.setState({ width: 1 })
+        this.setState({ width: 1, error: null })
     }
 
     handleWidth2 = () => {
-        this.setState({ width: 4 })
+        this.setState({ width: 4, error: null })
     }
 
     handleWidth3 = () => {
-        this.setState({ width: 8 })
+        this.setState({ width: 8, error: null })
     }
 
     handleHelpDrawClick = () => {
@@ -78,27 +86,37 @@ class Canvas extends Component {
 
             last.push(lastLine)
 
-            this.setState({ last, storage: stg })
-
-            this.clear()
-
-            this.paintComplete(this.state.storage)
+            this.setState({ last, storage: stg, error: null })
+            
+            try {
+                this.clear()
+                
+                this.paintComplete(this.state.storage)
+                
+                this.setState({error: null})
+            } catch(err) {
+                this.setState({error: err.message})
+            }
 
             const dataURL = this.canvas.toDataURL()
 
-            this.setState({ dataURL })
+            this.setState({ dataURL, error: null })
 
             this.props.onChange(dataURL, this.state.storage)
         }
     }
 
     handleRedoClick = () => {
-
         if (this.state.last.length > 0) {
 
             this.state.last[this.state.last.length - 1].forEach(el => {
-
-                this.paint(el.start, el.stop, el.strokeStyle, el.width)
+                try {
+                    this.paint(el.start, el.stop, el.strokeStyle, el.width)
+                    
+                    this.setState({error: null})
+                } catch(err) {
+                    this.setState({error: err.message})
+                }
             })
 
             let stg = this.state.storage
@@ -110,17 +128,19 @@ class Canvas extends Component {
             stg.push(lastLine)
 
             const dataURL = this.canvas.toDataURL()
-            
-            this.setState({ last, storage: stg })
 
-            this.props.onChange(dataURL, this.state.storage, dataURL)
+            this.setState({ last, storage: stg, error: null })
+
+            this.props.onChange(dataURL, this.state.storage)
         }
     }
 
     onMouseDown = ({ nativeEvent }) => {
         const length = this.state.line.length
+        
         const { offsetX, offsetY } = nativeEvent
-        this.setState({ length, isPainting: true, prevPos: { offsetX, offsetY } })
+
+        this.setState({ length, isPainting: true, prevPos: { offsetX, offsetY }, error: null })
     }
 
     // onTouchStart = ({ nativeEvent }) => {
@@ -137,6 +157,7 @@ class Canvas extends Component {
         if (this.state.isPainting) {
             const { offsetX, offsetY } = nativeEvent
             const offSetData = { offsetX, offsetY }
+
             // Set the start and stop position of the paint event.
             const positionData = {
                 start: { ...this.state.prevPos },
@@ -144,20 +165,34 @@ class Canvas extends Component {
                 strokeStyle: this.state.userStrokeStyle,
                 width: this.state.width
             }
+
             // Add the position to the line array
             let line = this.state.line.concat(positionData)
 
-            this.setState({ line })
+            this.setState({ line, error: null })
 
-            this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle, this.state.width)
+            try {
+                this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle, this.state.width)
+
+                this.setState({error: null})
+            } catch(err) {
+                this.setState({error: err.message})
+            }
         }
     }
 
     onMouseUp = ({ nativeEvent }) => {
         if (this.state.isPainting) {
-            this.setState({ isPainting: false })
 
-            this.sendPaintData()
+            this.setState({ isPainting: false, error: null })
+
+            try {
+                this.setState({error: null})
+
+                this.sendPaintData()
+            } catch (err) {
+                this.setState({error: err.message})
+            }
         }
     }
 
@@ -166,7 +201,7 @@ class Canvas extends Component {
 
         stg.push(this.state.line)
 
-        this.setState({ storage: stg, line: [], last: [] })
+        this.setState({ storage: stg, line: [], last: [], error: null })
 
 
     }
@@ -192,9 +227,15 @@ class Canvas extends Component {
 
             const dataURL = this.canvas.toDataURL()
 
-            this.setState({ dataURL, isPainting: false })
+            this.setState({ dataURL, isPainting: false, error: null})
 
-            this.sendPaintData()
+            try {
+                this.setState({error: null})
+
+                this.sendPaintData()
+            } catch (err) {
+                this.setState({error: err.message})
+            }
 
             this.props.onChange(dataURL, this.state.storage)
         }
@@ -220,14 +261,17 @@ class Canvas extends Component {
         this.ctx.beginPath()
         this.ctx.strokeStyle = strokeStyle
         this.ctx.lineWidth = width
+       
         // Move the the prevPosition of the mouse
         this.ctx.moveTo(x, y)
+       
         // Draw a line to the current position of the mouse
         this.ctx.lineTo(offsetX, offsetY)
+       
         // Visualize the line using the strokeStyle
         this.ctx.stroke()
 
-        this.setState({ prevPos: { offsetX, offsetY } })
+        this.setState({ prevPos: { offsetX, offsetY }, error: null })
     }
 
     paintComplete = (vectors) => {
@@ -235,8 +279,13 @@ class Canvas extends Component {
         vectors.forEach(arr => {
 
             arr.forEach(el => {
+                try {
+                    this.setState({error: null})
 
-                this.paint(el.start, el.stop, el.strokeStyle, el.width)
+                    this.paint(el.start, el.stop, el.strokeStyle, el.width)
+                } catch (err) {
+                    this.setState({ error: err.message })
+                }
             })
         })
     }
@@ -254,11 +303,11 @@ class Canvas extends Component {
                     <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
                     <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>
                     <div><button className='color1-canvas-button' onClick={this.handleColor1}><i class="fa fa-circle"></i></button>
-                    <button className='color2-canvas-button' onClick={this.handleColor2}><i class="fa fa-circle"></i></button>
-                    <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button></div>
+                        <button className='color2-canvas-button' onClick={this.handleColor2}><i class="fa fa-circle"></i></button>
+                        <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button></div>
                     <div><button className='width1-canvas-button' onClick={this.handleWidth1}><i class="fa fa-circle"></i></button>
-                    <button className='width2-canvas-button' onClick={this.handleWidth2}><i class="fa fa-circle"></i></button>
-                    <button className='width3-canvas-button' onClick={this.handleWidth3}><i class="fa fa-circle"></i></button></div>
+                        <button className='width2-canvas-button' onClick={this.handleWidth2}><i class="fa fa-circle"></i></button>
+                        <button className='width3-canvas-button' onClick={this.handleWidth3}><i class="fa fa-circle"></i></button></div>
                 </div>
             </div>
             <div className='canvas-area'>
@@ -274,6 +323,7 @@ class Canvas extends Component {
                 // onTouchMove={this.onTouchMove}
                 />
             </div>
+            {this.state.error && <Error message={this.state.error} />}
         </div>
     }
 }
