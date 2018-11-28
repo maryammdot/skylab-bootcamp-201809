@@ -38,17 +38,25 @@ class CreateStory extends Component {
                     this.props.onNewStory(storyId)
                 })
                 .catch(err => {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        case `stories with query ${this.state.query} not found`:
+                            message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                            break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 })
         } catch (err) {
 
-            this.setState({ error: err.message })
+            this.setState({ error: `OMPLE TOTS ELS CAMPS PER A CREAR EL CONTE` })
         }
     }
 
     handleHelpClick = () => {
         swal({
-            title: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
+            text: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
             width: 300,
             padding: '3em',
             confirmButtonText: 'SOM-HI',
@@ -64,7 +72,7 @@ class CreateStory extends Component {
         return <div className='container-create-story'>
             <div className='create-story-header'>
                 <h1>CREA UN NOU CONTE</h1>
-                <button className="help-create-story" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
+                <button className="help-create-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
                 {/* <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             </div>
             <form className="book-details-create" onSubmit={this.handleSubmit}>

@@ -22,13 +22,7 @@
   margin-top: 0;
 }
 
-.newStoryButton {
-  font-size: 1.5em;
-  background-color: transparent;
-  border: none;
-}
-
-.firstStoryButton {
+.first-search-button {
   font-size: 1em;
   width: 6em;
   height: 4em;
@@ -37,7 +31,7 @@
   background-color: transparent;
 }
 
-.detail-my-stories {
+.detail-my-favourite-stories {
   margin: 3%;
 }
 

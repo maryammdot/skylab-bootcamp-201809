@@ -14,19 +14,36 @@ class CreateStory extends Component {
             logic.retrieveStory(this.props.storyId)
                 .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, inProcess }) => {
 
-                    this.setState({ storyId: id, title, pages, hasCover, inProcess, id: this.props.storyId, error: null, textLanguage, audioLanguage })
+                    this.setState({ storyId: id, title, pages, hasCover, inProcess, error: null, textLanguage, audioLanguage })
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
+                            .then(({ dataURL, vectors }) => {
+
+                                this.setState({ dataURL, vectors, error: null })
+                            })
                     }
                 })
-                .then(({ dataURL, vectors }) => {
-                    this.setState({ dataURL, vectors, error: null })
-                })
                 .catch(err => {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 })
         } catch (err) {
-            this.setState({ error: err.message })
+            let message
+            switch (err.message) {
+                // case `stories with query ${this.state.query} not found`:
+                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                //     break
+                default:
+                    message = err.message
+            }
+            this.setState({ error: message })
         }
     }
 
@@ -36,18 +53,38 @@ class CreateStory extends Component {
     }
 
     handleCanvasChange = (dataURL, vectors) => {
+
         try {
             logic.saveStoryCover(this.props.storyId, dataURL, vectors)
                 .then(() => {
+                    this.setState({ error: null })
                     return logic.retrieveStoryCover(this.props.storyId)
                 })
                 .then(({ dataURL, vectors }) => {
 
                     this.setState({ dataURL, vectors, error: null })
                 })
-                .catch(err => this.setState({ error: err.message }))
+                .catch(err => {
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
+                })
         } catch (err) {
-            this.setState({ error: err.message })
+            let message
+            switch (err.message) {
+                // case `stories with query ${this.state.query} not found`:
+                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                //     break
+                default:
+                    message = err.message
+            }
+            this.setState({ error: message })
         }
     }
 
@@ -91,18 +128,63 @@ class CreateStory extends Component {
                     this.setState({ title, audioLanguage, textLanguage, pages, error: null })
                 })
                 .catch(err => {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 })
         } catch (err) {
-
-            this.setState({ error: err.message })
+            let message
+            switch (err.message) {
+                // case `stories with query ${this.state.query} not found`:
+                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                //     break
+                default:
+                    message = err.message
+            }
+            this.setState({ error: message })
         }
     }
 
     //Pages methods
     handleNewPageClick = () => {
-        if (this.state.id) {
-            this.props.onNewPageClick(this.state.id)
+        if (this.state.storyId) {
+            try {
+                logic.addPage(this.state.storyId, null)
+                    .then(({ pageId }) => {
+                        this.props.onNewPageClick(this.state.storyId, pageId)
+
+                        this.setState({ pageId })
+
+                        // this.props.onNewPageClick(this.state.storyId, pageId)
+                    })
+                    .catch(err => {
+                        let message
+                        switch (err.message) {
+                            // case `stories with query ${this.state.query} not found`:
+                            //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                            //     break
+                            default:
+                                message = err.message
+                        }
+                        this.setState({ error: message })
+                    })
+            } catch (err) {
+                let message
+                switch (err.message) {
+                    // case `stories with query ${this.state.query} not found`:
+                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                    //     break
+                    default:
+                        message = err.message
+                }
+                this.setState({ error: message })
+            }
         } else {
             this.setState({ error: 'omple i guarda la informació del compte primer' })
         }
@@ -131,7 +213,7 @@ class CreateStory extends Component {
                             swal(
                                 'ESBORRAT!',
                                 `S'HA ESBORRAT LA PÀGINA`,
-                                'ÈXIT'
+                                'success'
                             )
                             return logic.retrieveStory(this.state.storyId)
                         })
@@ -139,9 +221,27 @@ class CreateStory extends Component {
 
                             this.setState({ pages, error: null })
                         })
-                        .catch(err => this.setState({ error: err.message }))
+                        .catch(err => {
+                            let message
+                            switch (err.message) {
+                                // case `stories with query ${this.state.query} not found`:
+                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                                //     break
+                                default:
+                                    message = err.message
+                            }
+                            this.setState({ error: message })
+                        })
                 } catch (err) {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 }
             }
         })
@@ -179,13 +279,33 @@ class CreateStory extends Component {
                             swal(
                                 'ESBORRAT!',
                                 `S'HA ESBORRAT EL TEU CONTE`,
-                                'ÈXIT'
+                                'success'
                             )
                             this.props.onBackClick()
+                            this.setState({ error: null })
                         })
-                        .catch(err => this.setState({ error: err.message }))
+                        .catch(err => {
+                            let message
+                            switch (err.message) {
+                                // case `stories with query ${this.state.query} not found`:
+                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                                //     break
+                                default:
+                                    message = err.message
+                            }
+                            this.setState({ error: message })
+                        })
                 } catch (err) {
-                    this.setState({ error: err.message })
+
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 }
             }
         })
@@ -208,13 +328,32 @@ class CreateStory extends Component {
                         .then(() => {
                             swal(
                                 'ARA JA EL PODEN VEURE ALTRES NENS!',
-                                'ÈXIT'
+                                'success'
                             )
                             this.setState({ inProcess: false, error: null })
                         })
-                        .catch(err => this.setState({ error: err.message }))
+                        .catch(err => {
+
+                            let message
+                            switch (err.message) {
+                                case `stories with query ${this.state.query} not found`:
+                                    message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                                    break
+                                default:
+                                    message = err.message
+                            }
+                            this.setState({ error: message })
+                        })
                 } catch (err) {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 }
             }
         })
@@ -237,13 +376,31 @@ class CreateStory extends Component {
                         .then(() => {
                             swal(
                                 'ARA EL POTS VEURE NOMÉS TU!',
-                                'ÈXIT'
+                                'success'
                             )
                             this.setState({ inProcess: true, error: null })
                         })
-                        .catch(err => this.setState({ error: err.message }))
+                        .catch(err => {
+                            let message
+                            switch (err.message) {
+                                // case `stories with query ${this.state.query} not found`:
+                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                                //     break
+                                default:
+                                    message = err.message
+                            }
+                            this.setState({ error: message })
+                        })
                 } catch (err) {
-                    this.setState({ error: err.message })
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message })
                 }
             }
         })
@@ -267,16 +424,16 @@ class CreateStory extends Component {
                 <button type="submit">GUARDA ELS CANVIS</button>
             </form>}
             {!this.state.editCover && <div className='buttons-story'>
-                <button className="help-story" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
-                <div><button className="delete-story" onClick={this.handleRemoveClick}><i class="fa fa-trash-o"></i></button>
-                    {this.state.inProcess && <button className="finish" onClick={this.handleFinishClick}><i class="fa fa-rocket"></i></button>}
-                    {!this.state.inProcess && <button className="finish" onClick={this.handleWorkingClick}><i class="fa fa-child"></i></button>}
+                <button className="help-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
+                <div><button className="delete-story" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
+                    {this.state.inProcess && <button className="finish" onClick={this.handleFinishClick}><i className="fa fa-rocket"></i></button>}
+                    {!this.state.inProcess && <button className="finish" onClick={this.handleWorkingClick}><i className="fa fa-child"></i></button>}
                 </div>
             </div>}
-            {!this.state.editCover && <h3>PÀGINES</h3>}
+            {!this.state.editCover && !!this.state.pages.length && <h3>PÀGINES</h3>}
             {!this.state.editCover && <ul className="pages-section">
-                {this.state.pages.map((page, i) => <Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i+1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
-                {this.state.pages.length ? <button className="newPageButton" onClick={this.handleNewPageClick}><i class="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
+                {!!this.state.pages.length && this.state.pages.map((page, i) => <Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i + 1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
+                {this.state.pages.length ? <button className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
             </ul>}
             {this.state.error && <Error message={this.state.error} />}
         </div>

@@ -75,4 +75,20 @@
   outline: 0;
 }
 
+.width1-canvas-button, .width2-canvas-button, .width3-canvas-button {
+  background-color: transparent;
+  border: none;
+  margin: 3% 0;
+  font-size: 1em;
+  outline: 0;
+}
+
+.width2-canvas-button {
+  font-size: 1.3em;
+}
+
+.width3-canvas-button {
+  font-size: 1.7em;
+}
+
 /*# sourceMappingURL=style.css.map */

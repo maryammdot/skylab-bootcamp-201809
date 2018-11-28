@@ -5,7 +5,7 @@ import './style.css'
 
 class Canvas extends Component {
 
-    state = { isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last:false, prevPos: { offsetX: 0, offsetY: 0 } }
+    state = { isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last: [], prevPos: { offsetX: 0, offsetY: 0 }, width: 4 }
 
     componentDidMount() {
         // Here we set up the properties of the canvas element. 
@@ -24,7 +24,7 @@ class Canvas extends Component {
         this.ctx.lineWidth = 4
         if (this.props.vectors.length !== 0) {
 
-            this.setState({ line: this.props.vectors, storage: this.props.vectors })
+            this.setState({ line: [], storage: this.props.vectors })
             this.paintComplete(this.props.vectors)
         }
     }
@@ -41,12 +41,23 @@ class Canvas extends Component {
         this.setState({ userStrokeStyle: '#EE92C2' })
     }
 
+    handleWidth1 = () => {
+        this.setState({ width: 1 })
+    }
+
+    handleWidth2 = () => {
+        this.setState({ width: 4 })
+    }
+
+    handleWidth3 = () => {
+        this.setState({ width: 8 })
+    }
+
     handleHelpDrawClick = () => {
         swal({
             title: this.props.cover ? 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PÀGINA DEL TEU CONTE',
             width: 300,
             padding: '3em',
-            // background: '#fff url(/images/trees.png)',
             confirmButtonText: 'SOM-HI',
             confirmButtonColor: '#0097A7'
         })
@@ -57,49 +68,59 @@ class Canvas extends Component {
     }
 
     handleUndoClick = () => {
+        if (this.state.storage.length > 0) {
 
-        // const line = this.state.line
-        // const lastLength = this.state.length
+            let stg = this.state.storage
 
-        // const paint = line.slice(0, lastLength)
+            const lastLine = stg.pop()
 
-        // this.setState({ line: paint })
-        // DOING THAT THIS WAY WE CAN NOT MAINTAIN DIFFERENT COLORS!
+            let last = this.state.last
 
-        const last = this.state.storage.pop()
-        this.setState({last})
-        this.clear()
+            last.push(lastLine)
 
-        this.paintComplete(this.state.storage)
+            this.setState({ last, storage: stg })
 
-        const dataURL = this.canvas.toDataURL()
-        this.setState({ dataURL })
-        
-        this.props.onChange(dataURL, this.state.storage)
+            this.clear()
+
+            this.paintComplete(this.state.storage)
+
+            const dataURL = this.canvas.toDataURL()
+
+            this.setState({ dataURL })
+
+            this.props.onChange(dataURL, this.state.storage)
+        }
     }
 
     handleRedoClick = () => {
 
-        this.state.last.forEach(el => {
+        if (this.state.last.length > 0) {
 
-            this.paint(el.start, el.stop, el.strokeStyle, el.width)
-        })
-        
-        let stg = this.state.storage.push(this.state.last)
-        
-        const dataURL = this.canvas.toDataURL()
-        
-        this.setState({last: false, storage: stg})
-        
-        this.props.onChange(dataURL, this.state.storage, dataURL)
+            this.state.last[this.state.last.length - 1].forEach(el => {
+
+                this.paint(el.start, el.stop, el.strokeStyle, el.width)
+            })
+
+            let stg = this.state.storage
+
+            let last = this.state.last
+
+            let lastLine = last.pop()
+
+            stg.push(lastLine)
+
+            const dataURL = this.canvas.toDataURL()
+            
+            this.setState({ last, storage: stg })
+
+            this.props.onChange(dataURL, this.state.storage, dataURL)
+        }
     }
 
     onMouseDown = ({ nativeEvent }) => {
         const length = this.state.line.length
-        this.setState({ length })
         const { offsetX, offsetY } = nativeEvent
-        this.state.isPainting = true
-        this.state.prevPos = { offsetX, offsetY }
+        this.setState({ length, isPainting: true, prevPos: { offsetX, offsetY } })
     }
 
     // onTouchStart = ({ nativeEvent }) => {
@@ -124,15 +145,18 @@ class Canvas extends Component {
                 width: this.state.width
             }
             // Add the position to the line array
-            this.state.line = this.state.line.concat(positionData)
-            // this.state.line2 = this.state.line
+            let line = this.state.line.concat(positionData)
+
+            this.setState({ line })
+
             this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle, this.state.width)
         }
     }
 
     onMouseUp = ({ nativeEvent }) => {
         if (this.state.isPainting) {
-            this.state.isPainting = false
+            this.setState({ isPainting: false })
+
             this.sendPaintData()
         }
     }
@@ -142,7 +166,7 @@ class Canvas extends Component {
 
         stg.push(this.state.line)
 
-        this.setState({ storage: stg, line: [] })
+        this.setState({ storage: stg, line: [], last: [] })
 
 
     }
@@ -165,13 +189,11 @@ class Canvas extends Component {
 
     endPaintEvent = () => {
         if (this.state.isPainting) {
-            this.state.isPainting = false
-            //   this.sendPaintData()
-            // this.paintComplete()
-            // const length = this.state.line.length
+
             const dataURL = this.canvas.toDataURL()
-            this.setState({ dataURL })
-            // this.props.onEnd(dataURL)
+
+            this.setState({ dataURL, isPainting: false })
+
             this.sendPaintData()
 
             this.props.onChange(dataURL, this.state.storage)
@@ -204,11 +226,12 @@ class Canvas extends Component {
         this.ctx.lineTo(offsetX, offsetY)
         // Visualize the line using the strokeStyle
         this.ctx.stroke()
-        this.state.prevPos = { offsetX, offsetY }
+
+        this.setState({ prevPos: { offsetX, offsetY } })
     }
 
     paintComplete = (vectors) => {
-        
+
         vectors.forEach(arr => {
 
             arr.forEach(el => {
@@ -229,16 +252,18 @@ class Canvas extends Component {
                 </div>
                 <div className="utils-canvas">
                     <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
-                    {this.state.last && <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>}
-                    <button className='color1-canvas-button' onClick={this.handleColor1}><i class="fa fa-circle"></i></button>
+                    <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>
+                    <div><button className='color1-canvas-button' onClick={this.handleColor1}><i class="fa fa-circle"></i></button>
                     <button className='color2-canvas-button' onClick={this.handleColor2}><i class="fa fa-circle"></i></button>
-                    <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button>
+                    <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button></div>
+                    <div><button className='width1-canvas-button' onClick={this.handleWidth1}><i class="fa fa-circle"></i></button>
+                    <button className='width2-canvas-button' onClick={this.handleWidth2}><i class="fa fa-circle"></i></button>
+                    <button className='width3-canvas-button' onClick={this.handleWidth3}><i class="fa fa-circle"></i></button></div>
                 </div>
             </div>
             <div className='canvas-area'>
                 <canvas className='canvas'
                     id="page-draw"
-                    // We use the ref attribute to get direct access to the canvas element. 
                     ref={(ref) => (this.canvas = ref)}
                     onMouseDown={this.onMouseDown}
                     onMouseLeave={this.endPaintEvent}

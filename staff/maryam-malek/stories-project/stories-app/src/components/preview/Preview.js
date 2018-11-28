@@ -54,7 +54,7 @@ class Preview extends Component {
             <div className='header-preview'>
                 <h4 className="preview-title">AIXÍ QUEDA LA PÀGINA DEL TEU CONTE</h4>
                 <div className="info-preview">
-                    <button className='help-preview-button' onClick={this.handleHelpPreviewClick}><i class="fa fa-question"></i></button>
+                    <button className='help-preview-button' onClick={this.handleHelpPreviewClick}><i className="fa fa-question"></i></button>
                     <button className='back-preview-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
                 </div>
             </div>

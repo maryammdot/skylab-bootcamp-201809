@@ -9,7 +9,6 @@ class ReadPage extends Component {
 
     componentDidMount() {
         try {
-
             logic.retrieveStory(this.props.storyId)
                 .then(({ id, title, pages }) => {
                     this.setState({ error: null, index: Number(this.props.index), storyId: id, title, pages })
@@ -25,10 +24,18 @@ class ReadPage extends Component {
                     this.setState({ error: null, dataURL })
 
                     if (this.state.pages.length > this.state.index + 1) {
+
                         this.setState({ error: null, next: true })
+                    } else {
+                        
+                        this.setState({ error: null, next: false })
                     }
                     if (this.state.index > 0) {
+                        
                         this.setState({ error: null, last: true })
+                    } else {
+                        
+                        this.setState({ error: null, last: false })
                     }
                     this.audioPlayer.play()
                 })
@@ -57,10 +64,16 @@ class ReadPage extends Component {
                         this.setState({ error: null, dataURL })
 
                         if (this.state.pages.length > this.state.index + 1) {
+
                             this.setState({ error: null, next: true })
+                        } else {
+                            this.setState({ error: null, next: false })
                         }
                         if (this.state.index > 0) {
+
                             this.setState({ error: null, last: true })
+                        } else {
+                            this.setState({ error: null, last: false })
                         }
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -96,7 +109,7 @@ class ReadPage extends Component {
     handlePlayClick = () => {
         this.audioPlayer.play()
     }
-    
+
     handleStopClick = () => {
         this.audioPlayer.currentTime = 0
         this.audioPlayer.pause()

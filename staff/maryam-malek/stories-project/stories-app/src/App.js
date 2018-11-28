@@ -61,10 +61,14 @@ class App extends Component {
     }
 
 
-    handleNewPageClick = (id) => {
-        this.setState({ storyId: id })
-        this.props.history.push(`/story/${id}/pages`)
+    handleNewPageClick = (id, pageId) => {
+        this.setState({ storyId: id, pageId })
+        this.props.history.push(`/story/${id}/pages/${pageId}`)
     }
+
+    // handleNewPageId = (storyId, pageId) => {
+    //     this.props.history.push(`/story/${storyId}/pages/${pageId}`)
+    // }
 
     handleUpdatePageClick = (id, pageId) => {
         this.setState({ storyId: id })
@@ -106,9 +110,9 @@ class App extends Component {
             <Route path="/register" render={() => !logic.loggedIn ? <Register onRegister={this.handleRegister} onGoBack={this.handleGoBack} /> : <Redirect to="/" />} />
             <Route path="/login" render={() => !logic.loggedIn ? <Login onLogin={this.handleLogin} onGoBack={this.handleGoBack} /> : <Redirect to="/" />} />
             <Route path="/my-stories" render={() => logic.loggedIn ? <MyStories onNewStoryClick={this.handleNewStoryClick} onBackClick={this.handleBackStoryClick} onReadClick={this.handleReadClick} onEditClick={this.handleEditClick} /> : <Redirect to="/" />} />
-            <Route exact path="/story" render={() => logic.loggedIn ? <CreateStory onNewStory={this.handleNewStory} onNewPageClick={this.handleNewPageClick} storyId={undefined} onBackClick={this.handleBackStoryClick} /> : <Redirect to="/" />} />
+            <Route exact path="/story" render={() => logic.loggedIn ? <CreateStory onNewStory={this.handleNewStory} storyId={undefined} onBackClick={this.handleBackStoryClick} /> : <Redirect to="/" />} />
             <Route exact path="/story/:id" render={(props) => logic.loggedIn ? <UpdateStory onNewPageClick={this.handleNewPageClick} storyId={props.match.params.id} onBackClick={this.handleBackStoryClick} onDetailClick={pageId => this.handleDetailPageClick(props.match.params.id, pageId)} /> : <Redirect to="/" />} />
-            <Route exact path="/story/:id/pages" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} onBackClick={this.handleBackToBookClick} /> : <Redirect to="/" />} />
+            {/* <Route exact path="/story/:id/pages" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} onBackClick={this.handleBackToBookClick} onNewPage={this.handleNewPageId}/> : <Redirect to="/" />} /> */}
             <Route exact path="/story/:id/pages/:pageId" render={(props) => logic.loggedIn ? <CreatePage storyId={props.match.params.id} pageId={props.match.params.pageId} onBackClick={this.handleBackToBookClick} /> : <Redirect to="/" />} />
             <Route exact path="/tales/:id" render={(props) => logic.loggedIn ? <ReadStory storyId={props.match.params.id} onBackClick={this.handleBackStoryClick} onReadClick={this.handleReadTaleClick} /> : <Redirect to="/" />} />
             <Route exact path="/tales/:id/pages/:index/:pageId" render={(props) => logic.loggedIn ? <ReadPage storyId={props.match.params.id} pageId={props.match.params.pageId} index={props.match.params.index} onBackClick={this.handleBackTalePageClick} onNextPageClick={this.handleNextPageClick} onLastPageClick={this.handleLastPageClick} /> : <Redirect to="/" />} />

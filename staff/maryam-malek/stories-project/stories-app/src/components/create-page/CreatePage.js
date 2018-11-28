@@ -13,38 +13,43 @@ class CreatePage extends Component {
 
     componentDidMount() {
         try {
-            if (!this.props.pageId) {
-                logic.retrieveStory(this.props.storyId)
-                    .then(({ id, title, pages }) => {
+            // if (!this.props.pageId) {
+            //     logic.retrieveStory(this.props.storyId)
+            //         .then(({ id, title, pages }) => {
 
-                        this.setState({ storyId: this.props.storyId, title, pages, error: null })
-                        return logic.addPage(id, null)
-                    })
-                    .then(({ pageId, image }) => {
+            //             this.setState({ storyId: this.props.storyId, title, pages, error: null })
+            //             return logic.addPage(id, null)
+            //         })
+            //         //                     .then(({ pageId, image }) => {
+            //         // debugger
+            //         //                         this.setState({ pageId, image })
+            //         //                     })
+            //         .then(({ pageId }) => {
+            //             this.props.onNewPage(this.state.storyId, pageId)
 
-                        this.setState({ pageId, image })
-                    })
-                    .catch(err => this.setState({ error: err.message }))
-            } else {
-                logic.retrieveStory(this.props.storyId)
-                    .then(({ id, title, pages }) => {
+            //             this.setState({ pageId })
+            //         })
+            //         .catch(err => this.setState({ error: err.message }))
+            // } else {
+            logic.retrieveStory(this.props.storyId)
+                .then(({ id, title, pages }) => {
 
-                        this.setState({ storyId: this.props.storyId, title, pages, error: null })
-                        return logic.retrievePage(this.props.pageId, id)
-                    })
-                    .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
+                    this.setState({ storyId: this.props.storyId, title, pages, error: null })
+                    return logic.retrievePage(this.props.pageId, id)
+                })
+                .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
+                    // debugger
+                    this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio })
+                    if (hasImage) {
+                        return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
+                            .then(({ dataURL, vectors }) => {
 
-                        this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio })
-                        if (hasImage) {
-                            return logic.retrievePagePicture(this.props.pageId, this.props.storyId)
-                        }
-                    })
-                    .then(({ dataURL, vectors }) => {
-
-                        this.setState({ dataURL, vectors })
-                    })
-                    .catch(err => this.setState({ error: err.message }))
-            }
+                                this.setState({ dataURL, vectors })
+                            })
+                    }
+                })
+                .catch(err => this.setState({ error: err.message }))
+            // }
 
         } catch (err) {
             this.setState({ error: err.message })
@@ -71,6 +76,7 @@ class CreatePage extends Component {
 
     //Canvas component
     handleCanvasChange = (dataURL, vectors) => {
+        // debugger
 
         logic.savePagePicture(this.state.pageId, this.state.storyId, dataURL, vectors)
             .then(() => {

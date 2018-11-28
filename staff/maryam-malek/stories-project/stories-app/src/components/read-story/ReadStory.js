@@ -5,13 +5,13 @@ import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
 
 class ReadStory extends Component {
-    state = { pages: [], dataURL: './images/cover.png', favourite: false }
+    state = { pages: [], dataURL: './images/cover.png', favourite: false, author: '' }
 
     componentDidMount() {
         try {
             logic.retrieveStory(this.props.storyId)
-                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage }) => {
-                    this.setState({ error: null, storyId: id, title, pages, hasCover, textLanguage, audioLanguage })
+                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, author}) => {
+                    this.setState({ error: null, storyId: id, title, pages, hasCover, textLanguage, audioLanguage, author })
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
                             .then(({ dataURL }) => {
@@ -36,7 +36,7 @@ class ReadStory extends Component {
 
     handleHelpClick = () => {
         swal({
-            title: `APRETA EL BOTÓ DE 'COMENÇAR A LLEGIR' PER INICIAR EL CONTE. SI T'AGRADA, TE'L POTS GUARDAR A LA TEVA PÀGINA APRETANT EL COR`,
+            text: `APRETA EL BOTÓ DE 'COMENÇAR A LLEGIR' PER INICIAR EL CONTE. SI T'AGRADA, TE'L POTS GUARDAR A LA TEVA PÀGINA APRETANT EL COR`,
             width: 400,
             padding: '3em',
             confirmButtonText: 'SOM-HI',
@@ -94,8 +94,7 @@ class ReadStory extends Component {
                     <h4>TÍTOL</h4>
                     <p>{this.state.title}</p>
                     <h4>AUTOR</h4>
-                    <p>{this.state.title}</p>
-                    {/* <p>{this.state.author}</p> */}
+                    <p>{this.state.author}</p>
                     <h4>IDIOMA DE L'ÀUDIO</h4>
                     <p>{this.state.audioLanguage}</p>
                     <h4>IDIOMA DEL TEXT</h4>

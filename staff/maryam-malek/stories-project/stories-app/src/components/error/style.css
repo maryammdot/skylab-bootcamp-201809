@@ -1,5 +1,19 @@
+.error-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2%;
+  width: 100%;
+}
+
 .error {
   color: red;
+  border: red solid 1px;
+  padding: 1%;
+  max-width: 100%;
+  width: fit-content;
 }
 
 /*# sourceMappingURL=style.css.map */

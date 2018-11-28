@@ -243,7 +243,7 @@ const logic = {
 
             if (!user) throw new NotFoundError(`user with id ${author} not found`)
 
-            let story = await Story.findById(storyId).lean()
+            let story = await Story.findById(storyId).populate('author').lean().exec()
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
 
@@ -252,7 +252,7 @@ const logic = {
             delete story.__v
             // delete story.hasCover
 
-            story.author = story.author.toString()
+            story.author = story.author.name
 
             if (story.pages) {
                 story.pages.forEach(page => {
@@ -260,7 +260,7 @@ const logic = {
                     delete page._id
                     delete page.__v
                     // delete page.hasImage
-                    delete page.hasAudio
+                    // delete page.hasAudio
                     return page
                 })
             }

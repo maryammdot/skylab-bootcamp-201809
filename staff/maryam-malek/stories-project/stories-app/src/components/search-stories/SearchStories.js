@@ -24,15 +24,25 @@ class SearchStories extends Component {
                     
                     this.setState({ stories, error: null })
                 })
-                .catch(err => this.setState({ error: err.message }))
+                .catch(err => {
+                    let message
+                    switch(err.message) {
+                        case `stories with query ${this.state.query} not found`:
+                            message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                            break
+                        default:
+                        message = err.message
+                    }
+                    this.setState({ error: message })})
         } catch (err) {
-            this.setState({ error: err.message })
+            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!' })
         }
     }
 
     handleDetailClick = id => {
         this.props.onReadClick(id)
     }
+
     render() {
         return <div>
             <div className='container-search-stories'>

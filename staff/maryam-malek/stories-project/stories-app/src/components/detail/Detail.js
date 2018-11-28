@@ -22,7 +22,7 @@ class Detail extends Component {
     render() {
         return <div className='container-detail'>
             <button onClick={this.handleDetailClick}><div className='detail'>
-                <img className='detail-img' src={this.props.img} alt="detail image"></img>
+                <img className='detail-img' src={this.props.img} alt="detail"></img>
                 <span className='detail-text'>{this.props.text}</span>
             </div></button>
                 { this.props.pages && <div className='buttons-bar'>
