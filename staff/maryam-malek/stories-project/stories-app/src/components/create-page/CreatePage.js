@@ -28,11 +28,42 @@ class CreatePage extends Component {
 
                                 this.setState({ dataURL, vectors, error: null })
                             })
+                    } else {
+                        this.setState({dataURL: false, vectors: []})
                     }
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {
             this.setState({ error: err.message })
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.pageId !== this.props.pageId) {
+            try {
+                logic.retrieveStory(nextProps.storyId)
+                    .then(({ id, title, pages }) => {
+                        this.setState({ storyId: nextProps.storyId, title, pages, error: null })
+
+                        return logic.retrievePage(nextProps.pageId, id)
+                    })
+                    .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
+                        this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio, error: null })
+                        
+                        if (hasImage) {
+                            return logic.retrievePagePicture(nextProps.pageId, nextProps.storyId)
+                                .then(({ dataURL, vectors }) => {
+
+                                    this.setState({ dataURL, vectors, error: null })
+                                })
+                        }else {
+                            this.setState({dataURL: false, vectors: []})
+                        }
+                    })
+                    .catch(err => this.setState({ error: err.message }))
+            } catch (err) {
+                this.setState({ error: err.message })
+            }
         }
     }
 
@@ -66,8 +97,6 @@ class CreatePage extends Component {
                     this.setState({ dataURL, vectors, error: null })
                 })
                 .catch(err => this.setState({ error: err.message }))
-            // }
-
         } catch (err) {
             this.setState({ error: err.message })
         }
@@ -89,7 +118,6 @@ class CreatePage extends Component {
         }
     }
 
-
     //Audio component
     handleSaveAudio = (audioBlob) => {
         try {
@@ -108,10 +136,52 @@ class CreatePage extends Component {
         this.props.onBackClick(this.state.storyId)
     }
 
+    handleNewPageClick = () => {
+        if (this.state.storyId) {
+            try {
+                logic.addPage(this.state.storyId, null)
+                    .then(({ pageId }) => {
+                        this.props.onNewPageClick(this.state.storyId, pageId)
+
+                        this.setState({ pageId, error: null })
+
+                        // this.props.onNewPageClick(this.state.storyId, pageId)
+                    })
+                    .catch(err => {
+                        let message
+                        switch (err.message) {
+                            // case `stories with query ${this.state.query} not found`:
+                            //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                            //     break
+                            default:
+                                message = err.message
+                        }
+                        this.setState({ error: message })
+                    })
+            } catch (err) {
+                let message
+                switch (err.message) {
+                    // case `stories with query ${this.state.query} not found`:
+                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                    //     break
+                    default:
+                        message = err.message
+                }
+                this.setState({ error: message })
+            }
+        } else {
+            this.setState({ error: 'omple i guarda la informació del compte primer' })
+        }
+    }
+
+
 
     render() {
         return <div className='container-create-page'>
-            <h1 className="title-create-page">{this.state.title}</h1>
+            <div>
+                <h1 className="title-create-page">{this.state.title}</h1>
+                <button className="new-page-button" onClick={this.handleNewPageClick}>CREAR UNA NOVA PÀGINA</button>
+            </div>
             <div className='content'>
                 {this.state.draw && <Canvas onPreviewClick={this.handlePreviewClick} onTextClick={this.handleTextClick} storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}
                 {this.state.showText && <Textarea onDrawClick={this.handleDrawClick} onAudioClick={this.handleAudioClick} text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick} />}

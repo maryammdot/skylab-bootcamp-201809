@@ -5,7 +5,7 @@ import Error from '../error/Error'
 
 class Audio extends Component {
 
-    state = { text: '', error: null, canListen: false }
+    state = { text: '', error: null, canListen: false, secs: 0 }
 
     componentDidMount() {
         if (this.props.audio) {
@@ -67,7 +67,9 @@ class Audio extends Component {
 
             recorder.start()
 
-            this.setState({ recorder, error: null, canListen: false })
+            // this.beginCounter()
+
+            this.setState({ recorder, error: null, canListen: false, clear: false, secs: 0 })
         } catch (err) {
             this.setState({ error: err.message })
         }
@@ -80,7 +82,7 @@ class Audio extends Component {
 
                 const { audioUrl, audioBlob } = audio
 
-                this.setState({ audioUrl, error: null, canListen: true })
+                this.setState({ audioUrl, error: null, canListen: true, clear: true })
 
                 this.props.onSaveAudio(audioBlob)
             }
@@ -92,6 +94,20 @@ class Audio extends Component {
             }
         }
     }
+
+    // beginCounter = () => {
+    //     let counter = setInterval(function () {
+    //         let secs = this.state.secs
+
+    //         secs++
+
+    //         this.setState({ secs })
+    //     }, 1000)
+
+    //     if (this.state.clear) {
+    //         clearInterval(counter)
+    //     }
+    // }
 
     render() {
         return <div className='container-audio'>
@@ -109,6 +125,7 @@ class Audio extends Component {
                         <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
                         <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
                     </div>
+                    {!!this.state.clear && <h3>{this.state.secs}</h3>}
                     {this.state.canListen && <div className="play-sec">
                         <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
                     </div>}

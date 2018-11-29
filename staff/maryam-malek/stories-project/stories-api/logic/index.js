@@ -19,7 +19,7 @@ const logic = {
 
             if (user) throw new AlreadyExistsError(`username ${username} already registered`)
 
-            user = new User({ name, surname, username, password })
+            user = new User({ name: name.toUpperCase(), surname: surname.toUpperCase(), username: username.toUpperCase(), password: password.toUpperCase() })
 
             await user.save()
         })()
@@ -32,7 +32,7 @@ const logic = {
         )
 
         return (async () => {
-            let user = await User.findOne({ username })
+            let user = await User.findOne({ username: username.toUpperCase() })
 
             if (!user || password !== user.password) throw new AuthError('invalid username or password')
 
@@ -72,14 +72,13 @@ const logic = {
 
             if (user.password !== password) throw new AuthError('wrong password')
 
-            name != null && (user.name = name)
-            surname != null && (user.surname = surname)
-            username != null && (user.username = username)
-            newPassword != null && (user.password = newPassword)
+            name != null && (user.name = name.toUpperCase())
+            surname != null && (user.surname = surname.toUpperCase())
+            username != null && (user.username = username.toUpperCase())
+            newPassword != null && (user.password = newPassword.toUpperCase())
 
             await user.save()
         })()
-
     },
 
     addFavourites(userId, storyId) {
@@ -166,7 +165,6 @@ const logic = {
 
                 return favourites.push(story)
             })
-            
             return favourites
         })()
 
@@ -187,14 +185,14 @@ const logic = {
 
             if (!user) throw new NotFoundError(`user with id ${author} not found`)
 
-            let story = await Story.findOne({ $and: [{ author }, { title }] })
+            let story = await Story.findOne({ $and: [{ author }, { title: title.toUpperCase() }] })
 
             if (story) throw new AlreadyExistsError(`story with title ${title} already created by user with id ${author}`)
 
-            story = new Story({ title, author })
+            story = new Story({ title: title.toUpperCase(), author })
 
-            audioLanguage != null && (story.audioLanguage = audioLanguage)
-            textLanguage != null && (story.textLanguage = textLanguage)
+            audioLanguage != null && (story.audioLanguage = audioLanguage.toUpperCase())
+            textLanguage != null && (story.textLanguage = textLanguage.toUpperCase())
 
             story.cover = `http://localhost:${PORT}/api/users/${author}/stories/${story.id}/cover`
 
@@ -428,9 +426,9 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with title ${title} not found in user with id ${author} stories`)
 
-            title != null && (story.title = title)
-            audioLanguage != null && (story.audioLanguage = audioLanguage)
-            textLanguage != null && (story.textLanguage = textLanguage)
+            title != null && (story.title = title.toUpperCase())
+            audioLanguage != null && (story.audioLanguage = audioLanguage.toUpperCase())
+            textLanguage != null && (story.textLanguage = textLanguage.toUpperCase())
 
             await story.save()
         })()
@@ -506,9 +504,9 @@ const logic = {
             { key: 'query', value: query, type: String }
         ])
         return (async () => {
-
-            let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\i]/g, "")
-            
+        
+            let newQuery = query.toUpperCase()
+            // let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\i]/g, "")
             const regQuery= {
                 title: {$regex : newQuery},
                 inProcess: false

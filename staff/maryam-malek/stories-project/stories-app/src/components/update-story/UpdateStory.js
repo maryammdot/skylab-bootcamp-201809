@@ -168,8 +168,6 @@ class CreateStory extends Component {
                         this.props.onNewPageClick(this.state.storyId, pageId)
 
                         this.setState({ pageId, error: null })
-
-                        // this.props.onNewPageClick(this.state.storyId, pageId)
                     })
                     .catch(err => {
                         let message

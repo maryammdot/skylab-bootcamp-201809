@@ -32,9 +32,9 @@ class SearchStories extends Component {
                         default:
                         message = err.message
                     }
-                    this.setState({ error: message })})
+                    this.setState({ error: message, stories: [] })})
         } catch (err) {
-            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!' })
+            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
         }
     }
 

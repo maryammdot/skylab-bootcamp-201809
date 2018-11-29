@@ -47,8 +47,8 @@ class CreateStory extends Component {
                 .catch(err => {
                     let message
                     switch (err.message) {
-                        case `stories with query ${this.state.query} not found`:
-                            message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        case `story with title ${this.state.title} already created by user with id ${logic._userId}`:
+                            message = `JA HAS CREAT UN CONTE AMB AQUEST TÍTOL`
                             break
                         default:
                             message = err.message
