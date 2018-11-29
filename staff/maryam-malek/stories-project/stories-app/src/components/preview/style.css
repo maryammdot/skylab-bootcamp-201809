@@ -76,6 +76,39 @@
   border: none;
   margin: 3% 0;
   font-size: 1.5em;
+  outline: 0;
+}
+
+.audio-buttons button :hover {
+  color: blue;
+}
+
+.audio-stop {
+  color: red;
+}
+
+.audio-play {
+  color: green;
+}
+
+.next-button, .last-button {
+  background-color: transparent;
+  border: black solid 1px;
+  margin: 3% 0;
+  font-size: 1.5em;
+  outline: 0;
+  width: 85px;
+  position: absolute;
+}
+
+.last-button {
+  left: -14%;
+  top: 50%;
+}
+
+.next-button {
+  right: -14%;
+  top: 50%;
 }
 
 /*# sourceMappingURL=style.css.map */

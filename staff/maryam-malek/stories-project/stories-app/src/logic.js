@@ -285,6 +285,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
+                
                 if (res.error) throw Error(res.error)
 
             })

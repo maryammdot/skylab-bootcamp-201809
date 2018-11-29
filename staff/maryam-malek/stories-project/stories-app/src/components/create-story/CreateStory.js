@@ -7,6 +7,13 @@ import swal from 'sweetalert2'
 class CreateStory extends Component {
     state = { error: null }
 
+    componentDidMount () {
+        logic.retrieveUser()
+            .then(({name}) => {
+                this.setState({name})
+            })
+    }
+
     handleTitleChange = event => {
         const title = event.target.value
 
@@ -53,15 +60,15 @@ class CreateStory extends Component {
         }
     }
 
-    handleHelpClick = () => {
-        swal({
-            text: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
-            width: 300,
-            padding: '3em',
-            confirmButtonText: 'SOM-HI',
-            confirmButtonColor: '#0097A7'
-        })
-    }
+    // handleHelpClick = () => {
+    //     swal({
+    //         text: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
+    //         width: 300,
+    //         padding: '3em',
+    //         confirmButtonText: 'SOM-HI',
+    //         confirmButtonColor: '#0097A7'
+    //     })
+    // }
 
     handleBackClick = () => {
         this.props.onBackClick()
@@ -71,14 +78,14 @@ class CreateStory extends Component {
         return <div className='container-create-story'>
             <div className='create-story-header'>
                 <h1>CREA UN NOU CONTE</h1>
-                <button className="help-create-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
+                {/* <button className="help-create-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button> */}
                 {/* <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             </div>
             <form className="book-details-create" onSubmit={this.handleSubmit}>
                 <h3>TÍTOL DEL CONTE</h3>
                 <input type="text" value={this.state.title} onChange={this.handleTitleChange} />
                 <h3>AUTOR DEL CONTE</h3>
-                <input type="text" disabled value={logic._userId} />
+                <input type="text" disabled value={this.state.name} />
                 <h3>INIDOMA DE L'AUDIO DEL CONTE</h3>
                 <input type="text" value={this.state.audioLanguage} onChange={this.handleAudioLanguageChange} />
                 <h3>IDIOMA DEL TEXT DEL CONTE</h3>

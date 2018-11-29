@@ -23,6 +23,7 @@
   border: none;
   margin: 3% 0;
   font-size: 1.5em;
+  outline: 0;
 }
 
 .back-canvas-button {
@@ -32,12 +33,13 @@
   border: solid 1px black;
   border-radius: 10% 10%;
   background-color: transparent;
+  outline: 0;
 }
 
 .canvas-area {
   height: 450px;
   display: flex;
-  flex-direction: columns;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -46,36 +48,40 @@
 .canvas {
   border: 1px solid grey;
   border-radius: 20%;
+  background-color: lavender;
+}
+
+.utils-canvas {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 2%;
+}
+
+.color1-canvas-button, .color2-canvas-button, .color3-canvas-button {
+  border: none;
+  margin: 3%;
+  width: 0.5em;
+  height: 1.5em;
+  outline: 0;
+  border-radius: 50%;
 }
 
 .color1-canvas-button {
-  color: #0097A7;
-  background-color: transparent;
-  border: none;
-  margin: 3% 0;
-  font-size: 1.5em;
-  outline: 0;
+  background-color: #0097A7;
 }
 
 .color2-canvas-button {
-  color: #CDDC39;
-  background-color: transparent;
-  border: none;
-  margin: 3% 0;
-  font-size: 1.5em;
-  outline: 0;
+  background-color: #CDDC39;
 }
 
 .color3-canvas-button {
-  color: #EE92C2;
-  background-color: transparent;
-  border: none;
-  margin: 3% 0;
-  font-size: 1.5em;
-  outline: 0;
+  background-color: #EE92C2;
 }
 
-.width1-canvas-button, .width2-canvas-button, .width3-canvas-button {
+.redo-canvas-button, .undo-canvas-button {
   background-color: transparent;
   border: none;
   margin: 3% 0;
@@ -83,12 +89,33 @@
   outline: 0;
 }
 
+.width1-canvas-button, .width2-canvas-button, .width3-canvas-button {
+  border: none;
+  margin: 3%;
+  width: 0.3em;
+  height: 1em;
+  outline: 0;
+  border-radius: 50%;
+  background-color: black;
+}
+
 .width2-canvas-button {
-  font-size: 1.3em;
+  width: 0.5em;
+  height: 1.2em;
 }
 
 .width3-canvas-button {
-  font-size: 1.7em;
+  width: 0.5em;
+  height: 1.7em;
+}
+
+.width-container-buttons, .color-container-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 90px;
 }
 
 /*# sourceMappingURL=style.css.map */

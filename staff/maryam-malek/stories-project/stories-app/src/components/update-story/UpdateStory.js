@@ -12,9 +12,9 @@ class CreateStory extends Component {
     componentDidMount() {
         try {
             logic.retrieveStory(this.props.storyId)
-                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, inProcess }) => {
+                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, inProcess, author }) => {
 
-                    this.setState({ storyId: id, title, pages, hasCover, inProcess, error: null, textLanguage, audioLanguage })
+                    this.setState({ author, storyId: id, title, pages, hasCover, inProcess, error: null, textLanguage, audioLanguage })
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
                             .then(({ dataURL, vectors }) => {
@@ -121,6 +121,15 @@ class CreateStory extends Component {
             logic.updateStory(this.state.storyId, title, audioLanguage, textLanguage)
                 .then(() => {
                     this.setState({ error: null })
+                    swal({
+                        title: `CANVIS GUARDATS`,
+                        width: 300,
+                        padding: '3em',
+                        background: '#fff url(/images/trees.png)',
+                        confirmButtonText: 'SOM-HI',
+                        confirmButtonColor: '#0097A7'
+                    })
+
                     return logic.retrieveStory(this.state.storyId)
                 })
                 .then(({ title, audioLanguage, textLanguage, pages }) => {
@@ -249,7 +258,7 @@ class CreateStory extends Component {
 
     handleHelpClick = () => {
         swal({
-            text: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
+            text: `APRETA A SOBRE DEL PINGÜÍ PER A DIBUIXAR LA PORTADA DEL TEU CONTE, APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
             width: 300,
             padding: '3em',
             background: '#fff url(/images/trees.png)',
@@ -415,7 +424,7 @@ class CreateStory extends Component {
             {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
             {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
                 <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />
-                <input type="text" disabled placeholder={logic._userId} />
+                <input type="text" disabled placeholder={this.state.author} />
                 <input type="text" placeholder={this.state.audioLanguage} onChange={this.handleAudioLanguageChange} />
                 <input type="text" placeholder={this.state.textLanguage} onChange={this.handleTextLanguageChange} />
                 <button type="submit">GUARDA ELS CANVIS</button>

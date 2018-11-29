@@ -5,7 +5,7 @@ import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
 
 class ReadPage extends Component {
-    state = { pages: [], next: false, last: false }
+    state = { pages: [], next: false, last: false, dataURL: '../../images/picture.png' }
 
     componentDidMount() {
         try {
@@ -47,7 +47,9 @@ class ReadPage extends Component {
 
                         this.setState({ error: null, last: false })
                     }
-                    this.audioPlayer.play()
+                    if(this.state.hasAudio) {
+                        this.audioPlayer.play()
+                    }
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {
@@ -70,6 +72,8 @@ class ReadPage extends Component {
                                 .then(({ dataURL }) => {
                                     this.setState({ error: null, dataURL })
                                 })
+                        } else {
+                            this.setState({dataURL: '../../images/picture.png'})
                         }
                         // if (hasAudio) {
                         //     let audioPlay = this.audioPlayer
@@ -94,7 +98,9 @@ class ReadPage extends Component {
                         } else {
                             this.setState({ error: null, last: false })
                         }
-                        this.audioPlayer.play()
+                        if(this.state.hasAudio) {
+                            this.audioPlayer.play()
+                        }
                     })
                     .catch(err => this.setState({ error: err.message }))
             } catch (err) {
@@ -104,7 +110,7 @@ class ReadPage extends Component {
 
     handleHelpPageClick = () => {
         swal({
-            text: `APRETA LES FLETXES DE LA DRETA O L'ESQUERRA PER ANAR ENDAVANT O ENDARRERE EN LES PÀGINES DEL CONTE APRETA EL TRIANGLE PER TORNAR A SENTIR L'AUDIO DE LA PÀGINA O EL BOTÓ DE VOLUM PER DEIXAR-LO DE SENTIR`,
+            text: `APRETA LES FLETXES DE LA DRETA O L'ESQUERRA PER ANAR ENDAVANT O ENDARRERE EN LES PÀGINES DEL CONTE APRETA EL TRIANGLE PER TORNAR A SENTIR L'AUDIO DE LA PÀGINA O EL QUADRAT PER DEIXAR-LO DE SENTIR`,
             width: 400,
             padding: '3em',
             confirmButtonText: 'SOM-HI',
@@ -161,8 +167,8 @@ class ReadPage extends Component {
             <div className="read-page-book-area">
                 <img src={this.state.dataURL} alt="page image" />
                 {this.state.hasAudio && <div className="audio-buttons">
-                    <button onClick={this.handlePlayClick} className="audio"><i className="fa fa-play-circle"></i></button>
-                    <button onClick={this.handleStopClick} className="audio"><i className="fa fa-stop"></i></button>
+                    <button onClick={this.handlePlayClick} className="audio-play"><i className="fa fa-play-circle"></i></button>
+                    <button onClick={this.handleStopClick} className="audio-stop"><i className="fa fa-stop"></i></button>
                     {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                     <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>

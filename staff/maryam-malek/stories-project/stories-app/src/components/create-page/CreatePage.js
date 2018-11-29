@@ -113,21 +113,20 @@ class CreatePage extends Component {
         return <div className='container-create-page'>
             <h1 className="title-create-page">{this.state.title}</h1>
             <div className='content'>
-                {this.state.draw && <Canvas storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}
-                {this.state.showText && <Textarea text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick} />}
-                {this.state.showAudio && <Audio storyId={this.state.storyId} pageId={this.state.pageId} onBackClick={this.handleBackClick} onSaveAudio={this.handleSaveAudio} />}
-                {this.state.preview && <Preview hasAudio={this.state.hasAudio} audioURL={this.state.audioURL} dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
+                {this.state.draw && <Canvas onPreviewClick={this.handlePreviewClick} onTextClick={this.handleTextClick} storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}
+                {this.state.showText && <Textarea onDrawClick={this.handleDrawClick} onAudioClick={this.handleAudioClick} text={this.state.text} onSaveText={this.handleSaveText} onBackClick={this.handleBackClick} />}
+                {this.state.showAudio && <Audio onTextClick={this.handleTextClick} onPreviewClick={this.handlePreviewClick} storyId={this.state.storyId} pageId={this.state.pageId} onBackClick={this.handleBackClick} onSaveAudio={this.handleSaveAudio} />}
+                {this.state.preview && <Preview onAudioClick={this.handleAudioClick} onDrawClick={this.handleDrawClick} hasAudio={this.state.hasAudio} audioURL={this.state.audioURL} dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
             </div>
             <div className="navbar-pages">
                 <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
                 <button className="text" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
-                <button className="audio" onClick={this.handleAudioClick}><i className="fa fa-youtube-play"></i></button>
+                <button className="audio" onClick={this.handleAudioClick}><i className="fa fa-dot-circle-o"></i></button>
                 <button className="preview" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>
     }
-
 }
 
 export default CreatePage

@@ -8,8 +8,11 @@ const bearerTokenParser = require('../utils/bearer-token-parser')
 const jwtVerifier = require('./jwt-verifier')
 const Busboy = require('busboy')
 
-const jsonBodyParser = bodyparser.json()
+const jsonBodyParser = bodyparser.json({ limit: '50mb' })
 const router = express.Router()
+
+// app.use(bodyParser.json({ limit: '50mb' }))
+// app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
 const { env: { JWT_SECRET } } = process
 

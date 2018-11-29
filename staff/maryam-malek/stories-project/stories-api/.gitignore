@@ -7,5 +7,6 @@ data/stories/**/*.jpeg
 data/stories/**/*.gif
 data/stories/**/*.bmp
 data/stories/**/*.svg
+data/stories/**/*.ogg
 !data/stories/default/cover.png
 !data/stories/default/picture.png

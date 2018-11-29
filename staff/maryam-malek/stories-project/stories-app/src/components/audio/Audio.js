@@ -5,7 +5,7 @@ import Error from '../error/Error'
 
 class Audio extends Component {
 
-    state = { text: '', error: null }
+    state = { text: '', error: null, canListen: false }
 
     componentDidMount() {
         if (this.props.audio) {
@@ -15,7 +15,7 @@ class Audio extends Component {
 
     handleHelpAudioClick = () => {
         swal({
-            title: 'ARROSSEGANT EL DIT DIBUIXA LA PÀGINA DEL TEU CONTE',
+            text: `APRETA EL BOTÓ RODÓ PER COMENÇAR A GRAVAR I EL QUADRAT PER PARAR. APRETA EL TRIANGLE QUE SORTIRÀ PER ESCOLTAR EL QUE HAS GRAVAT. SI NO T'AGRADA, TORNA-HO A GRAVAR!`,
             width: 300,
             padding: '3em',
             background: '#fff url(/images/trees.png)',
@@ -46,7 +46,7 @@ class Audio extends Component {
                                 const audioBlob = new Blob(audioChunks)
                                 const audioUrl = URL.createObjectURL(audioBlob)
                                 const audio = new Audio(audioUrl)
-                                
+
                                 const play = () => {
                                     audio.play()
                                 }
@@ -64,26 +64,32 @@ class Audio extends Component {
     start = async () => {
         try {
             const recorder = await this.recordAudio()
-            
+
             recorder.start()
-            
-            this.setState({ recorder, error: null })
+
+            this.setState({ recorder, error: null, canListen: false })
         } catch (err) {
-            this.setState({error: err.message})
+            this.setState({ error: err.message })
         }
     }
 
     stop = async () => {
         try {
-            const audio = await this.state.recorder.stop()
-            
-            const { audioUrl, audioBlob } = audio
-            
-            this.setState({ audioUrl, error: null })
-            
-            this.props.onSaveAudio(audioBlob)
+            if (this.state.recorder) {
+                const audio = await this.state.recorder.stop()
+
+                const { audioUrl, audioBlob } = audio
+
+                this.setState({ audioUrl, error: null, canListen: true })
+
+                this.props.onSaveAudio(audioBlob)
+            }
         } catch (err) {
-            this.setState({error: err.message})
+            if (err.name === 'InvalidStateError') {
+                this.setState({ error: null })
+            } else {
+                this.setState({ error: err.message })
+            }
         }
     }
 
@@ -96,14 +102,18 @@ class Audio extends Component {
                     <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
                 </div>
             </div>
-            <div className="audio-displays">
-                <div className="rec-stop">
-                    <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
-                    <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
+            <div>
+                <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button>
+                <div className="audio-displays">
+                    <div className="rec-stop">
+                        <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
+                        <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
+                    </div>
+                    {this.state.canListen && <div className="play-sec">
+                        <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
+                    </div>}
                 </div>
-                <div className="play-sec">
-                    <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
-                </div>
+                <button className="next-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

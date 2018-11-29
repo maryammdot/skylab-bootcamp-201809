@@ -63,7 +63,7 @@ class Canvas extends Component {
 
     handleHelpDrawClick = () => {
         swal({
-            title: this.props.cover ? 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PORTADA DEL TEU CONTE' : 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PÀGINA DEL TEU CONTE',
+            text: this.props.cover ? 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PORTADA DEL TEU CONTE. APRETA A SOBRE DE LES RODONES DE COLOR PER A TRIAR EL COLOR I A SOBRE DE LES NEGRES PER A TRIAR EL GRUIX DE LA LÍNIA. DESFÉS I REFÉS EL TEU DIBUIX APRETANT SOBRE LES FLETXES' : 'ARROSSEGANT EL DIT O EL RATOLÍ DIBUIXA LA PÀGINA DEL TEU CONTE. APRETA A SOBRE DE LES RODONES DE COLOR PER A TRIAR EL COLOR I A SOBRE DE LES NEGRES PER A TRIAR EL GRUIX DE LA LÍNIA. DESFÉS I REFÉS EL TEU DIBUIX APRETANT SOBRE LES FLETXES',
             width: 300,
             padding: '3em',
             confirmButtonText: 'SOM-HI',
@@ -299,18 +299,24 @@ class Canvas extends Component {
                     {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
                     {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>}
                 </div>
-                <div className="utils-canvas">
-                    <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
-                    <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>
-                    <div><button className='color1-canvas-button' onClick={this.handleColor1}><i class="fa fa-circle"></i></button>
-                        <button className='color2-canvas-button' onClick={this.handleColor2}><i class="fa fa-circle"></i></button>
-                        <button className='color3-canvas-button' onClick={this.handleColor3}><i class="fa fa-circle"></i></button></div>
-                    <div><button className='width1-canvas-button' onClick={this.handleWidth1}><i class="fa fa-circle"></i></button>
-                        <button className='width2-canvas-button' onClick={this.handleWidth2}><i class="fa fa-circle"></i></button>
-                        <button className='width3-canvas-button' onClick={this.handleWidth3}><i class="fa fa-circle"></i></button></div>
-                </div>
             </div>
+            <div>
+            <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button>
             <div className='canvas-area'>
+                <div className="utils-canvas">
+                    <div className='do-container-buttons'>
+                        <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
+                        <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>
+                    </div>
+                    <div className='color-container-buttons'>
+                        <button className='color1-canvas-button' onClick={this.handleColor1}></button>
+                        <button className='color2-canvas-button' onClick={this.handleColor2}></button>
+                        <button className='color3-canvas-button' onClick={this.handleColor3}></button></div>
+                    <div className='width-container-buttons'>
+                        <button className='width1-canvas-button' onClick={this.handleWidth1}></button>
+                        <button className='width2-canvas-button' onClick={this.handleWidth2}></button>
+                        <button className='width3-canvas-button' onClick={this.handleWidth3}></button></div>
+                </div>
                 <canvas className='canvas'
                     id="page-draw"
                     ref={(ref) => (this.canvas = ref)}
@@ -322,6 +328,8 @@ class Canvas extends Component {
                 // onTouchEnd={this.onTouchEnd}
                 // onTouchMove={this.onTouchMove}
                 />
+            </div>
+            <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

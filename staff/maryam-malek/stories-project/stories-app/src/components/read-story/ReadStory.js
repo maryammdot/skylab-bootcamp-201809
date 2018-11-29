@@ -11,6 +11,7 @@ class ReadStory extends Component {
         try {
             logic.retrieveStory(this.props.storyId)
                 .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, author}) => {
+                    
                     this.setState({ error: null, storyId: id, title, pages, hasCover, textLanguage, audioLanguage, author })
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
