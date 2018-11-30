@@ -26,10 +26,10 @@ class Detail extends Component {
                 <span className='detail-text'>{this.props.text}</span>
             </div></button>
                 { this.props.pages && <div className='buttons-bar'>
-                    <button className="delete" onClick={this.handleRemoveClick}><i class="fa fa-trash-o"></i></button>
+                    <button className="delete" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
                 </div>}
                 {this.props.edit && <div className='buttons-bar'>
-                    <button className="edit" onClick={this.handleEditClick}><i class="fa fa-edit"></i></button>
+                    <button className="edit" onClick={this.handleEditClick}><i className="fa fa-edit"></i></button>
                 </div>}
 
         </div>

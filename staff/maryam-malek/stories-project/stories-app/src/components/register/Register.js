@@ -54,7 +54,7 @@ class Register extends Component {
             <div className='container-register'>
                 <h3>REGISTRE</h3>
                 <form className='register-form' onSubmit={this.handleSubmit}>
-                    <input type="text" placeholder="NOM" onChange={this.handleNameChange} />
+                    <input type="text" placeholder="NOM" onChange={this.handleNameChange} autoFocus/>
                     <input type="text" placeholder="COGNOM" onChange={this.handleSurnameChange} />
                     <input type="text" placeholder="NOM D'USUARI" onChange={this.handleUsernameChange} />
                     <input type="password" placeholder="CONTRASENYA" onChange={this.handlePasswordChange} />

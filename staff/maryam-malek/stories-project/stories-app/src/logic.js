@@ -391,12 +391,9 @@ const logic = {
             })
     },
 
-    searchStoryByAuthor(query) {
-        validate([
-            { key: 'query', value: query, type: String }
-        ])
+    searchRandomStories() {
 
-        return fetch(`${this.url}/users/${this._userId}/stories/findByAuthor/${query}`, {
+        return fetch(`${this.url}/users/${this._userId}/findRandomStories`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this._token}`
@@ -404,6 +401,7 @@ const logic = {
         })
             .then(res => res.json())
             .then(res => {
+
                 if (res.error) throw Error(res.error)
 
                 return res.data

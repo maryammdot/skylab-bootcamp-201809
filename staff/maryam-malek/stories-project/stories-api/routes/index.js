@@ -313,14 +313,15 @@ router.get('/users/:id/stories/find/:query', [bearerTokenParser, jwtVerifier], (
     }, res)
 })
 
-router.get('/users/:id/stories/findByAuthor/:query', [bearerTokenParser, jwtVerifier], (req, res) => {
+router.get('/users/:id/findRandomStories', [bearerTokenParser, jwtVerifier], (req, res) => {
     routeHandler(() => {
-        const { params: { id, query }, sub } = req
+        const { params: { id }, sub } = req
 
         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.searchStoriesByAuthor(query)
+        return logic.searchRandomStories()
             .then(stories => {
+                debugger
                 res.json({
                     data: stories
                 })

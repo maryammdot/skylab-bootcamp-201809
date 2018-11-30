@@ -7,10 +7,78 @@ import Detail from '../detail/Detail'
 class SearchStories extends Component {
     state = { error: null, stories: [] }
 
+    componentDidMount() {
+        try {
+            logic.searchRandomStories()
+                .then((stories) => {
+
+                    this.setState({ stories, error: null })
+                })
+                .catch(err => {
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message, stories: [] })
+                })
+        } catch (err) {
+            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
+        }
+    }
+
+    handleRandomClick = () => {
+        try {
+            logic.searchRandomStories()
+                .then((stories) => {
+
+                    this.setState({ stories, error: null })
+                })
+                .catch(err => {
+                    let message
+                    switch (err.message) {
+                        // case `stories with query ${this.state.query} not found`:
+                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                        //     break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message, stories: [] })
+                })
+        } catch (err) {
+            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
+        }
+    }
+
     handleInputChange = event => {
         const query = event.target.value
 
         this.setState({ query, error: null })
+
+        try {
+            logic.searchStory(query)
+                .then((stories) => {
+
+                    this.setState({ stories, error: null })
+                })
+                .catch(err => {
+                    let message
+                    switch (err.message) {
+                        case `stories with query ${this.state.query} not found`:
+                            message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                            break
+                        default:
+                            message = err.message
+                    }
+                    this.setState({ error: message, stories: [] })
+                })
+        } catch (err) {
+            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
+        }
+
     }
 
     handleSubmit = event => {
@@ -20,19 +88,20 @@ class SearchStories extends Component {
         try {
             logic.searchStory(query)
                 .then((stories) => {
-                    
+
                     this.setState({ stories, error: null })
                 })
                 .catch(err => {
                     let message
-                    switch(err.message) {
+                    switch (err.message) {
                         case `stories with query ${this.state.query} not found`:
                             message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
                             break
                         default:
-                        message = err.message
+                            message = err.message
                     }
-                    this.setState({ error: message, stories: [] })})
+                    this.setState({ error: message, stories: [] })
+                })
         } catch (err) {
             this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
         }
@@ -45,11 +114,14 @@ class SearchStories extends Component {
     render() {
         return <div>
             <div className='container-search-stories'>
-                <h1>CERCA CONTES</h1>
-                <form className='search-form' onSubmit={this.handleSubmit}>
-                    <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} />
-                    <button type="submit"><i className="fa fa-search"></i></button>
-                </form>
+                <div className='title-form-container'>
+                    <h1>CERCA CONTES</h1>
+                    <form className='search-form' onSubmit={this.handleSubmit}>
+                        <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus/>
+                        <button type="submit"><i className="fa fa-search"></i></button>
+                    </form>
+                    <button className='random-button' onClick={this.handleRandomClick}>BUSCAR CONTES ALEATORIS</button>
+                </div>
                 <ul className='search-stories-list'>
                     {this.state.stories.map(story => <div className='detail-search-stories'><Detail edit={false} id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} /></div>)}
                 </ul>
@@ -57,7 +129,6 @@ class SearchStories extends Component {
             {this.state.error && <Error message={this.state.error} />}
         </div>
     }
-
 }
 
 export default SearchStories

@@ -19,7 +19,9 @@ const logic = {
 
             if (user) throw new AlreadyExistsError(`username ${username} already registered`)
 
-            user = new User({ name: name.toUpperCase(), surname: surname.toUpperCase(), username: username.toUpperCase(), password: password.toUpperCase() })
+            // user = new User({ name: name.toUpperCase(), surname: surname.toUpperCase(), username: username.toUpperCase(), password: password.toUpperCase() })
+
+            user = new User({ name, surname, username, password })
 
             await user.save()
         })()
@@ -32,7 +34,7 @@ const logic = {
         )
 
         return (async () => {
-            let user = await User.findOne({ username: username.toUpperCase() })
+            let user = await User.findOne({ username })
 
             if (!user || password !== user.password) throw new AuthError('invalid username or password')
 
@@ -72,10 +74,10 @@ const logic = {
 
             if (user.password !== password) throw new AuthError('wrong password')
 
-            name != null && (user.name = name.toUpperCase())
-            surname != null && (user.surname = surname.toUpperCase())
-            username != null && (user.username = username.toUpperCase())
-            newPassword != null && (user.password = newPassword.toUpperCase())
+            name != null && (user.name = name)
+            surname != null && (user.surname = surname)
+            username != null && (user.username = username)
+            newPassword != null && (user.password = newPassword)
 
             await user.save()
         })()
@@ -103,7 +105,7 @@ const logic = {
 
             const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
 
-            if(index >= 0) throw new AlreadyExistsError(`story with id ${storyId} already marked as favourite`)
+            if (index >= 0) throw new AlreadyExistsError(`story with id ${storyId} already marked as favourite`)
 
             user.favourites.push(story.id)
 
@@ -129,12 +131,12 @@ const logic = {
 
             const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
 
-            if(index < 0) throw new NotFoundError(`story with id ${storyId} not found as favourite`)
+            if (index < 0) throw new NotFoundError(`story with id ${storyId} not found as favourite`)
 
             story.pages.splice(index, 1)
 
             user.favourites.splice(index, 1)
-            
+
             await user.save()
         })()
     },
@@ -153,7 +155,7 @@ const logic = {
             let favourites = []
 
             user.favourites.forEach(async story => {
-                
+
                 story.id = story._id.toString()
                 delete story._id
                 delete story.__v
@@ -185,14 +187,14 @@ const logic = {
 
             if (!user) throw new NotFoundError(`user with id ${author} not found`)
 
-            let story = await Story.findOne({ $and: [{ author }, { title: title.toUpperCase() }] })
+            let story = await Story.findOne({ $and: [{ author }, { title }] })
 
             if (story) throw new AlreadyExistsError(`story with title ${title} already created by user with id ${author}`)
 
-            story = new Story({ title: title.toUpperCase(), author })
+            story = new Story({ title, author })
 
-            audioLanguage != null && (story.audioLanguage = audioLanguage.toUpperCase())
-            textLanguage != null && (story.textLanguage = textLanguage.toUpperCase())
+            audioLanguage != null && (story.audioLanguage = audioLanguage)
+            textLanguage != null && (story.textLanguage = textLanguage)
 
             story.cover = `http://localhost:${PORT}/api/users/${author}/stories/${story.id}/cover`
 
@@ -426,9 +428,9 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with title ${title} not found in user with id ${author} stories`)
 
-            title != null && (story.title = title.toUpperCase())
-            audioLanguage != null && (story.audioLanguage = audioLanguage.toUpperCase())
-            textLanguage != null && (story.textLanguage = textLanguage.toUpperCase())
+            title != null && (story.title = title)
+            audioLanguage != null && (story.audioLanguage = audioLanguage)
+            textLanguage != null && (story.textLanguage = textLanguage)
 
             await story.save()
         })()
@@ -504,16 +506,17 @@ const logic = {
             { key: 'query', value: query, type: String }
         ])
         return (async () => {
-        
-            let newQuery = query.toUpperCase()
-            // let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\i]/g, "")
-            const regQuery= {
-                title: {$regex : newQuery},
+
+            // let newQuery = query.toUpperCase()
+            // let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "")
+            let test = new RegExp(query, 'i')
+            const regQuery = {
+                title: { $regex: test },
                 inProcess: false
             }
 
             let stories = await Story.find(regQuery).lean()
-            
+
             if (!stories.length) throw new NotFoundError(`stories with query ${query} not found`)
 
             stories.forEach(story => {
@@ -531,35 +534,38 @@ const logic = {
         })()
     },
 
-    searchStoriesByAuthor(query) {
-        validate([
-            { key: 'query', value: query, type: String }
-        ])
+    searchRandomStories() {
+
         return (async () => {
 
-            let users = User.find({ username: { "$regex": query, "$options": "i" } }).lean()
+            let stories = await Story.find({ inProcess: false }).lean()
 
-            if (!users.length) throw new NotFoundError(`stories with query ${query} not found`)
+            let randomStories = []
 
-            let matchingStories = []
-
-            users.forEach(async user => {
-
-                let stories = await Story.find({ $and: [{ author: user.id }, { inProcess: false }] }).lean()
-                if (stories.length) {
-                    stories.forEach(story => {
-                        delete story._id
-                        delete story.__v
-                        delete story.pages
-                        story.author = story.author.toString()
-
-                        return story
-                    })
+            if (stories.length > 6) {
+                for (i = 0; i < 6; i++) {
+                    const randomNum = Math.floor(Math.random() * (stories.length))
+                    
+                    randomStories.push(stories[randomNum])
+                    
+                    stories.splice(randomNum, 1)
                 }
-                return matchingStories.concat(stories)
+            } else {
+                randomStories = stories
+            }
+
+            randomStories.forEach(story => {
+                story.id = story._id.toString()
+                delete story._id
+                delete story.__v
+                delete story.pages
+                story.author = story.author.toString()
+                
+                return story
             })
 
-            return matchingStories
+            return randomStories
+
         })()
     },
 
@@ -836,75 +842,75 @@ const logic = {
 
     //MAYBE I WILL NEED RETRIEVE PAGE, INSTEAD OF LIST BOOKS, OR RETRIEVE BOOK ALSO!!!!
 
-//     addPageAudio(storyId, pageId, audioUrl, audioBlob) {
-//         validate([
-//             { key: 'pageId', value: pageId, type: String },
-//             { key: 'storyId', value: storyId, type: String },
-//             { key: 'audioUrl', value: audioUrl, type: String },
-//             // { key: 'audioBlob', value: audioBlob, type: String }
-//         ])
+    //     addPageAudio(storyId, pageId, audioUrl, audioBlob) {
+    //         validate([
+    //             { key: 'pageId', value: pageId, type: String },
+    //             { key: 'storyId', value: storyId, type: String },
+    //             { key: 'audioUrl', value: audioUrl, type: String },
+    //             // { key: 'audioBlob', value: audioBlob, type: String }
+    //         ])
 
-//         return (async () => {
+    //         return (async () => {
 
-//             let story = await Story.findById(storyId)
+    //             let story = await Story.findById(storyId)
 
-//             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+    //             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-//             let page = await Page.findById(pageId)
+    //             let page = await Page.findById(pageId)
 
-//             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-// debugger
-//             page.audioURL = audioUrl
+    //             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+    // debugger
+    //             page.audioURL = audioUrl
 
-//             page.audioBlob = audioBlob
+    //             page.audioBlob = audioBlob
 
-//             page.hasAudio = true
+    //             page.hasAudio = true
 
-//             await page.save()
+    //             await page.save()
 
-//             const _page = story.pages.find(page => page.id === pageId)
+    //             const _page = story.pages.find(page => page.id === pageId)
 
-//             _page.audioURL = audioURL
+    //             _page.audioURL = audioURL
 
-//             _page.audioBlob = audioBlob
+    //             _page.audioBlob = audioBlob
 
-//             _page.hasAudio = true
+    //             _page.hasAudio = true
 
-//             await story.save()
-//         })()
-//     },
+    //             await story.save()
+    //         })()
+    //     },
 
-//     retrievePageAudio(pageId, storyId) {
-//         validate([
-//             { key: 'pageId', value: pageId, type: String },
-//             { key: 'storyId', value: storyId, type: String }
-//         ])
+    //     retrievePageAudio(pageId, storyId) {
+    //         validate([
+    //             { key: 'pageId', value: pageId, type: String },
+    //             { key: 'storyId', value: storyId, type: String }
+    //         ])
 
-//         return (async () => {
+    //         return (async () => {
 
-//             let story = await Story.findById(storyId)
+    //             let story = await Story.findById(storyId)
 
-//             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+    //             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-//             let page = await Page.findById(pageId).lean()
+    //             let page = await Page.findById(pageId).lean()
 
-//             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+    //             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-//             page.id = page._id.toString()
-//             delete page._id
-//             delete page.__v
-//             delete page.hasImage
-//             delete page.dataURL
-//             delete page.vectors
-//             delete page.image
-//             delete page.text
-// debugger
-//             return page
-//         })()
-//     }
+    //             page.id = page._id.toString()
+    //             delete page._id
+    //             delete page.__v
+    //             delete page.hasImage
+    //             delete page.dataURL
+    //             delete page.vectors
+    //             delete page.image
+    //             delete page.text
+    // debugger
+    //             return page
+    //         })()
+    //     }
 
-savePageAudio(userId, pageId, storyId, audioFile) {
-    
+    savePageAudio(userId, pageId, storyId, audioFile) {
+
         validate([
             { key: 'userId', value: userId, type: String },
             { key: 'pageId', value: pageId, type: String },
@@ -953,7 +959,7 @@ savePageAudio(userId, pageId, storyId, audioFile) {
 
                         return page.save()
                     })
-                    .then(()=> {
+                    .then(() => {
                         resolve()
                     })
 

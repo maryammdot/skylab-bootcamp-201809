@@ -5,7 +5,7 @@ import Error from '../error/Error'
 import swal from 'sweetalert2'
 
 class CreateStory extends Component {
-    state = { error: null }
+    state = { error: null, title: '', audioLanguage: '', textLanguage: '' }
 
     componentDidMount () {
         logic.retrieveUser()
@@ -83,10 +83,10 @@ class CreateStory extends Component {
             </div>
             <form className="book-details-create" onSubmit={this.handleSubmit}>
                 <h3>TÍTOL DEL CONTE</h3>
-                <input type="text" value={this.state.title} onChange={this.handleTitleChange} />
+                <input type="text" value={this.state.title} onChange={this.handleTitleChange} autoFocus />
                 <h3>AUTOR DEL CONTE</h3>
                 <input type="text" disabled value={this.state.name} />
-                <h3>INIDOMA DE L'AUDIO DEL CONTE</h3>
+                <h3>IDIOMA DE L'AUDIO DEL CONTE</h3>
                 <input type="text" value={this.state.audioLanguage} onChange={this.handleAudioLanguageChange} />
                 <h3>IDIOMA DEL TEXT DEL CONTE</h3>
                 <input type="text" value={this.state.textLanguage} onChange={this.handleTextLanguageChange} />

@@ -41,7 +41,7 @@ class Login extends Component {
             <div className='container-login'>
                 <h3>INICIA SESSIÓ</h3>
                 <form className='login-form' onSubmit={this.handleSubmit}>
-                    <input type="text" placeholder="NOM D'USUARI" onChange={this.handleUsernameChange} />
+                    <input type="text" placeholder="NOM D'USUARI" onChange={this.handleUsernameChange} autoFocus/>
                     <input type="password" placeholder="CONTRASENYA" onChange={this.handlePasswordChange} />
                     <div className='buttons'><button type="submit">INICIA SESSIÓ</button> <a href="#" onClick={this.props.onGoBack}>ENDARRERE</a></div>
                 </form>

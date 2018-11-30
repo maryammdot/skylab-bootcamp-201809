@@ -5,7 +5,7 @@ import Error from '../error/Error'
 
 class Audio extends Component {
 
-    state = { text: '', error: null, canListen: false, secs: 0 }
+    state = { text: '', error: null, canListen: false, secs: 0, clear: true }
 
     componentDidMount() {
         if (this.props.audio) {
@@ -66,11 +66,13 @@ class Audio extends Component {
             const recorder = await this.recordAudio()
 
             recorder.start()
-
-            // this.beginCounter()
-
+            
             this.setState({ recorder, error: null, canListen: false, clear: false, secs: 0 })
+
+            this.beginCounter()
         } catch (err) {
+            const e = err
+            debugger
             this.setState({ error: err.message })
         }
     }
@@ -84,6 +86,8 @@ class Audio extends Component {
 
                 this.setState({ audioUrl, error: null, canListen: true, clear: true })
 
+                clearInterval(this.counter)
+
                 this.props.onSaveAudio(audioBlob)
             }
         } catch (err) {
@@ -95,19 +99,17 @@ class Audio extends Component {
         }
     }
 
-    // beginCounter = () => {
-    //     let counter = setInterval(function () {
-    //         let secs = this.state.secs
+    beginCounter = () => {
+        this.counter = setInterval( () => {
+            let secs = this.state.secs
 
-    //         secs++
+            secs++
 
-    //         this.setState({ secs })
-    //     }, 1000)
+            this.setState({ secs })
+        }, 1000)
+    }
+    
 
-    //     if (this.state.clear) {
-    //         clearInterval(counter)
-    //     }
-    // }
 
     render() {
         return <div className='container-audio'>
@@ -125,7 +127,7 @@ class Audio extends Component {
                         <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
                         <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
                     </div>
-                    {!!this.state.clear && <h3>{this.state.secs}</h3>}
+                    {!this.state.clear && <h3>{this.state.secs}</h3>}
                     {this.state.canListen && <div className="play-sec">
                         <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
                     </div>}

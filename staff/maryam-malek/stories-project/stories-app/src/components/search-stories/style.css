@@ -5,7 +5,14 @@
   justify-content: center;
   align-items: center;
   width: 500px;
-  height: 70%;
+  height: 700px;
+  margin-top: 30%;
+}
+
+.title-form-container {
+  position: absolute;
+  top: 8%;
+  left: 41%;
 }
 
 .search-stories-list {
@@ -15,12 +22,11 @@
   justify-content: center;
   align-items: center;
   width: 70%;
-  height: 70%;
+  height: 50%;
 }
 
 .search-form {
-  width: 100%;
-  text-align: center;
+  width: 350px;
 }
 
 .search-form input {
@@ -35,7 +41,8 @@
   border: none;
 }
 
-.firstStoryButton {
+.random-button {
+  margin-top: 4%;
   font-size: 1em;
   width: 6em;
   height: 4em;
