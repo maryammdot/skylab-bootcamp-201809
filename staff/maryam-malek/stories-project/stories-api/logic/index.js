@@ -60,6 +60,7 @@ const logic = {
 
     updateUser(id, name, surname, username, newPassword, password) {
         validate([
+            { key: 'id', value: id, type: String },
             { key: 'name', value: name, type: String, optional: true },
             { key: 'surname', value: surname, type: String, optional: true },
             { key: 'username', value: username, type: String, optional: true },
@@ -93,7 +94,7 @@ const logic = {
 
             let user = await User.findById(userId)
 
-            if (!user) throw new NotFoundError(`user with id ${author} not found`)
+            if (!user) throw new NotFoundError(`user with id ${userId} not found`)
 
             let story = await Story.findById(storyId)
 
@@ -123,7 +124,7 @@ const logic = {
 
             let user = await User.findById(userId)
 
-            if (!user) throw new NotFoundError(`user with id ${author} not found`)
+            if (!user) throw new NotFoundError(`user with id ${userId} not found`)
 
             let story = await Story.findById(storyId)
 
@@ -426,7 +427,7 @@ const logic = {
 
             let story = await Story.findById(id)
 
-            if (!story) throw new NotFoundError(`story with title ${title} not found in user with id ${author} stories`)
+            if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
 
             title != null && (story.title = title)
             audioLanguage != null && (story.audioLanguage = audioLanguage)
@@ -520,6 +521,7 @@ const logic = {
             if (!stories.length) throw new NotFoundError(`stories with query ${query} not found`)
 
             stories.forEach(story => {
+                // if(story.inProcess === true) throw Error(`story with id ${story.id} still in process`)
                 story.id = story._id.toString()
                 delete story._id
                 delete story.__v
@@ -540,14 +542,16 @@ const logic = {
 
             let stories = await Story.find({ inProcess: false }).lean()
 
+            if (!stories.length) throw new NotFoundError(`stories not found`)
+
             let randomStories = []
 
             if (stories.length > 6) {
                 for (i = 0; i < 6; i++) {
                     const randomNum = Math.floor(Math.random() * (stories.length))
-                    
+
                     randomStories.push(stories[randomNum])
-                    
+
                     stories.splice(randomNum, 1)
                 }
             } else {
@@ -560,7 +564,7 @@ const logic = {
                 delete story.__v
                 delete story.pages
                 story.author = story.author.toString()
-                
+
                 return story
             })
 
@@ -613,8 +617,6 @@ const logic = {
             let page = await Page.findById(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-            //THINK ABOUT KIND OF ERROR I WANT TO THROW!!
 
             page.text = text
 
@@ -840,7 +842,6 @@ const logic = {
         })()
     },
 
-    //MAYBE I WILL NEED RETRIEVE PAGE, INSTEAD OF LIST BOOKS, OR RETRIEVE BOOK ALSO!!!!
 
     //     addPageAudio(storyId, pageId, audioUrl, audioBlob) {
     //         validate([
@@ -909,10 +910,10 @@ const logic = {
     //         })()
     //     }
 
-    savePageAudio(userId, pageId, storyId, audioFile) {
+    savePageAudio(pageId, storyId, audioFile) {
 
         validate([
-            { key: 'userId', value: userId, type: String },
+            // { key: 'userId', value: userId, type: String },
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String }
             // { key: 'audioFile', value: audioFile, type: String }
@@ -924,7 +925,7 @@ const logic = {
 
         return new Promise((resolve, reject) => {
             try {
-                Story.findById(storyId)
+                return Story.findById(storyId)
                     .then(story => {
                         if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
@@ -999,6 +1000,7 @@ const logic = {
 
                         resolve(rs)
                     })
+                    // .catch((err) => {debugger})
             } catch (err) {
                 reject(err)
             }

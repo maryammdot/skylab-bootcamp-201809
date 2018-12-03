@@ -36,15 +36,7 @@ describe('logic', () => {
                 expect(_user.surname).to.equal(surname)
                 expect(_user.username).to.equal(username)
                 expect(_user.password).to.equal(password)
-
             })
-
-            // I don't know why it returns error  AssertionError: expected [Function] to throw AlreadyExistsError
-            // it('should fail on repeted username', async () => {
-            //     await logic.register(name, surname, username, password)
-
-            //     expect(() => logic.register(name, surname, username, password)).to.throw(AlreadyExistsError, `username ${username} already registered`)
-            // })
 
             it('should fail on undefined name', () => {
                 expect(() => logic.register(undefined, surname, username, password)).to.throw(TypeError, 'undefined is not a string')
@@ -58,7 +50,55 @@ describe('logic', () => {
                 expect(() => logic.register('   \t\n', surname, username, password)).to.throw(ValueError, 'name is empty or blank')
             })
 
-            // TODO other test cases
+            it('should fail on undefined surname', () => {
+                expect(() => logic.register(name, undefined, username, password)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty surname', () => {
+                expect(() => logic.register(name, '', username, password)).to.throw(ValueError, 'surname is empty or blank')
+            })
+
+            it('should fail on blank surname', () => {
+                expect(() => logic.register(name, '   \t\n', username, password)).to.throw(ValueError, 'surname is empty or blank')
+            })
+
+            it('should fail on undefined username', () => {
+                expect(() => logic.register(name, surname, undefined, password)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty username', () => {
+                expect(() => logic.register(name, surname, '', password)).to.throw(ValueError, 'username is empty or blank')
+            })
+
+            it('should fail on blank username', () => {
+                expect(() => logic.register(name, surname, '   \t\n', password)).to.throw(ValueError, 'username is empty or blank')
+            })
+
+            it('should fail on undefined password', () => {
+                expect(() => logic.register(name, surname, username, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty password', () => {
+                expect(() => logic.register(name, surname, username, '')).to.throw(ValueError, 'password is empty or blank')
+            })
+
+            it('should fail on blank password', () => {
+                expect(() => logic.register(name, surname, username, '   \t\n')).to.throw(ValueError, 'password is empty or blank')
+            })
+
+            describe('with already registered user', () => {
+                beforeEach(async () => user = await new User({ name, surname, username, password }).save())
+
+                it('should fail on repeted username', async () => {
+                    try {
+                        await logic.register(name, surname, username, password)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(AlreadyExistsError)
+                        expect(err.message).to.equal(`username ${username} already registered`)
+                    }
+                })
+            })
         })
 
         describe('authenticate', () => {
@@ -104,7 +144,18 @@ describe('logic', () => {
                 expect(() => logic.authenticate('   \t\n', password)).to.throw(ValueError, 'username is empty or blank')
             })
 
-            // TODO other test cases
+
+            it('should fail on undefined password', () => {
+                expect(() => logic.authenticate(username, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty password', () => {
+                expect(() => logic.authenticate(username, '')).to.throw(ValueError, 'password is empty or blank')
+            })
+
+            it('should fail on blank password', () => {
+                expect(() => logic.authenticate(username, '   \t\n')).to.throw(ValueError, 'password is empty or blank')
+            })
         })
 
         describe('retrieve user', () => {
@@ -143,7 +194,20 @@ describe('logic', () => {
             it('should fail on blank id', () => {
                 expect(() => logic.retrieveUser('   \t\n')).to.throw(ValueError, 'id is empty or blank')
             })
-            // TODO other test cases
+
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail on incorrect password', async () => {
+                    try {
+                        await logic.retrieveUser(user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
         })
 
 
@@ -176,18 +240,101 @@ describe('logic', () => {
                 expect(_user.password).to.equal(newPassword)
             })
 
+            it('should fail on incorrect password', async () => {
+                try {
+                    await logic.updateUser(user.id, newName, newSurname, newUsername, newPassword, 'wrong_password')
+                    expect(true).to.be.false
+                } catch (err) {
+                    expect(err).to.be.instanceof(AuthError)
+                    expect(err.message).to.equal(`wrong password`)
+                }
+            })
+
             it('should fail on undefined id', () => {
-                expect(() => logic.retrieveUser(undefined)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.updateUser(undefined, newName, newSurname, newUsername, newPassword, user.password)).to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty id', () => {
-                expect(() => logic.retrieveUser('')).to.throw(ValueError, 'id is empty or blank')
+                expect(() => logic.updateUser('', newName, newSurname, newUsername, newPassword, user.password)).to.throw(ValueError, 'id is empty or blank')
             })
 
             it('should fail on blank id', () => {
-                expect(() => logic.retrieveUser('   \t\n')).to.throw(ValueError, 'id is empty or blank')
+                expect(() => logic.updateUser('   \t\n', newName, newSurname, newUsername, newPassword, user.password)).to.throw(ValueError, 'id is empty or blank')
             })
-            // TODO other test cases
+
+            it('should fail on undefined name', () => {
+                expect(() => logic.updateUser(user.id, undefined, newSurname, newUsername, newPassword, user.password)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty name', () => {
+                expect(() => logic.updateUser(user.id, '', newSurname, newUsername, newPassword, user.password)).to.throw(ValueError, 'name is empty or blank')
+            })
+
+            it('should fail on blank name', () => {
+                expect(() => logic.updateUser(user.id, '   \t\n', newSurname, newUsername, newPassword, user.password)).to.throw(ValueError, 'name is empty or blank')
+            })
+
+            it('should fail on undefined surname', () => {
+                expect(() => logic.updateUser(user.id, newName, undefined, newUsername, newPassword, user.password)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty surname', () => {
+                expect(() => logic.updateUser(user.id, newName, '', newUsername, newPassword, user.password)).to.throw(ValueError, 'surname is empty or blank')
+            })
+
+            it('should fail on blank surname', () => {
+                expect(() => logic.updateUser(user.id, newName, '   \t\n', newUsername, newPassword, user.password)).to.throw(ValueError, 'surname is empty or blank')
+            })
+
+            it('should fail on undefined username', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, undefined, newPassword, user.password)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty username', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, '', newPassword, user.password)).to.throw(ValueError, 'username is empty or blank')
+            })
+
+            it('should fail on blank username', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, '   \t\n', newPassword, user.password)).to.throw(ValueError, 'username is empty or blank')
+            })
+
+            it('should fail on undefined new password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, undefined, user.password)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty new password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, '', user.password)).to.throw(ValueError, 'newPassword is empty or blank')
+            })
+
+            it('should fail on blank new password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, '   \t\n', user.password)).to.throw(ValueError, 'newPassword is empty or blank')
+            })
+
+            it('should fail on undefined password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, newPassword, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, newPassword, '')).to.throw(ValueError, 'password is empty or blank')
+            })
+
+            it('should fail on blank password', () => {
+                expect(() => logic.updateUser(user.id, newName, newSurname, newUsername, newPassword, '   \t\n')).to.throw(ValueError, 'password is empty or blank')
+            })
+
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail on not existing user', async () => {
+                    try {
+                        await logic.updateUser(user.id, newName, newSurname, newUsername, newPassword, user.password)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
         })
 
     })
@@ -228,6 +375,36 @@ describe('logic', () => {
                 expect(story.cover).not.to.be.undefined
             })
 
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.addStory(title, user.id, audioLanguage, textLanguage)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('with already created story with same title', () => {
+                beforeEach(async () => {
+                    story = await new Story({ title, author: user.id, audioLanguage, textLanguage }).save()
+                })
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.addStory(title, user.id, audioLanguage, textLanguage)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(AlreadyExistsError)
+                        expect(err.message).to.equal(`story with title ${title} already created by user with id ${user.id}`)
+                    }
+                })
+            })
+
             it('should fail on undefined title', () => {
                 expect(() => logic.addStory(undefined, user.id, audioLanguage, textLanguage)).to.throw(TypeError, 'undefined is not a string')
             })
@@ -237,10 +414,44 @@ describe('logic', () => {
             })
 
             it('should fail on blank title', () => {
-                expect(() => logic.addStory('   \t\n', audioLanguage, textLanguage)).to.throw(ValueError, 'title is empty or blank')
+                expect(() => logic.addStory('   \t\n', user.id, audioLanguage, textLanguage)).to.throw(ValueError, 'title is empty or blank')
             })
 
-            // TODO other test cases
+            it('should fail on undefined author', () => {
+                expect(() => logic.addStory(title, undefined, audioLanguage, textLanguage)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty author', () => {
+                expect(() => logic.addStory(title, '', audioLanguage, textLanguage)).to.throw(ValueError, 'authorId is empty or blank')
+            })
+
+            it('should fail on blank author', () => {
+                expect(() => logic.addStory(title, '   \t\n', audioLanguage, textLanguage)).to.throw(ValueError, 'authorId is empty or blank')
+            })
+
+            it('should fail on undefined audio language', () => {
+                expect(() => logic.addStory(title, user.id, undefined, textLanguage)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty audio language', () => {
+                expect(() => logic.addStory(title, user.id, '', textLanguage)).to.throw(ValueError, 'audioLanguage is empty or blank')
+            })
+
+            it('should fail on blank audio language', () => {
+                expect(() => logic.addStory(title, user.id, '   \t\n', textLanguage)).to.throw(ValueError, 'audioLanguage is empty or blank')
+            })
+
+            it('should fail on undefined text language', () => {
+                expect(() => logic.addStory(title, user.id, audioLanguage, undefined)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty text language', () => {
+                expect(() => logic.addStory(title, user.id, audioLanguage, '')).to.throw(ValueError, 'textLanguage is empty or blank')
+            })
+
+            it('should fail on blank text language', () => {
+                expect(() => logic.addStory(title, user.id, audioLanguage, '   \t\n')).to.throw(ValueError, 'textLanguage is empty or blank')
+            })
         })
 
         describe('list stories', () => {
@@ -307,6 +518,19 @@ describe('logic', () => {
                 expect(__story2.pages.length).to.equal(0)
             })
 
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.listStories(user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
 
             it('should fail on undefined user id', () => {
                 expect(() => logic.listStories(undefined)).to.throw(TypeError, 'undefined is not a string')
@@ -323,7 +547,7 @@ describe('logic', () => {
 
 
         describe('retrieve story', () => {
-            let title, audioLanguage, textLanguage, user, story, page, index, text
+            let title, audioLanguage, textLanguage, user, story, page, text
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -339,10 +563,9 @@ describe('logic', () => {
 
                 let id = user.id
 
-                index = 1
                 text = `text-${Math.random()}`
 
-                page = await new Page({ index, text }).save()
+                page = await new Page({ text }).save()
 
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
 
@@ -354,18 +577,17 @@ describe('logic', () => {
 
 
                 expect(_story.id).to.be.a('string')
-                expect(_story.author.toString()).to.equal(user.id)
+                expect(_story.author.toString()).to.equal(user.name)
                 expect(_story.title).to.equal(title)
                 expect(_story.audioLanguage).to.equal(audioLanguage)
                 expect(_story.textLanguage).to.equal(textLanguage)
                 expect(_story.cover).to.be.undefined
                 expect(_story.hasCover).to.be.false
                 expect(_story.pages.length).to.equal(1)
-                expect(_story.pages[0].index).to.equal(index)
                 expect(_story.pages[0].text).to.equal(text)
                 expect(_story.pages[0].id).to.equal(page.id)
                 expect(_story.pages[0].hasImage).to.be.false
-                expect(_story.pages[0].hasAudio).to.be.undefined
+                expect(_story.pages[0].hasAudio).to.be.false
 
                 const _stories = await Story.find()
 
@@ -379,7 +601,6 @@ describe('logic', () => {
                 expect(__story.cover).to.be.undefined
                 expect(__story.hasCover).to.be.false
                 expect(_story.pages.length).to.equal(__story.pages.length)
-                expect(_story.pages[0].index).to.equal(__story.pages[0].index)
                 expect(_story.pages[0].text).to.equal(__story.pages[0].text)
                 expect(_story.pages[0].id).to.equal(__story.pages[0].id)
                 expect(__story.pages[0].hasImage).to.be.false
@@ -389,6 +610,33 @@ describe('logic', () => {
 
             })
 
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.retrieveStory(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing user', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.retrieveStory(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                    }
+                })
+            })
 
             it('should fail on undefined authorId', () => {
                 expect(() => logic.retrieveStory(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
@@ -400,6 +648,18 @@ describe('logic', () => {
 
             it('should fail on empty authorId', () => {
                 expect(() => logic.retrieveStory('   \t\n', story.id)).to.throw(ValueError, 'authorId is empty or blank')
+            })
+
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.retrieveStory(user.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.retrieveStory(user.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.retrieveStory(user.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
             })
         })
 
@@ -490,11 +750,63 @@ describe('logic', () => {
                 expect(_story.textLanguage).to.equal(newTextLanguage)
             })
 
-            it('should fail on undefined user.id', () => {
-                expect(() => logic.updateStory(story.id, null, undefined, null, null)).to.throw(TypeError, 'undefined is not a string')
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail with unexisting user', async () => {
+                    try {
+                        await logic.updateStory(story.id, newTitle, user.id, newAudioLanguage, newTextLanguage)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.updateStory(story.id, newTitle, user.id, newAudioLanguage, newTextLanguage)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                    }
+                })
+            })
+
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.updateStory(undefined, title, user.id, null, null)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.updateStory('', title, user.id, null, null)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.updateStory('   \t\n', title, user.id, null, null)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on undefined title', () => {
+                expect(() => logic.updateStory(story.id, undefined, user.id, null, null)).not.to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty title', () => {
+                expect(() => logic.updateStory(story.id, '', user.id, null, null)).to.throw(ValueError, 'title is empty or blank')
+            })
+
+            it('should fail on empty title', () => {
+                expect(() => logic.updateStory(story.id, '   \t\n', user.id, null, null)).to.throw(ValueError, 'title is empty or blank')
+            })
+
+            it('should fail on undefined authorId', () => {
+                expect(() => logic.updateStory(story.id, null, undefined, null, null)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty authorId', () => {
                 expect(() => logic.updateStory(story.id, null, '', null, null)).to.throw(ValueError, 'authorId is empty or blank')
             })
 
@@ -502,7 +814,29 @@ describe('logic', () => {
                 expect(() => logic.updateStory(story.id, null, '   \t\n', null, null)).to.throw(ValueError, 'authorId is empty or blank')
             })
 
-            // TODO other test cases
+            it('should fail on undefined audioLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, undefined, null)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty audioLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, '', null)).to.throw(ValueError, 'audioLanguage is empty or blank')
+            })
+
+            it('should fail on empty audioLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, '   \t\n', null)).to.throw(ValueError, 'audioLanguage is empty or blank')
+            })
+
+            it('should fail on undefined textLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, audioLanguage, undefined)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty textLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, audioLanguage, '')).to.throw(ValueError, 'textLanguage is empty or blank')
+            })
+
+            it('should fail on empty textLanguage', () => {
+                expect(() => logic.updateStory(story.id, null, user.id, audioLanguage, '   \t\n')).to.throw(ValueError, 'textLanguage is empty or blank')
+            })
         })
 
 
@@ -543,19 +877,57 @@ describe('logic', () => {
                 expect(_story.inProcess).to.be.false
             })
 
-            it('should fail on undefined user.id', () => {
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail with unexisting user', async () => {
+                    try {
+                        await logic.finishStory(story.id, user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.finishStory(story.id, user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                    }
+                })
+            })
+
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.finishStory(undefined, user.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.finishStory('', user.id)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.finishStory('   \t\n', user.id)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on undefined author', () => {
                 expect(() => logic.finishStory(story.id, undefined)).to.throw(TypeError, 'undefined is not a string')
             })
 
-            it('should fail on empty title', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.finishStory(story.id, '')).to.throw(ValueError, 'authorId is empty or blank')
             })
 
-            it('should fail on empty authorId', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.finishStory(story.id, '   \t\n')).to.throw(ValueError, 'authorId is empty or blank')
             })
-
-            // TODO other test cases
         })
 
         describe('work in story ', () => {
@@ -594,24 +966,61 @@ describe('logic', () => {
                 expect(_story.textLanguage).to.equal(textLanguage)
                 expect(_story.inProcess).to.be.true
             })
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
 
-            it('should fail on undefined user.id', () => {
+                it('should fail with unexisting user', async () => {
+                    try {
+                        await logic.workInStory(story.id, user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.workInStory(story.id, user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                    }
+                })
+            })
+
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.workInStory(undefined, user.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.workInStory('', user.id)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.workInStory('   \t\n', user.id)).to.throw(ValueError, 'id is empty or blank')
+            })
+
+            it('should fail on undefined author', () => {
                 expect(() => logic.workInStory(story.id, undefined)).to.throw(TypeError, 'undefined is not a string')
             })
 
-            it('should fail on empty title', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.workInStory(story.id, '')).to.throw(ValueError, 'authorId is empty or blank')
             })
 
-            it('should fail on empty authorId', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.workInStory(story.id, '   \t\n')).to.throw(ValueError, 'authorId is empty or blank')
             })
-
-            // TODO other test cases
         })
 
-        false && describe('save cover', () => {
-            let user, story
+        describe('save story cover', () => {
+            let user, story, dataURL, vectors
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -630,26 +1039,86 @@ describe('logic', () => {
                 let id = user.id
 
                 story = await new Story({ title, author: id, audioLanguage, textLanguage }).save()
+
+                dataURL = 'dataURL....'
+                vectors = [{
+                    start: { offsetX: 10, offsetY: 10 },
+                    stop: { offsetX: 20, offsetY: 15 },
+                    strokeStyle: 'fff',
+                    width: 4
+                }]
             })
 
             it('should succeed on correct data', async () => {
 
-                const rs = fs.createReadStream(path.join(process.cwd(), `data/stories/default/cover.png`))
-
-                await logic.saveStoryCover(user.id, story.id, rs)
-
-                expect(fs.existsSync(path.join(process.cwd(), `data/stories/${story.id}/cover/cover.png`))).to.be.true
+                await logic.saveStoryCover(story.id, dataURL, vectors)
 
                 const _story = await Story.findById(story.id)
 
                 expect(_story.hasCover).to.be.true
+                expect(_story.dataURL).to.equal(dataURL)
+                expect(_story.vectors.length).to.equal(vectors.length)
+                expect(_story.vectors[0].strokeStyle).to.equal(vectors[0].strokeStyle)
+                expect(_story.vectors[0].width).to.equal(vectors[0].width)
+                expect(_story.vectors[0].start.offsetX).to.equal(vectors[0].start.offsetX)
+                expect(_story.vectors[0].start.offsetY).to.equal(vectors[0].start.offsetY)
+                expect(_story.vectors[0].stop.offsetX).to.equal(vectors[0].stop.offsetX)
+                expect(_story.vectors[0].stop.offsetY).to.equal(vectors[0].stop.offsetY)
             })
 
-            afterEach(() => fs.removeSync(`data/stories/${story.id}`))
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.saveStoryCover(story.id, dataURL, vectors)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.saveStoryCover(undefined, dataURL, vectors)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.saveStoryCover('', dataURL, vectors)).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.saveStoryCover('   \t\n', dataURL, vectors)).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on undefined dataURL', () => {
+                expect(() => logic.saveStoryCover(story.id, undefined, vectors)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty dataURL', () => {
+                expect(() => logic.saveStoryCover(story.id, '', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
+            })
+
+            it('should fail on blank dataURL', () => {
+                expect(() => logic.saveStoryCover(story.id, '   \t\n', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
+            })
+
+            // it('should fail on undefined vectors', () => {
+            //     expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+            // })
+
+            // it('should fail on empty vectors', () => {
+            //     expect(() => logic.saveStoryCover(story.id, dataURL, '')).to.throw(ValueError, 'vectors is empty or blank')
+            // })
+
+            // it('should fail on blank vectors', () => {
+            //     expect(() => logic.saveStoryCover(story.id, dataURL, '   \t\n')).to.throw(ValueError, 'vectors is empty or blank')
+            // })
         })
 
-        false && describe('retrieve cover', () => {
-            let user, story
+        describe('retrieve story cover', () => {
+            let user, story, vectors, dataURL
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -666,72 +1135,60 @@ describe('logic', () => {
                 newTextLanguage = `${textLanguage}-${Math.random()}`
                 newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
+                dataURL = 'dataURL....'
+                vectors = [{
+                    start: { offsetX: 10, offsetY: 10 },
+                    stop: { offsetX: 20, offsetY: 15 },
+                    strokeStyle: 'fff',
+                    width: 4
+                }]
 
-                story = await new Story({ title, author: id, audioLanguage, textLanguage }).save()
+                story = await new Story({ title, author: id, audioLanguage, textLanguage, hasCover: true, vectors, dataURL }).save()
             })
             it('should succeed on correct data', async () => {
-                const storyCoverReadStream = await logic.retrieveStoryCover(user.id, story.id)
 
-                const storyCoverHashReadStream = storyCoverReadStream.pipe(hasha.stream())
+                const cover = await logic.retrieveStoryCover(story.id)
 
-                const defaultCoverHashReadStream = fs.createReadStream('data/stories/default/cover.png').pipe(hasha.stream())
+                const _story = await Story.findById(story.id)
 
-                const hashes = await Promise.all([
-                    streamToArray(storyCoverHashReadStream)
-                        .then(arr => arr[0]),
-                    streamToArray(defaultCoverHashReadStream)
-                        .then(arr => arr[0])
-                ])
-
-                const [storyCoverHash, defaultCoverHash] = hashes
-
-                expect(storyCoverHash).to.equal(defaultCoverHash)
+                expect(_story.hasCover).to.be.true
+                expect(_story.hasCover).to.equal(cover.hasCover)
+                expect(_story.dataURL).to.equal(cover.dataURL)
+                expect(_story.vectors.length).to.equal(cover.vectors.length)
+                expect(_story.vectors[0].strokeStyle).to.equal(cover.vectors[0].strokeStyle)
+                expect(_story.vectors[0].width).to.equal(cover.vectors[0].width)
+                expect(_story.vectors[0].start.offsetX).to.equal(cover.vectors[0].start.offsetX)
+                expect(_story.vectors[0].start.offsetY).to.equal(cover.vectors[0].start.offsetY)
+                expect(_story.vectors[0].stop.offsetX).to.equal(cover.vectors[0].stop.offsetX)
+                expect(_story.vectors[0].stop.offsetY).to.equal(cover.vectors[0].stop.offsetY)
             })
 
-            describe('when user already has a profile photo', () => {
-                let folder, file
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
 
-                beforeEach(async () => {
-                    folder = `data/stories/${story.id}`
-
-                    fs.mkdirSync(folder)
-
-                    fs.mkdirSync(`data/stories/${story.id}/cover`)
-
-                    file = 'cover.png'
-
-                    fs.writeFileSync(path.join(`data/stories/${story.id}/cover`, file), text2png(':-)', { color: 'blue' }))
-
-                    story.hasCover = true
-
-                    await story.save()
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.retrieveStoryCover(story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
                 })
-
-                it('should succeed on correct data', async () => {
-                    const storyCoverReadStream = await logic.retrieveStoryCover(user.id, story.id)
-
-                    const storyCoverHashReadStream = storyCoverReadStream.pipe(hasha.stream())
-
-                    const actualCoverHashReadStream = fs.createReadStream(path.join(`data/stories/${story.id}/cover`, file)).pipe(hasha.stream())
-
-                    const hashes = await Promise.all([
-                        streamToArray(storyCoverHashReadStream)
-                            .then(arr => arr[0]),
-                        streamToArray(actualCoverHashReadStream)
-                            .then(arr => arr[0])
-                    ])
-
-                    const [storyCoverHash, actualCoverHash] = hashes
-
-                    expect(storyCoverHash).to.equal(actualCoverHash)
-                })
-
             })
 
-            afterEach(() => fs.removeSync(`data/stories/${story.id}`))
+            it('should fail on undefined story id', () => {
+                expect(() => logic.retrieveStoryCover(undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.retrieveStoryCover('')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.retrieveStoryCover('   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
         })
-
-
 
         describe('remove story', () => {
             let title, audioLanguage, textLanguage, user, story, page
@@ -765,22 +1222,60 @@ describe('logic', () => {
 
             })
 
-            it('should fail on undefined story id', () => {
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail with unexisting user', async () => {
+                    try {
+                        await logic.removeStory(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.removeStory(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.removeStory(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.removeStory('', story.id)).to.throw(ValueError, 'authorId is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.removeStory('   \t\n', story.id)).to.throw(ValueError, 'authorId is empty or blank')
+            })
+
+            it('should fail on undefined author', () => {
                 expect(() => logic.removeStory(user.id, undefined)).to.throw(TypeError, 'undefined is not a string')
             })
 
-            it('should fail on empty story id', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.removeStory(user.id, '')).to.throw(ValueError, 'storyId is empty or blank')
             })
 
-            it('should fail on blank story id', () => {
+            it('should fail on empty author', () => {
                 expect(() => logic.removeStory(user.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
             })
-
-            // TODO other test cases
         })
 
-        describe('search stories', () => {
+        describe('search stories by title', () => {
             let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2
 
             beforeEach(async () => {
@@ -812,13 +1307,6 @@ describe('logic', () => {
 
             it('should succeed on correct query', async () => {
 
-                const query = 'title'
-                // const stories = await logic.searchStoriesByTitle(title)
-
-                // expect(stories.length).to.equal(2)
-
-                // const [_story, _story2] = stories
-
                 const stories = await logic.searchStoriesByTitle(title)
 
                 expect(stories.length).to.equal(1)
@@ -831,36 +1319,115 @@ describe('logic', () => {
                 expect(_story.author.toString()).to.equal(story.author.toString())
                 expect(_story.audioLanguage).to.equal(story.audioLanguage)
                 expect(_story.textLanguage).to.equal(story.textLanguage)
-                
-                // expect(_story2.id.toString()).to.equal(story2.id.toString())
-                // expect(_story2.title).to.equal(story2.title)
-                // expect(_story2.hasCover).to.equal(story2.hasCover)
-                // expect(_story2.author.toString()).to.equal(story2.author.toString())
-                // expect(_story2.audioLanguage).to.equal(story2.audioLanguage)
-                // expect(_story2.textLanguage).to.equal(story2.textLanguage)
+
             })
 
-            // it('should fail if inProcess is true', async () => {
+            // describe('without true inProcess user', () => {
+            //     beforeEach( async () => {
+            //         story.inProcess = true
+            //         await story.save()    
+            //     })
 
-            //     story.inProcess = true
-            //     await story.save()
+            //     it('should fail on incorrect password', async () => {
+            //         try {
+            //             await logic.searchStoriesByTitle(story.title)
+            //             expect(true).to.be.false
+            //         } catch (err) {
+            //             expect(err).to.be.instanceof(Error)
+            //             expect(err.message).to.equal(`story with id ${story.id} still in process`)
+            //         }
+            //     })
 
-            //     expect(() => logic.searchStoriesByTitle(title)).to.throw(NotFoundError, `stories with query ${title} not found`)
-                
             // })
+
+            describe('without existing stories', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.searchStoriesByTitle(title)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`stories with query ${title} not found`)
+                    }
+                })
+            })
 
             it('should fail on undefined title', () => {
                 expect(() => logic.searchStoriesByTitle(undefined)).to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty title', () => {
-                expect(() => logic.searchStoriesByTitle('')).to.throw(ValueError, 'title is empty or blank')
+                expect(() => logic.searchStoriesByTitle('')).to.throw(ValueError, 'query is empty or blank')
             })
 
             it('should fail on empty title', () => {
-                expect(() => logic.searchStoriesByTitle('   \t\n')).to.throw(ValueError, 'title is empty or blank')
+                expect(() => logic.searchStoriesByTitle('   \t\n')).to.throw(ValueError, 'query is empty or blank')
             })
         })
+
+
+        describe('search random stories', () => {
+            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2
+
+            beforeEach(async () => {
+                name = `n-${Math.random()}`
+                surname = `s-${Math.random()}`
+                username = `u-${Math.random()}`
+                password = `p-${Math.random()}`
+
+                user = await new User({ name, surname, username, password }).save()
+
+                title = `title-${Math.random()}`
+                audioLanguage = `audioLanguage-${Math.random()}`
+                textLanguage = `textLanguage-${Math.random()}`
+
+                title2 = `title-${Math.random()}`
+                textLanguage2 = `textLanguage-${Math.random()}`
+                audioLanguage2 = `audioLanguage-${Math.random()}`
+
+                let id = user.id
+
+                story = new Story({ title, author: id, audioLanguage, textLanguage })
+                story.inProcess = false
+                await story.save()
+                story2 = new Story({ title: title2, author: id, audioLanguage: audioLanguage2, textLanguage: textLanguage2 })
+                story2.inProcess = false
+                await story2.save()
+            })
+
+            it('should succeed', async () => {
+
+                const stories = await logic.searchRandomStories()
+
+                expect(stories.length).to.equal(2)
+
+                const _story = stories[0]
+
+                expect(_story.id).to.exist
+                expect(_story.title).to.exist
+                expect(_story.hasCover).to.exist
+                expect(_story.author).to.exist
+                expect(_story.audioLanguage).to.exist
+                expect(_story.textLanguage).to.exist
+            })
+
+            describe('without existing stories', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting story', async () => {
+                    try {
+                        await logic.searchRandomStories()
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`stories not found`)
+                    }
+                })
+            })
+        })
+
 
         describe('add story to favourite', () => {
             let title, audioLanguage, textLanguage, user, story
@@ -895,16 +1462,70 @@ describe('logic', () => {
                 const [storyFav] = __user.favourites
 
                 expect(storyFav.toString()).to.equal(story.id.toString())
-                
+
             })
 
-            // it('should fail if inProcess is true', async () => {
+            // describe('without true inProcess user', () => {
+            //     beforeEach( async () => {
+            //         story.inProcess = true
+            //         await story.save()    
+            //     })
 
-            //     story.inProcess = true
-            //     await story.save()
-
-            //     expect(() => logic.addFavourites(user.id, story.id)).to.throw(Error, `story with id ${story.id} still in process`)
+            //     it('should fail on incorrect password', async () => {
+            //         try {
+            //             await logic.addFavourites(user.id, story.id)
+            //             expect(true).to.be.false
+            //         } catch (err) {
+            //             expect(err).to.be.instanceof(Error)
+            //             expect(err.message).to.equal(`story with id ${story.id} still in process`)
+            //         }
+            //     })
             // })
+
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.addFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.addFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            describe('with already favourite story', () => {
+                beforeEach(async () => {
+                    user.favourites.push(story.id)
+                    await user.save()
+                })
+
+                it('should fail with already tagged as favourite story ', async () => {
+                    try {
+                        await logic.addFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(AlreadyExistsError)
+                        expect(err.message).to.equal(`story with id ${story.id} already marked as favourite`)
+                    }
+                })
+            })
 
             it('should fail on undefined userId', () => {
                 expect(() => logic.addFavourites(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
@@ -918,10 +1539,21 @@ describe('logic', () => {
                 expect(() => logic.addFavourites('   \t\n', story.id)).to.throw(ValueError, 'userId is empty or blank')
             })
 
-            //TO DO OTHER CASES
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.addFavourites(user.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.addFavourites(user.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.addFavourites(user.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
         })
 
-        describe('remove story to favourite', () => {
+        describe('remove story from favourites', () => {
             let title, audioLanguage, textLanguage, user, story
 
             beforeEach(async () => {
@@ -954,40 +1586,160 @@ describe('logic', () => {
                 const __user = await User.findById(user.id)
 
                 expect(__user.favourites.length).to.equal(0)
-
-                
             })
 
-            // it('should fail if inProcess is true', async () => {
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
 
-            //     story.inProcess = true
-            //     await story.save()
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.removeFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
 
-            //     expect(() => logic.addFavourites(user.id, story.id)).to.throw(Error, `story with id ${story.id} still in process`)
-            // })
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.removeFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            describe('without already favourite story', () => {
+                beforeEach(async () => {
+                    user.favourites = []
+                    await user.save()
+                })
+
+                it('should fail with already tagged as favourite story ', async () => {
+                    try {
+                        await logic.removeFavourites(user.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found as favourite`)
+                    }
+                })
+            })
 
             it('should fail on undefined userId', () => {
-                expect(() => logic.addFavourites(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.removeFavourites(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty userId', () => {
-                expect(() => logic.addFavourites('', story.id)).to.throw(ValueError, 'userId is empty or blank')
+                expect(() => logic.removeFavourites('', story.id)).to.throw(ValueError, 'userId is empty or blank')
             })
 
             it('should fail on empty userId', () => {
-                expect(() => logic.addFavourites('   \t\n', story.id)).to.throw(ValueError, 'userId is empty or blank')
+                expect(() => logic.removeFavourites('   \t\n', story.id)).to.throw(ValueError, 'userId is empty or blank')
             })
 
-            //TO DO OTHER CASES
+            it('should fail on undefined storyId', () => {
+                expect(() => logic.removeFavourites(user.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.removeFavourites(user.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on empty storyId', () => {
+                expect(() => logic.removeFavourites(user.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+        })
+
+        describe('list favourite stories', () => {
+            let title, audioLanguage, textLanguage, user, story
+
+            beforeEach(async () => {
+                name = `n-${Math.random()}`
+                surname = `s-${Math.random()}`
+                username = `u-${Math.random()}`
+                password = `p-${Math.random()}`
+
+                user = await new User({ name, surname, username, password }).save()
+
+                title = `title-${Math.random()}`
+                audioLanguage = `audioLanguage-${Math.random()}`
+                textLanguage = `textLanguage-${Math.random()}`
+
+
+                let id = user.id
+
+                story = new Story({ title, author: id, audioLanguage, textLanguage })
+                story.inProcess = false
+                await story.save()
+
+                user.favourites.push(story.id)
+
+                await user.save()
+            })
+
+            it('should succeed on correct user id', async () => {
+                const favourites = await logic.listFavourites(user.id)
+
+                const _user = await User.findById(user.id)
+
+                expect(_user.favourites.length).to.equal(favourites.length)
+
+                const [favourite] = favourites
+
+                const [_favourite] = _user.favourites
+
+                expect(favourite.id).to.equal(_favourite.toString())
+                expect(favourite.author).to.equal(user.id.toString())
+                expect(favourite.hasCover).to.be.false
+                expect(favourite.title).to.equal(title)
+                expect(favourite.audioLanguage).to.equal(audioLanguage)
+                expect(favourite.textLanguage).to.equal(textLanguage)
+                expect(favourite.dataURL).to.be.undefined
+                expect(favourite.pages.length).to.equal(0)
+            })
+
+            describe('without existing user', () => {
+                beforeEach(async () => await User.deleteMany())
+
+                it('should fail unexisting user ', async () => {
+                    try {
+                        await logic.listFavourites(user.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`user with id ${user.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined userId', () => {
+                expect(() => logic.listFavourites(undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty userId', () => {
+                expect(() => logic.listFavourites('')).to.throw(ValueError, 'userId is empty or blank')
+            })
+
+            it('should fail on empty userId', () => {
+                expect(() => logic.listFavourites('   \t\n')).to.throw(ValueError, 'userId is empty or blank')
+            })
         })
 
 
     })
 
-
     describe('page', () => {
         describe('add page', () => {
-            let title, audioLanguage, textLanguage, user, story, index, text
+            let title, audioLanguage, textLanguage, user, story, text
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1006,13 +1758,12 @@ describe('logic', () => {
                 story = new Story({ title, author: id, audioLanguage, textLanguage })
                 await story.save()
 
-                index = 1
                 text = `text-${Math.random()}`
             })
 
             it('should succeed on correct data', async () => {
 
-                await logic.addPage(story.id, index, text)
+                await logic.addPage(story.id, text)
 
                 const stories = await Story.find()
 
@@ -1025,7 +1776,6 @@ describe('logic', () => {
                 const [page] = _story.pages
 
                 expect(page.id).to.be.a('string')
-                expect(page.index).to.equal(index)
                 expect(page.text).to.equal(text)
 
                 const pages = await Page.find()
@@ -1035,31 +1785,50 @@ describe('logic', () => {
                 const [_page] = pages
 
                 expect(_page.id).to.equal(page.id)
-                expect(_page.index).to.equal(index)
                 expect(_page.text).to.equal(text)
             })
 
-            it('should fail on undefined index', () => {
-                expect(() => logic.addPage(story.id, undefined, text)).to.throw(TypeError, 'undefined is not a number')
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail with unexisting user ', async () => {
+                    try {
+                        await logic.addPage(story.id, text)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
             })
 
             it('should fail on undefined story id', () => {
-                expect(() => logic.addPage(undefined, index, text)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.addPage(undefined, text)).to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty story id', () => {
-                expect(() => logic.addPage('', index, text)).to.throw(ValueError, 'storyId is empty or blank')
+                expect(() => logic.addPage('', text)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
             it('should fail on blank story id', () => {
-                expect(() => logic.addPage('   \t\n', index, text)).to.throw(ValueError, 'storyId is empty or blank')
+                expect(() => logic.addPage('   \t\n', text)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
-            // TODO other test cases
+            it('should fail on undefined text', () => {
+                expect(() => logic.addPage(story.id, undefined, text)).not.to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty text', () => {
+                expect(() => logic.addPage(story.id, '')).to.throw(ValueError, 'text is empty or blank')
+            })
+
+            it('should fail on blank text', () => {
+                expect(() => logic.addPage(story.id, '   \t\n')).to.throw(ValueError, 'text is empty or blank')
+            })
         })
 
         describe('update page', () => {
-            let title, audioLanguage, textLanguage, user, story, index, text, newText, page
+            let title, audioLanguage, textLanguage, user, story, text, newText, page
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1075,11 +1844,11 @@ describe('logic', () => {
 
                 let id = user.id
 
-                index = 1
+
                 text = `text-${Math.random()}`
                 newText = `text-${Math.random()}`
 
-                page = await new Page({ index, text }).save()
+                page = await new Page({ text }).save()
 
                 story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
                 await story.save()
@@ -1088,7 +1857,7 @@ describe('logic', () => {
 
             it('should succeed on correct data', async () => {
 
-                await logic.updatePage(page.id, story.id, index, newText)
+                await logic.updatePage(page.id, story.id, newText)
 
                 const stories = await Story.find()
 
@@ -1101,7 +1870,6 @@ describe('logic', () => {
                 const [__page] = _story.pages
 
                 expect(__page.id).to.be.a('string')
-                expect(__page.index).to.equal(index)
                 expect(__page.text).to.equal(newText)
 
                 const pages = await Page.find()
@@ -1111,33 +1879,182 @@ describe('logic', () => {
                 const [_page] = pages
 
                 expect(_page.id).to.equal(page.id)
-                expect(_page.index).to.equal(index)
                 expect(_page.text).to.equal(newText)
             })
 
-            it('should fail on undefined index', () => {
-                expect(() => logic.updatePage(page.id, story.id, undefined, text)).to.throw(TypeError, 'undefined is not a number')
+            describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.updatePage(page.id, story.id, text)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.updatePage(page.id, story.id, text)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.updatePage(undefined, story.id, text)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.updatePage('', story.id, text)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.updatePage('   \t\n', story.id, text)).to.throw(ValueError, 'pageId is empty or blank')
             })
 
             it('should fail on undefined story id', () => {
-                expect(() => logic.updatePage(page.id, undefined, index, text)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.updatePage(page.id, undefined, text)).to.throw(TypeError, 'undefined is not a string')
             })
 
             it('should fail on empty story id', () => {
-                expect(() => logic.updatePage(page.id, '', index, text)).to.throw(ValueError, 'storyId is empty or blank')
+                expect(() => logic.updatePage(page.id, '', text)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
             it('should fail on blank story id', () => {
-                expect(() => logic.updatePage(page.id, '   \t\n', index, text)).to.throw(ValueError, 'storyId is empty or blank')
+                expect(() => logic.updatePage(page.id, '   \t\n', text)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
-            // TODO other test cases
+            it('should fail on undefined story id', () => {
+                expect(() => logic.updatePage(page.id, story.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.updatePage(page.id, story.id, '')).to.throw(ValueError, 'text is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.updatePage(page.id, story.id, '   \t\n')).to.throw(ValueError, 'text is empty or blank')
+            })
         })
 
+        describe('retrieve page', () => {
+            let title, audioLanguage, textLanguage, user, story, text, page
 
+            beforeEach(async () => {
+                name = `n-${Math.random()}`
+                surname = `s-${Math.random()}`
+                username = `u-${Math.random()}`
+                password = `p-${Math.random()}`
 
-        false && describe('save picture', () => {
-            let user, story, page
+                user = await new User({ name, surname, username, password }).save()
+
+                title = `title-${Math.random()}`
+                audioLanguage = `audioLanguage-${Math.random()}`
+                textLanguage = `textLanguage-${Math.random()}`
+
+                let id = user.id
+
+                text = `text-${Math.random()}`
+
+                page = await new Page({ text }).save()
+
+                story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
+                await story.save()
+
+            })
+
+            it('should succeed on correct data', async () => {
+
+                const _page = await logic.retrievePage(page.id, story.id)
+
+                const stories = await Story.find()
+
+                expect(stories.length).to.equal(1)
+
+                const [_story] = stories
+
+                expect(_story.pages.length).to.equal(1)
+
+                const [__page] = _story.pages
+
+                expect(__page.id).to.equal(_page.id)
+                expect(__page.text).to.equal(_page.text)
+
+                const pages = await Page.find()
+
+                expect(pages.length).to.equal(1)
+
+                const [___page] = pages
+
+                expect(___page.id).to.equal(_page.id)
+                expect(___page.text).to.equal(_page.text)
+            })
+
+            describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePage(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePage(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.retrievePage(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.retrievePage('', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.retrievePage('   \t\n', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.retrievePage(page.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.retrievePage(page.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.retrievePage(page.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+        })
+
+        describe('save page picture', () => {
+            let user, story, page, dataURL, vectors
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1155,30 +2072,214 @@ describe('logic', () => {
                 newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
 
-                index = 1
                 text = `text-${Math.random()}`
+                dataURL = 'dataURL....'
+                vectors = [{
+                    start: { offsetX: 10, offsetY: 10 },
+                    stop: { offsetX: 20, offsetY: 15 },
+                    strokeStyle: 'fff',
+                    width: 4
+                }]
 
-                page = await new Page({ index, text }).save()
+                page = await new Page({ text }).save()
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
             })
 
             it('should succeed on correct data', async () => {
 
-                const rs = fs.createReadStream(path.join(process.cwd(), `data/stories/default/picture.png`))
-
-                await logic.savePicPage(page.id, story.id, rs)
-
-                expect(fs.existsSync(path.join(process.cwd(), `data/stories/${story.id}/pages/${page.id}/picture.png`))).to.be.true
+                await logic.savePagePicture(page.id, story.id, dataURL, vectors)
 
                 const _page = await Page.findById(page.id)
 
                 expect(_page.hasImage).to.be.true
+                expect(_page.dataURL).to.equal(dataURL)
+                expect(_page.vectors.length).to.equal(vectors.length)
+                expect(_page.vectors[0].strokeStyle).to.equal(vectors[0].strokeStyle)
+                expect(_page.vectors[0].width).to.equal(vectors[0].width)
+                expect(_page.vectors[0].start.offsetX).to.equal(vectors[0].start.offsetX)
+                expect(_page.vectors[0].start.offsetY).to.equal(vectors[0].start.offsetY)
+                expect(_page.vectors[0].stop.offsetX).to.equal(vectors[0].stop.offsetX)
+                expect(_page.vectors[0].stop.offsetY).to.equal(vectors[0].stop.offsetY)
             })
 
-            afterEach(() => fs.removeSync(`data/stories/${story.id}`))
+            describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.savePagePicture(page.id, story.id, dataURL, vectors)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.savePagePicture(page.id, story.id, dataURL, vectors)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.savePagePicture(undefined, story.id, dataURL, vectors)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.savePagePicture('', story.id, dataURL, vectors)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.savePagePicture('   \t\n', story.id, dataURL, vectors)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.savePagePicture(page.id, undefined, dataURL, vectors)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.savePagePicture(page.id, '', dataURL, vectors)).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.savePagePicture(page.id, '   \t\n', dataURL, vectors)).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on undefined dataURL', () => {
+                expect(() => logic.savePagePicture(page.id, story.id, undefined, vectors)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty dataURL', () => {
+                expect(() => logic.savePagePicture(page.id, story.id, '', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
+            })
+
+            it('should fail on blank dataURL', () => {
+                expect(() => logic.savePagePicture(page.id, story.id, '   \t\n', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
+            })
+
+            // it('should fail on undefined vectors', () => {
+            //     expect(() => logic.savePagePicture(page.id, story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+            // })
+
+            // it('should fail on empty vectors', () => {
+            //     expect(() => logic.savePagePicture(page.id, story.id, dataURL, '')).to.throw(ValueError, 'vectors is empty or blank')
+            // })
+
+            // it('should fail on blank vectors', () => {
+            //     expect(() => logic.savePagePicture(page.id, story.id, dataURL, '   \t\n')).to.throw(ValueError, 'vectors is empty or blank')
+            // })
         })
 
-        false && describe('retrieve picture', () => {
+        describe('retrieve picture', () => {
+            let user, story, page, dataURL, vectors
+
+            beforeEach(async () => {
+                name = `n-${Math.random()}`
+                surname = `s-${Math.random()}`
+                username = `u-${Math.random()}`
+                password = `p-${Math.random()}`
+
+                user = await new User({ name, surname, username, password }).save()
+
+                title = `title-${Math.random()}`
+                audioLanguage = `audioLanguage-${Math.random()}`
+                textLanguage = `textLanguage-${Math.random()}`
+                newTitle = `${title}-${Math.random()}`
+                newTextLanguage = `${textLanguage}-${Math.random()}`
+                newAudioLanguage = `${audioLanguage}-${Math.random()}`
+                let id = user.id
+                text = `text-${Math.random()}`
+                dataURL = 'dataURL....'
+                vectors = [{
+                    start: { offsetX: 10, offsetY: 10 },
+                    stop: { offsetX: 20, offsetY: 15 },
+                    strokeStyle: 'fff',
+                    width: 4
+                }]
+
+                page = await new Page({ text, hasImage: true, dataURL, vectors }).save()
+                story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
+            })
+            it('should succeed on correct data', async () => {
+
+                const image = await logic.retrievePagePicture(page.id, story.id)
+
+                const _page = await Page.findById(page.id)
+
+                expect(_page.hasImage).to.be.true
+                expect(_page.hasImage).to.equal(image.hasImage)
+                expect(_page.dataURL).to.equal(image.dataURL)
+                expect(_page.vectors.length).to.equal(image.vectors.length)
+                expect(_page.vectors[0].strokeStyle).to.equal(image.vectors[0].strokeStyle)
+                expect(_page.vectors[0].width).to.equal(image.vectors[0].width)
+                expect(_page.vectors[0].start.offsetX).to.equal(image.vectors[0].start.offsetX)
+                expect(_page.vectors[0].start.offsetY).to.equal(image.vectors[0].start.offsetY)
+                expect(_page.vectors[0].stop.offsetX).to.equal(image.vectors[0].stop.offsetX)
+                expect(_page.vectors[0].stop.offsetY).to.equal(image.vectors[0].stop.offsetY)
+            })
+            describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePagePicture(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePagePicture(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.retrievePagePicture(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.retrievePagePicture('', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.retrievePagePicture('   \t\n', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.retrievePagePicture(page.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.retrievePagePicture(page.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.retrievePagePicture(page.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+        })
+
+        describe('save page audio', () => {
             let user, story, page
 
             beforeEach(async () => {
@@ -1196,79 +2297,204 @@ describe('logic', () => {
                 newTextLanguage = `${textLanguage}-${Math.random()}`
                 newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
-                index = 1
+
                 text = `text-${Math.random()}`
 
-                page = await new Page({ index, text }).save()
+                page = await new Page({ text }).save()
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
             })
+
             it('should succeed on correct data', async () => {
-                const pagePicReadStream = await logic.retrievePagePic(page.id, story.id)
 
-                const pagePicHashReadStream = pagePicReadStream.pipe(hasha.stream())
+                // I AM TESTING WITH IMAGE, NOT AUDIO, BUT SAME EFECT???
 
-                const defaultPictureHashReadStream = fs.createReadStream('data/stories/default/picture.png').pipe(hasha.stream())
+                const rs = fs.createReadStream(path.join(process.cwd(), `data/stories/default/picture.png`))
 
-                const hashes = await Promise.all([
-                    streamToArray(pagePicHashReadStream)
-                        .then(arr => arr[0]),
-                    streamToArray(defaultPictureHashReadStream)
-                        .then(arr => arr[0])
-                ])
+                await logic.savePageAudio(page.id, story.id, rs)
 
-                const [pagePicHash, defaultPictureHash] = hashes
+                expect(fs.existsSync(path.join(process.cwd(), `data/stories/${story.id}/pages/${page.id}/audio.ogg`))).to.be.true
 
-                expect(pagePicHash).to.equal(defaultPictureHash)
+                const _page = await Page.findById(page.id)
+
+                expect(_page.hasAudio).to.be.true
             })
 
-            describe('when user already has a profile photo', () => {
-                let folder, file
+            false && describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
 
-                beforeEach(async () => {
-                    folder = `data/stories/${story.id}`
-
-                    fs.mkdirSync(folder)
-
-                    fs.mkdirSync(`data/stories/${story.id}/pages`)
-                    fs.mkdirSync(`data/stories/${story.id}/pages/${page.id}`)
-
-                    file = 'picture.png'
-
-                    fs.writeFileSync(path.join(`data/stories/${story.id}/pages/${page.id}`, file), text2png(':-)', { color: 'blue' }))
-
-                    page.hasImage = true
-                    debugger
-
-                    await page.save()
+                it('should fail unexisting page ',  () => {
+                    try {
+                        const rs = fs.createReadStream(path.join(process.cwd(), `data/stories/default/picture.png`))
+                        return logic.savePageAudio(page.id, story.id, rs)
+                            .catch((err) => {
+                                expect(err).to.be.instanceof(NotFoundError)
+                                expect(err.message).to.equal(`page with id ${page.id} not found`)
+                            })
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
                 })
+            })
 
-                it('should succeed on correct data', async () => {
-                    const pagePicReadStream = await logic.retrievePagePic(page.id, story.id)
+            false && describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
 
-                    const pagePicHashReadStream = pagePicReadStream.pipe(hasha.stream())
-
-                    const actualPictureHashReadStream = fs.createReadStream(path.join(`data/stories/${story.id}/pages/${page.id}`, file)).pipe(hasha.stream())
-
-                    const hashes = await Promise.all([
-                        streamToArray(pagePicHashReadStream)
-                            .then(arr => arr[0]),
-                        streamToArray(actualPictureHashReadStream)
-                            .then(arr => arr[0])
-                    ])
-
-                    const [pagePicHash, actualPictureHash] = hashes
-
-                    expect(pagePicHash).to.equal(actualPictureHash)
+                it('should fail unexisting story ', async () => {
+                    try {
+                        const rs = fs.createReadStream(path.join(process.cwd(), `data/stories/default/picture.png`))
+                        await logic.savePageAudio(page.id, story.id, rs)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
                 })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.savePageAudio(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.savePageAudio('', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.savePageAudio('   \t\n', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.savePageAudio(page.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.savePageAudio(page.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.savePageAudio(page.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
             })
 
             afterEach(() => fs.removeSync(`data/stories/${story.id}`))
         })
 
+        describe('retrieve page audio', () => {
+            let user, story, page, folder, file
 
+            beforeEach(async () => {
+                name = `n-${Math.random()}`
+                surname = `s-${Math.random()}`
+                username = `u-${Math.random()}`
+                password = `p-${Math.random()}`
+
+                user = await new User({ name, surname, username, password }).save()
+
+                title = `title-${Math.random()}`
+                audioLanguage = `audioLanguage-${Math.random()}`
+                textLanguage = `textLanguage-${Math.random()}`
+                newTitle = `${title}-${Math.random()}`
+                newTextLanguage = `${textLanguage}-${Math.random()}`
+                newAudioLanguage = `${audioLanguage}-${Math.random()}`
+                let id = user.id
+                text = `text-${Math.random()}`
+
+                page = await new Page({ text }).save()
+                story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
+
+                folder = `data/stories/${story.id}`
+
+                fs.mkdirSync(folder)
+
+                fs.mkdirSync(`data/stories/${story.id}/pages`)
+                fs.mkdirSync(`data/stories/${story.id}/pages/${page.id}`)
+
+                file = 'audio.ogg'
+
+                fs.writeFileSync(path.join(`data/stories/${story.id}/pages/${page.id}`, file), text2png(':-)', { color: 'blue' }))
+
+                page.hasAudio = true
+
+                await page.save()
+
+            })
+
+            false && it('should succeed on correct data', async () => {
+                const pageAudioReadStream = await logic.retrievePageAudio(page.id, story.id)
+
+                const pageAudioHashReadStream = pageAudioReadStream.pipe(hasha.stream())
+
+                const actualAudiotureHashReadStream = fs.createReadStream(path.join(`data/stories/${story.id}/pages/${page.id}`, file)).pipe(hasha.stream())
+
+                const hashes = await Promise.all([
+                    streamToArray(pageAudioHashReadStream)
+                        .then(arr => arr[0]),
+                    streamToArray(actualAudiotureHashReadStream)
+                        .then(arr => arr[0])
+                ])
+
+                const [pageAudioHash, actualAudiotureHash] = hashes
+
+                expect(pageAudioHash).to.equal(actualAudiotureHash)
+            })
+
+            false && describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePageAudio(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.retrievePageAudio(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.retrievePageAudio(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.retrievePageAudio('', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.retrievePageAudio('   \t\n', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on undefined story id', () => {
+                expect(() => logic.retrievePageAudio(page.id, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty story id', () => {
+                expect(() => logic.retrievePageAudio(page.id, '')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+
+            it('should fail on blank story id', () => {
+                expect(() => logic.retrievePageAudio(page.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
+            })
+            afterEach(() => fs.removeSync(`data/stories/${story.id}`))
+        })
 
         describe('remove page', () => {
-            let title, audioLanguage, textLanguage, user, story, index, text, page
+            let title, audioLanguage, textLanguage, user, story, text, page
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1284,10 +2510,9 @@ describe('logic', () => {
 
                 let id = user.id
 
-                index = 1
                 text = `text-${Math.random()}`
 
-                page = await new Page({ index, text }).save()
+                page = await new Page({ text }).save()
 
                 story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
                 await story.save()
@@ -1312,6 +2537,63 @@ describe('logic', () => {
 
             })
 
+            describe('without existing page', () => {
+                beforeEach(async () => await Page.deleteMany())
+
+                it('should fail unexisting page ', async () => {
+                    try {
+                        await logic.removePage(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => await Story.deleteMany())
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.removePage(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
+                    }
+                })
+            })
+
+            describe('without existing story', () => {
+                beforeEach(async () => {
+                    story.pages = []
+                    await story.save()
+                })
+
+                it('should fail unexisting story ', async () => {
+                    try {
+                        await logic.removePage(page.id, story.id)
+                        expect(true).to.be.false
+                    } catch (err) {
+                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err.message).to.equal(`page with id ${page.id} not found in story with id ${story.id}`)
+                    }
+                })
+            })
+
+            it('should fail on undefined page id', () => {
+                expect(() => logic.removePage(undefined, story.id)).to.throw(TypeError, 'undefined is not a string')
+            })
+
+            it('should fail on empty page id', () => {
+                expect(() => logic.removePage('', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
+            it('should fail on blank page id', () => {
+                expect(() => logic.removePage('   \t\n', story.id)).to.throw(ValueError, 'pageId is empty or blank')
+            })
+
             it('should fail on undefined story id', () => {
                 expect(() => logic.removePage(page.id, undefined)).to.throw(TypeError, 'undefined is not a string')
             })
@@ -1323,8 +2605,6 @@ describe('logic', () => {
             it('should fail on blank story id', () => {
                 expect(() => logic.removePage(page.id, '   \t\n')).to.throw(ValueError, 'storyId is empty or blank')
             })
-
-            // TODO other test cases
         })
 
     })

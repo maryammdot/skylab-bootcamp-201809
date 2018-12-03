@@ -83,9 +83,9 @@ class ReadStory extends Component {
             <div className='read-story-header'>
                 <h1>{this.state.title}</h1>
                 <div className='buttons-story-read'>
-                    <button className="help-story-read-button" onClick={this.handleHelpClick}><i class="fa fa-question"></i></button>
-                    {!this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart-o"></i></button>}
-                    {this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i class="fa fa-heart"></i></button>}
+                    <button className="help-story-read-button" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
+                    {!this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i className="fa fa-heart-o"></i></button>}
+                    {this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i className="fa fa-heart"></i></button>}
                     {/* <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button> */}
                 </div>
             </div>

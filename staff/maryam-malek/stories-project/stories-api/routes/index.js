@@ -462,7 +462,7 @@ router.post('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
 
             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
                 debugger
-                logic.savePageAudio(id, pageId, storyId, file)
+                logic.savePageAudio(pageId, storyId, file)
             })
 
             busboy.on('finish', () => resolve())

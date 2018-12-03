@@ -4,7 +4,7 @@ const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('./
 
 //If I don't require sessionstorage here it doesn't work!!!!
 
-global.sessionStorage = require('sessionstorage')
+// global.sessionStorage = require('sessionstorage')
 
 const logic = {
     _userId: sessionStorage.getItem('userId') || null,
