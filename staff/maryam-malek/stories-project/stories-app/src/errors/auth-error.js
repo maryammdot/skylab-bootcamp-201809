@@ -11,5 +11,5 @@ class AuthError extends Error {
     }
 }
 
-// module.exports = AuthError
-export default AuthError
+module.exports = AuthError
+// export default AuthError

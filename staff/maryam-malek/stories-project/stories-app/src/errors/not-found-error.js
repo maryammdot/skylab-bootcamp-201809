@@ -11,5 +11,5 @@ class NotFoundError extends Error {
     }
 }
 
-// module.exports = NotFoundError
-export default NotFoundError
+module.exports = NotFoundError
+// export default NotFoundError

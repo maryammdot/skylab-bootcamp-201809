@@ -77,9 +77,9 @@ const logic = {
             })
     },
 
-    updateUser() {
+    // updateUser() {
 
-    },
+    // },
 
     get loggedIn() {
         return !!this._userId
@@ -92,58 +92,6 @@ const logic = {
 
         sessionStorage.removeItem('userId')
         sessionStorage.removeItem('token')
-    },
-
-    addFavourite(storyId) {
-        validate([
-            { key: 'storyId', value: storyId, type: String }
-        ])
-
-        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this._token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-
-                if (res.error) throw Error(res.error)
-            })
-    },
-
-    removeFavourite(storyId) {
-        validate([
-            { key: 'storyId', value: storyId, type: String }
-        ])
-
-        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${this._token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-
-                if (res.error) throw Error(res.error)
-            })
-    },
-
-    listFavourites() {
-
-        return fetch(`${this.url}/users/${this._userId}/favourites`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${this._token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.error) throw Error(res.error)
-                
-                return res.data
-            })
     },
 
     addStory(title, audioLanguage, textLanguage) {
@@ -212,9 +160,9 @@ const logic = {
     updateStory(storyId, title, audioLanguage, textLanguage) {
         validate([
             { key: 'storyId', value: storyId, type: String },
-            { key: 'title', value: title, type: String },
-            { key: 'audioLanguage', value: audioLanguage, type: String },
-            { key: 'textLanguage', value: textLanguage, type: String }
+            { key: 'title', value: title, type: String, optional: true },
+            { key: 'audioLanguage', value: audioLanguage, type: String, optional: true },
+            { key: 'textLanguage', value: textLanguage, type: String, optional: true }
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}`, {
@@ -231,6 +179,59 @@ const logic = {
                 if (res.error) throw Error(res.error)
             })
     },
+
+    addFavourite(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    removeFavourite(storyId) {
+        validate([
+            { key: 'storyId', value: storyId, type: String }
+        ])
+
+        return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/favourites`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.error) throw Error(res.error)
+            })
+    },
+
+    listFavourites() {
+
+        return fetch(`${this.url}/users/${this._userId}/favourites`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this._token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) throw Error(res.error)
+                
+                return res.data
+            })
+    },
+
 
     finishStory(storyId) {
         validate([
@@ -272,7 +273,7 @@ const logic = {
 
         validate([
             { key: 'storyId', value: storyId, type: String },
-            // { key: 'dataURL', value: dataURL, type: String},
+            { key: 'dataURL', value: dataURL, type: String},
             // { key: 'vectors', value: vectors, type: String}
         ])
 
@@ -436,7 +437,7 @@ const logic = {
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
-            // { key: 'dataURL', value: dataURL, type: String},
+            { key: 'dataURL', value: dataURL, type: String},
             // { key: 'vectors', value: vectors, type: String}
         ])
 
