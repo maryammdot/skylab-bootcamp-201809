@@ -923,51 +923,41 @@ const logic = {
 
         const pathToFile = path.join(`${folder}/pages/${pageId}`, 'audio.ogg')
 
-        return new Promise((resolve, reject) => {
-            try {
-                return Story.findById(storyId)
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+        return Story.findById(storyId)
+            .then(story => {
+                if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                        return Page.findById(pageId)
-                    })
-                    .then(page => {
-                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+                return Page.findById(pageId)
+            })
+            .then(page => {
+                if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-                        if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
-                            if (!fs.existsSync(`${folder}`)) {
+                if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
+                    if (!fs.existsSync(`${folder}`)) {
 
-                                fs.mkdirSync(folder)
-                            }
-                            if (!fs.existsSync(`${folder}/pages`)) {
+                        fs.mkdirSync(folder)
+                    }
+                    if (!fs.existsSync(`${folder}/pages`)) {
 
-                                fs.mkdirSync(`${folder}/pages`)
-                            }
-                            fs.mkdirSync(`${folder}/pages/${pageId}`)
+                        fs.mkdirSync(`${folder}/pages`)
+                    }
+                    fs.mkdirSync(`${folder}/pages/${pageId}`)
 
-                        } else {
-                            // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
+                } else {
+                    // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
 
-                            // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
-                            fs.unlinkSync(pathToFile)
-                        }
+                    // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
+                    fs.unlinkSync(pathToFile)
+                }
 
-                        const ws = fs.createWriteStream(pathToFile)
+                const ws = fs.createWriteStream(pathToFile)
 
-                        audioFile.pipe(ws)
+                audioFile.pipe(ws)
 
-                        page.hasAudio = true
+                page.hasAudio = true
 
-                        return page.save()
-                    })
-                    .then(() => {
-                        resolve()
-                    })
-
-            } catch (err) {
-                reject(err)
-            }
-        })
+                return page.save()
+            })
     },
 
     retrievePageAudio(pageId, storyId) {
@@ -976,35 +966,27 @@ const logic = {
             { key: 'storyId', value: storyId, type: String }
         ])
 
-        return new Promise((resolve, reject) => {
-            try {
-                Story.findById(storyId)
-                    .then(story => {
-                        if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+        return Story.findById(storyId)
+            .then(story => {
+                if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                        return Page.findById(pageId)
-                    })
-                    .then(page => {
-                        if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
+                return Page.findById(pageId)
+            })
+            .then(page => {
+                if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-                        let file
+                let file
 
-                        if (page.hasAudio) {
+                if (page.hasAudio) {
+                    file = `data/stories/${storyId}/pages/${pageId}/audio.ogg`
+                } else {
+                    file = null
+                }
 
-                            file = `data/stories/${storyId}/pages/${pageId}/audio.ogg`
-                        } else {
-                            file = null
-                        }
+                const rs = fs.createReadStream(file)
 
-                        const rs = fs.createReadStream(file)
-
-                        resolve(rs)
-                    })
-                    // .catch((err) => {debugger})
-            } catch (err) {
-                reject(err)
-            }
-        })
+                return rs
+            })
     },
 
 }
