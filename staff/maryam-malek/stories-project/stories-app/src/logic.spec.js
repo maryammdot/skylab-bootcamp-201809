@@ -715,8 +715,6 @@ describe('logic', () => {
 
                 let __user = await User.findById(user.id)
 
-                __user = __user.toJSON()
-
                 expect(__user.favourites.length).to.equal(1)
 
                 const [storyFav] = __user.favourites
@@ -772,8 +770,8 @@ describe('logic', () => {
 
             describe('with already favourite story', () => {
                 beforeEach(async () => {
-                    user = user.toJSON()
                     user.favourites.push(story.id)
+                    
                     await user.save()
                 })
 
@@ -824,8 +822,6 @@ describe('logic', () => {
                 story = new Story({ title, author: id, audioLanguage, textLanguage })
                 story.inProcess = false
                 await story.save()
-
-                user = user.toJSON()
 
                 user.favourites.push(story.id)
 
@@ -922,8 +918,6 @@ describe('logic', () => {
                 story = new Story({ title, author: id, audioLanguage, textLanguage })
                 story.inProcess = false
                 await story.save()
-
-                user = user.toJSON()
 
                 user.favourites.push(story.id)
 
@@ -1165,7 +1159,6 @@ describe('logic', () => {
                 await logic.saveStoryCover(story.id, dataURL, vectors)
 
                 let _story = await Story.findById(story.id)
-                _story = _story.toJSON()
 
                 expect(_story.hasCover).to.be.true
                 expect(_story.dataURL).to.equal(dataURL)
@@ -1266,8 +1259,6 @@ describe('logic', () => {
                 const cover = await logic.retrieveStoryCover(story.id)
 
                 let _story = await Story.findById(story.id)
-
-                _story = _story.toJSON()
 
                 expect(_story.hasCover).to.be.true
                 expect(_story.hasCover).to.equal(cover.hasCover)
@@ -1674,8 +1665,6 @@ describe('logic', () => {
 
                 let _page = await Page.findById(page.id)
 
-                _page = _page.toJSON()
-
                 expect(_page.hasImage).to.be.true
                 expect(_page.dataURL).to.equal(dataURL)
                 expect(_page.vectors.length).to.equal(vectors.length)
@@ -1801,8 +1790,6 @@ describe('logic', () => {
                 const image = await logic.retrievePagePicture(page.id, story.id)
 
                 let _page = await Page.findById(page.id)
-debugger
-                _page = _page.toJSON()
 
                 expect(_page.hasImage).to.be.true
                 expect(_page.hasImage).to.equal(image.hasImage)

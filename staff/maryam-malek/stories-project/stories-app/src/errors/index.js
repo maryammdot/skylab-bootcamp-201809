@@ -4,9 +4,9 @@
 // const NotFoundError = require('./not-found-error')
 const ValueError = require('./value-error')
 
-// module.exports = {
-//     ValueError
-// }
-export default {
-        ValueError
+module.exports = {
+    ValueError
 }
+// export default {
+//         ValueError
+// }
