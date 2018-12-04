@@ -8,49 +8,41 @@ class SearchStories extends Component {
     state = { error: null, stories: [] }
 
     componentDidMount() {
-        try {
-            logic.searchRandomStories()
-                .then((stories) => {
+        logic.searchRandomStories()
+            .then((stories) => {
 
-                    this.setState({ stories, error: null })
-                })
-                .catch(err => {
-                    let message
-                    switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
-                        default:
-                            message = err.message
-                    }
-                    this.setState({ error: message, stories: [] })
-                })
-        } catch (err) {
-            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
-        }
+                this.setState({ stories, error: null })
+            })
+            .catch(err => {
+                let message
+                switch (err.message) {
+                    // case `stories with query ${this.state.query} not found`:
+                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                    //     break
+                    default:
+                        message = err.message
+                }
+                this.setState({ error: message, stories: [] })
+            })
     }
 
     handleRandomClick = () => {
-        try {
-            logic.searchRandomStories()
-                .then((stories) => {
+        logic.searchRandomStories()
+            .then((stories) => {
 
-                    this.setState({ stories, error: null })
-                })
-                .catch(err => {
-                    let message
-                    switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
-                        default:
-                            message = err.message
-                    }
-                    this.setState({ error: message, stories: [] })
-                })
-        } catch (err) {
-            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
-        }
+                this.setState({ stories, error: null })
+            })
+            .catch(err => {
+                let message
+                switch (err.message) {
+                    // case `stories with query ${this.state.query} not found`:
+                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                    //     break
+                    default:
+                        message = err.message
+                }
+                this.setState({ error: message, stories: [] })
+            })
     }
 
     handleInputChange = event => {
@@ -117,7 +109,7 @@ class SearchStories extends Component {
                 <div className='title-form-container'>
                     <h1>CERCA CONTES</h1>
                     <form className='search-form' onSubmit={this.handleSubmit}>
-                        <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus/>
+                        <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus />
                         <button type="submit"><i className="fa fa-search"></i></button>
                     </form>
                     <button className='random-button' onClick={this.handleRandomClick}>BUSCAR CONTES ALEATORIS</button>

@@ -77,7 +77,7 @@ class CreateStory extends Component {
     render() {
         return <div className='container-create-story'>
             <div className='create-story-header'>
-                <h1>CREA UN NOU CONTE</h1>
+                {/* <h1>CREA UN NOU CONTE</h1> */}
                 {/* <button className="help-create-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button> */}
                 {/* <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             </div>

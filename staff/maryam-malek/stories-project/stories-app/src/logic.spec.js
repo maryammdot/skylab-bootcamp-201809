@@ -1,4 +1,4 @@
-// import logic from './logic'
+require('dotenv').config()
 global.sessionStorage = require('sessionstorage')
 const logic = require('./logic')
 const { mongoose, models: { User, Story, Page } } = require('stories-data')
@@ -8,10 +8,11 @@ const { expect } = require('chai')
 const fs = require('fs-extra')
 const path = require('path')
 
-const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('./errors')
+const { ValueError } = require('./errors')
 
 const MONGO_URL = 'mongodb://localhost:27017/stories-app'
 
+logic.url = process.env.REACT_APP_API_URL
 
 describe('logic', () => {
     before(() => mongoose.connect(MONGO_URL, { useNewUrlParser: true, useCreateIndex: true }))
@@ -712,7 +713,9 @@ describe('logic', () => {
             it('should succeed on correct query', async () => {
                 await logic.addFavourite(story.id)
 
-                const __user = await User.findById(user.id)
+                let __user = await User.findById(user.id)
+
+                __user = __user.toJSON()
 
                 expect(__user.favourites.length).to.equal(1)
 
@@ -769,6 +772,7 @@ describe('logic', () => {
 
             describe('with already favourite story', () => {
                 beforeEach(async () => {
+                    user = user.toJSON()
                     user.favourites.push(story.id)
                     await user.save()
                 })
@@ -820,6 +824,8 @@ describe('logic', () => {
                 story = new Story({ title, author: id, audioLanguage, textLanguage })
                 story.inProcess = false
                 await story.save()
+
+                user = user.toJSON()
 
                 user.favourites.push(story.id)
 
@@ -875,7 +881,7 @@ describe('logic', () => {
                         await logic.removeFavourite(story.id)
                         expect(true).to.be.false
                     } catch (err) {
-                        expect(err).to.be.instanceof(NotFoundError)
+                        expect(err).to.be.instanceof(Error)
                         expect(err.message).to.equal(`story with id ${story.id} not found as favourite`)
                     }
                 })
@@ -916,6 +922,8 @@ describe('logic', () => {
                 story = new Story({ title, author: id, audioLanguage, textLanguage })
                 story.inProcess = false
                 await story.save()
+
+                user = user.toJSON()
 
                 user.favourites.push(story.id)
 
@@ -1156,8 +1164,9 @@ describe('logic', () => {
 
                 await logic.saveStoryCover(story.id, dataURL, vectors)
 
-                const _story = await Story.findById(story.id)
-debugger
+                let _story = await Story.findById(story.id)
+                _story = _story.toJSON()
+
                 expect(_story.hasCover).to.be.true
                 expect(_story.dataURL).to.equal(dataURL)
                 expect(_story.vectors.length).to.equal(vectors.length)
@@ -1256,7 +1265,9 @@ debugger
 
                 const cover = await logic.retrieveStoryCover(story.id)
 
-                const _story = await Story.findById(story.id)
+                let _story = await Story.findById(story.id)
+
+                _story = _story.toJSON()
 
                 expect(_story.hasCover).to.be.true
                 expect(_story.hasCover).to.equal(cover.hasCover)
@@ -1661,7 +1672,9 @@ debugger
 
                 await logic.savePagePicture(page.id, story.id, dataURL, vectors)
 
-                const _page = await Page.findById(page.id)
+                let _page = await Page.findById(page.id)
+
+                _page = _page.toJSON()
 
                 expect(_page.hasImage).to.be.true
                 expect(_page.dataURL).to.equal(dataURL)
@@ -1787,7 +1800,9 @@ debugger
 
                 const image = await logic.retrievePagePicture(page.id, story.id)
 
-                const _page = await Page.findById(page.id)
+                let _page = await Page.findById(page.id)
+debugger
+                _page = _page.toJSON()
 
                 expect(_page.hasImage).to.be.true
                 expect(_page.hasImage).to.equal(image.hasImage)

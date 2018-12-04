@@ -1,6 +1,6 @@
 const validate = require('./utils/validate')
 
-const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('./errors')
+// const { ValueError } = require('./errors')
 
 //If I don't require sessionstorage here it doesn't work!!!!
 
@@ -9,8 +9,8 @@ const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('./
 const logic = {
     _userId: sessionStorage.getItem('userId') || null,
     _token: sessionStorage.getItem('token') || null,
-    url: 'http://localhost:5000/api',
-    //POSAR AQUESTA URL EN EL .ENV!!!!!!!!!
+    url: 'NO_URL',
+    
 
     register(name, surname, username, password) {
         validate([

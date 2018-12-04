@@ -9,15 +9,6 @@
   height: 70%;
 }
 
-.create-story-header {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 500px;
-}
-
 .help-create-story {
   background-color: transparent;
   border: none;

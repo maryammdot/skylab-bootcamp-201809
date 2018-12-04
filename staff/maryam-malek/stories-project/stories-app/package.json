@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^6.1.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1",
@@ -31,6 +32,7 @@
     "fs-extra": "^7.0.1",
     "isomorphic-fetch": "^2.2.1",
     "sessionstorage": "^0.1.0",
-    "stories-data": "file:../stories-data"
+    "stories-data": "file:../stories-data",
+    "dotenv": "^6.1.0"
   }
 }

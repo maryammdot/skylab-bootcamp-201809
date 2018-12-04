@@ -8,15 +8,12 @@ class MyFavourites extends Component {
     state = { error: null, stories: [] }
 
     componentDidMount() {
-        try {
-            logic.listFavourites()
-                .then(stories => {
-                    this.setState({ stories, error: null })
-                })
-                .catch(err => this.setState({ error: err.message }))
-        } catch (err) {
-            this.setState({ error: err.message })
-        }
+        logic.listFavourites()
+            .then(stories => {
+                this.setState({ stories, error: null })
+            })
+            .catch(err => this.setState({ error: err.message }))
+
     }
 
     handleDetailClick = id => {

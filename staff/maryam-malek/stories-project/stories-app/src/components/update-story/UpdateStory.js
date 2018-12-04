@@ -418,7 +418,8 @@ class CreateStory extends Component {
         return <div className='container-story'>
             <h1>{this.state.title}</h1>
             {/* <button className="back-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
-            {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.dataURL} alt="book cover"></img></a>}
+            {/* {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.dataURL} alt="book cover"></img></a>} */}
+            {!this.state.editCover && <img onClick={this.handleCoverClick} className="book-cover" src={this.state.dataURL} alt="book cover"></img>}
             {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
             {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
                 <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />

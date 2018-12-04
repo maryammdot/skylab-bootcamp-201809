@@ -1,6 +1,12 @@
 *
     font-family: 'Amatic SC', cursive
-    letter-spacing: 1.5px
+    letter-spacing: 2px
+    font-size: 1.05em
+body 
+    // font-family: 'Amatic SC', cursive
+    // letter-spacing: 2px
+    // font-size: 1.05em
+    margin: 0
 #root
     display: flex
     flex-direction: column
@@ -9,6 +15,10 @@
     align-items: center
     background-image: url('../../images/back-lines.png')
     background-position: bottom
+    width: 100%
+    // height: 100vh 
+    min-height: 100vh
+    position: relative
 .container-log-reg
     width: 500px
     display: flex
@@ -17,8 +27,8 @@
     justify-content: center
     align-items: center
 .container-register
-    height: 300px
-    width: 190px
+    height: 450px
+    width: 275px
     background-image: url('../../images/back-colors.png')
     grid-template-rows: 15% 82% 3%
     position: relative
@@ -26,19 +36,20 @@
     grid-column: 1 / 2
     padding-top: 1em
     padding-left: 1.5em
-    color: white
-    font-weight: 100
+    color: #616161
+    font-weight: 300
 .register-form
     grid-column: 2 / 3
     display: flex
     flex-direction: column
     flex-wrap: wrap
-    justify-content: space-around
+    justify-content: center
     align-items: center
-
+    width: 100%
+    height: 43%
 .register-form input
     width: 72%
-    height: 18px
+    height: 25px
     margin: 3% 0
     border: 1px solid #bdbdbd
     
@@ -66,6 +77,7 @@
     left: 6em
     background-color: transparent
     border: none
+    text-indent: 1.3em
 .register-form a 
     text-decoration: none
     color: #616161

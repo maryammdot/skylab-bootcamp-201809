@@ -45,9 +45,6 @@ const Page = new Schema({
     audioURL: {
         type: String,
     },
-    // audioBlob: {
-    //     type: Blob
-    // },
     text: {
         type: String
     }
