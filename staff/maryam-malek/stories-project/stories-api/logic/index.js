@@ -276,7 +276,7 @@ const logic = {
         validate([
             { key: 'storyId', value: storyId, type: String },
             { key: 'dataURL', value: dataURL, type: String },
-            // { key: 'vectors', value: vectors, type: String }
+            { key: 'vectors', value: vectors, type: Array}
         ])
 
         return (async () => {
@@ -661,7 +661,7 @@ const logic = {
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
             { key: 'dataURL', value: dataURL, type: String },
-            // { key: 'vectors', value: vectors, type: String }
+            { key: 'vectors', value: vectors, type: Array}
         ])
 
         return (async () => {

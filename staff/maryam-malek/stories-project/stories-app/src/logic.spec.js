@@ -10,7 +10,7 @@ const path = require('path')
 
 const { ValueError } = require('./errors')
 
-const MONGO_URL = 'mongodb://localhost:27017/stories-app'
+const MONGO_URL = process.env.REACT_APP_MONGO_URL
 
 logic.url = process.env.REACT_APP_API_URL
 
@@ -1209,9 +1209,9 @@ describe('logic', () => {
                 expect(() => logic.saveStoryCover(story.id, '   \t\n', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
             })
 
-            // it('should fail on undefined vectors', () => {
-            //     expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
-            // })
+            it('should fail on undefined vectors', () => {
+                expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
 
             // it('should fail on empty vectors', () => {
             //     expect(() => logic.saveStoryCover(story.id, dataURL, '')).to.throw(ValueError, 'vectors is empty or blank')
@@ -1740,9 +1740,9 @@ describe('logic', () => {
                 expect(() => logic.savePagePicture(page.id, story.id, '   \t\n', vectors)).to.throw(ValueError, 'dataURL is empty or blank')
             })
 
-            // it('should fail on undefined vectors', () => {
-            //     expect(() => logic.savePagePicture(page.id, story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
-            // })
+            it('should fail on undefined vectors', () => {
+                expect(() => logic.savePagePicture(page.id, story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+            })
 
             // it('should fail on empty vectors', () => {
             //     expect(() => logic.savePagePicture(page.id, story.id, dataURL, '')).to.throw(ValueError, 'vectors is empty or blank')

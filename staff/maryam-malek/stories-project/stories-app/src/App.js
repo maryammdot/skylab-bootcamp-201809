@@ -14,8 +14,8 @@ import ReadPage from './components/read-page/ReadPage'
 import SearchStories from './components/search-stories/SearchStories'
 import logic from './logic'
 
-// logic.url = process.env.REACT_APP_API_URL´
-logic.url = 'http://localhost:5000/api'
+logic.url = process.env.REACT_APP_API_URL
+// logic.url = 'http://localhost:5000/api'
 
 class App extends Component {
     state = { error: null, storyId: '' }

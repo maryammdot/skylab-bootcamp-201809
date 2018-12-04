@@ -107,12 +107,14 @@ class SearchStories extends Component {
         return <div>
             <div className='container-search-stories'>
                 <div className='title-form-container'>
-                    <h1>CERCA CONTES</h1>
-                    <form className='search-form' onSubmit={this.handleSubmit}>
-                        <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus />
-                        <button type="submit"><i className="fa fa-search"></i></button>
-                    </form>
-                    <button className='random-button' onClick={this.handleRandomClick}>BUSCAR CONTES ALEATORIS</button>
+                    <h1>CERCAR CONTES</h1>
+                    <div className='form-search-container'>
+                        <form className='search-form' onSubmit={this.handleSubmit}>
+                            <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus />
+                            <button type="submit"><i className="fa fa-search"></i></button>
+                        </form>
+                        <button className='random-button' onClick={this.handleRandomClick}>BUSCAR CONTES ALEATORIS</button>
+                    </div>
                 </div>
                 <ul className='search-stories-list'>
                     {this.state.stories.map(story => <div className='detail-search-stories'><Detail edit={false} id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} /></div>)}

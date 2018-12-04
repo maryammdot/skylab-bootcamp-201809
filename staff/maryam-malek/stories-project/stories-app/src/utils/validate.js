@@ -4,7 +4,7 @@ function validate(params) {
     params.forEach(({ key, value, type, optional }) => {
         switch (type) {
             case String:
-            
+
                 if (optional && value == null) break
 
                 if (typeof value !== 'string') throw TypeError(`${value} is not a string`)
@@ -24,6 +24,12 @@ function validate(params) {
                 if (optional && value == null) break
 
                 if (typeof value !== 'number') throw TypeError(`${value} is not a number`)
+                break
+            case Array:
+                if (optional && value == null) break
+
+                if (!value instanceof Array) throw TypeError(`${value} is not an array`)
+                break
         }
     })
 }

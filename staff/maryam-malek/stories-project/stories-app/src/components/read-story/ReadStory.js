@@ -10,8 +10,8 @@ class ReadStory extends Component {
     componentDidMount() {
         try {
             logic.retrieveStory(this.props.storyId)
-                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, author}) => {
-                    
+                .then(({ id, title, pages, hasCover, textLanguage, audioLanguage, author }) => {
+
                     this.setState({ error: null, storyId: id, title, pages, hasCover, textLanguage, audioLanguage, author })
                     if (hasCover) {
                         return logic.retrieveStoryCover(this.props.storyId)
@@ -21,7 +21,7 @@ class ReadStory extends Component {
                     }
                 })
                 .then(() => {
-                    this.setState({error: null})
+                    this.setState({ error: null })
                     return logic.listFavourites()
                 })
                 .then(stories => {
@@ -106,8 +106,10 @@ class ReadStory extends Component {
                     <p>{this.state.pages.length}</p>
                 </div>
             </div>
-            {!!this.state.pages.length && <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>}
-            {!this.state.pages.length && <h3 className="begin-story-read-h3">AQUEST CONTE NO TÉ CAP PÀGINA</h3>}
+            <div className='read-buttons'>
+                {!!this.state.pages.length && <button className="begin-story-read-button" onClick={this.handleReadClick}>COMENÇAR A LLEGIR</button>}
+                {!this.state.pages.length && <h3 className="begin-story-read-h3">AQUEST CONTE NO TÉ CAP PÀGINA</h3>}
+            </div>
             {this.state.error && <Error message={this.state.error} />}
         </div >
     }

@@ -274,7 +274,7 @@ const logic = {
         validate([
             { key: 'storyId', value: storyId, type: String },
             { key: 'dataURL', value: dataURL, type: String},
-            // { key: 'vectors', value: vectors, type: String}
+            { key: 'vectors', value: vectors, type: Array}
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
@@ -438,7 +438,7 @@ const logic = {
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },
             { key: 'dataURL', value: dataURL, type: String},
-            // { key: 'vectors', value: vectors, type: String}
+            { key: 'vectors', value: vectors, type: Array}
         ])
 
         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/picture`, {
@@ -473,6 +473,7 @@ const logic = {
     },
 
     savePageAudio(pageId, storyId, audioBlob) {
+        debugger
         validate([
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String },

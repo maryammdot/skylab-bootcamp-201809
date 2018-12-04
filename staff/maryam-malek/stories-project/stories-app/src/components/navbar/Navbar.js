@@ -35,7 +35,7 @@ class Navbar extends Component {
 
     render() {
 
-        return <div>
+        return <React.Fragment>
             {this.props.loggedIn && <div className='navbar-container'>
                 <button className='my-stories-button' onClick={this.handleMyStoriesClick}>ELS MEUS CONTES</button>
                 <button className='favourit-stories-button' onClick={this.handleMyFavouritesClick}>CONTES PREFERITS</button>
@@ -46,7 +46,7 @@ class Navbar extends Component {
                 <button className='register-button' onClick={this.handleRegisterClick}>REGISTRA'T</button>
                 <button className='login-button' onClick={this.handleLoginClick}>INICIA SESSIÓ</button>
             </div>}
-        </div>
+            </React.Fragment>
     }
 }
 
