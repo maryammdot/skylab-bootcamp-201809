@@ -301,7 +301,7 @@ class Canvas extends Component {
                 </div>
             </div>
             <div>
-            <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button>
+            {/* <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
             <div className='canvas-area'>
                 <div className="utils-canvas">
                     <div className='do-container-buttons'>
@@ -329,7 +329,7 @@ class Canvas extends Component {
                 // onTouchMove={this.onTouchMove}
                 />
             </div>
-            <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button>
+            {/* <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

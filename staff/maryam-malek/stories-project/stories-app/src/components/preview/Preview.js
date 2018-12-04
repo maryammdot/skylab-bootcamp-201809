@@ -58,7 +58,7 @@ class Preview extends Component {
                 </div>
             </div>
             <div className='main-container'>
-                <button className="last-button" onClick={this.props.onAudioClick}>GRAVAR LA VEU</button>
+                {/* <button className="last-button" onClick={this.props.onAudioClick}>GRAVAR LA VEU</button> */}
                 <div className="preview-book-page">
                     {this.props.dataURL && <img src={this.props.dataURL} alt="page image" />}
                     {!this.props.dataURL && <img src='./images/picture.png' alt="page image" />}
@@ -75,7 +75,7 @@ class Preview extends Component {
                         <span>{this.props.text}</span>
                     </div>
                 </div>
-                <button className="next-button" onClick={this.props.onDrawClick}>DIBUIXAR</button>
+                {/* <button className="next-button" onClick={this.props.onDrawClick}>DIBUIXAR</button> */}
             </div>
             {/* <button className="audio"><i className="fa fa-volume-off"></i></button> */}
         </div>

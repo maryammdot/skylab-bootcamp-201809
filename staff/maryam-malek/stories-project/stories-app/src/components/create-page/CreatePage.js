@@ -6,6 +6,7 @@ import Textarea from '../textarea/Textarea'
 import Audio from '../audio/Audio'
 import Preview from '../preview/Preview'
 import Error from '../error/Error'
+import ReactTooltip from 'react-tooltip'
 
 
 class CreatePage extends Component {
@@ -178,7 +179,7 @@ class CreatePage extends Component {
 
     render() {
         return <div className='container-create-page'>
-            <div>
+            <div className='create-page-header'>
                 <h1 className="title-create-page">{this.state.title}</h1>
                 <button className="new-page-button" onClick={this.handleNewPageClick}>CREAR UNA NOVA PÀGINA</button>
             </div>
@@ -189,12 +190,13 @@ class CreatePage extends Component {
                 {this.state.preview && <Preview onAudioClick={this.handleAudioClick} onDrawClick={this.handleDrawClick} hasAudio={this.state.hasAudio} audioURL={this.state.audioURL} dataURL={this.state.dataURL} text={this.state.text} onBackClick={this.handleBackClick} />}
             </div>
             <div className="navbar-pages">
-                <button className="draw" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
-                <button className="text" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
-                <button className="audio" onClick={this.handleAudioClick}><i className="fa fa-dot-circle-o"></i></button>
-                <button className="preview" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
+                <button className="draw" data-tip="DIBUIXA LA PÀGINA" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
+                <button className="text" data-tip="ESCRIU EL TEXT DE LA PÀGINA" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
+                <button className="audio" data-tip="GRAVA L'AUDIO DE LA PÀGINA" onClick={this.handleAudioClick}><i className="fa fa-dot-circle-o"></i></button>
+                <button className="preview" data-tip="MIRA COM QUEDA LA PÀGINA" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div>
     }
 }

@@ -3,6 +3,7 @@ import './style.css'
 import logic from '../../logic'
 import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
+import ReactTooltip from 'react-tooltip'
 
 class ReadPage extends Component {
     state = { pages: [], next: false, last: false, dataURL: '../../images/picture.png' }
@@ -167,8 +168,8 @@ class ReadPage extends Component {
             <div className="read-page-book-area">
                 <img src={this.state.dataURL} alt="page image" />
                 {this.state.hasAudio && <div className="audio-buttons">
-                    <button onClick={this.handlePlayClick} className="audio-play"><i className="fa fa-play-circle"></i></button>
-                    <button onClick={this.handleStopClick} className="audio-stop"><i className="fa fa-stop"></i></button>
+                    <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle"></i></button>
+                    <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop"></i></button>
                     {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                     <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
@@ -177,10 +178,11 @@ class ReadPage extends Component {
                     <span className='text-read-story'>{this.state.text}</span>
                     <span>PÀGINA {this.state.index + 1}</span>
                 </div>
-                {this.state.next && <button className="next" onClick={this.handleNextPageClick}><i className="fa fa-chevron-right"></i></button>}
-                {this.state.last && <button className="last" onClick={this.handleLastPageClick}><i className="fa fa-chevron-left"></i></button>}
+                {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right"></i></button>}
+                {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left"></i></button>}
             </div>
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div>
     }
 }

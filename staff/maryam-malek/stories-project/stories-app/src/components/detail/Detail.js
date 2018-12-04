@@ -27,12 +27,12 @@ class Detail extends Component {
                 <span className='detail-text'>{this.props.text}</span>
             </div></button>
                 { this.props.pages && <div className='buttons-bar'>
-                    <button data-tip="hello world" className="delete" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
-                    <ReactTooltip />
+                    <button data-tip="ESBORRA LA PÀGINA" className="delete" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
+                    <ReactTooltip effect='solid'/>
                 </div>}
                 {this.props.edit && <div className='buttons-bar'>
-                    <button data-tip="hello world" className="edit" onClick={this.handleEditClick}><i className="fa fa-edit"></i></button>
-                    <ReactTooltip />
+                    <button data-tip="EDITA EL CONTE" className="edit" onClick={this.handleEditClick}><i className="fa fa-edit"></i></button>
+                    <ReactTooltip effect='solid' />
                 </div>}
         </div>
     }

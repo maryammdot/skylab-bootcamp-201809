@@ -3,6 +3,7 @@ import './style.css'
 import logic from '../../logic'
 import Error from '../../components/error/Error'
 import swal from 'sweetalert2'
+import ReactTooltip from 'react-tooltip'
 
 class ReadStory extends Component {
     state = { pages: [], dataURL: './images/cover.png', favourite: false, author: '' }
@@ -84,8 +85,8 @@ class ReadStory extends Component {
                 <h1>{this.state.title}</h1>
                 <div className='buttons-story-read'>
                     <button className="help-story-read-button" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
-                    {!this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i className="fa fa-heart-o"></i></button>}
-                    {this.state.favourite && <button className="favourites-story-button" onClick={this.handleFavouritesClick}><i className="fa fa-heart"></i></button>}
+                    {!this.state.favourite && <button className="favourites-story-button" data-tip="AFEGIR EL CONTE A PREFEREITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart-o"></i></button>}
+                    {this.state.favourite && <button className="favourites-story-button" data-tip="ELIMINAR EL CONTE DE PREFERITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart"></i></button>}
                     {/* <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button> */}
                 </div>
             </div>
@@ -111,6 +112,7 @@ class ReadStory extends Component {
                 {!this.state.pages.length && <h3 className="begin-story-read-h3">AQUEST CONTE NO TÉ CAP PÀGINA</h3>}
             </div>
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div >
     }
 

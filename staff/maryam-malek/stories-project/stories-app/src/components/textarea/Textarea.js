@@ -53,11 +53,11 @@ class Textarea extends Component {
                 </div>
             </div>
             <div>
-                <button className="last-button" onClick={this.props.onDrawClick}>DIBUIXAR</button>
+                {/* <button className="last-button" onClick={this.props.onDrawClick}>DIBUIXAR</button> */}
                 <div className='text-area-space'>
                     <textarea required className='textarea-page' name='text' id='text-page' maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols='20' rows='10' ></textarea>
                 </div>
-                <button className="next-button" onClick={this.props.onAudioClick}>GRAVAR L'AUDIO</button>
+                {/* <button className="next-button" onClick={this.props.onAudioClick}>GRAVAR L'AUDIO</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

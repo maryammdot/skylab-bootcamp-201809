@@ -5,6 +5,7 @@ import Error from '../error/Error'
 import Detail from '../detail/Detail'
 import Canvas from '../canvas/Canvas'
 import swal from 'sweetalert2'
+import ReactTooltip from 'react-tooltip'
 
 class CreateStory extends Component {
     state = { error: null, editCover: false, id: '', pages: [], dataURL: './images/cover.png', vectors: [] }
@@ -419,7 +420,7 @@ class CreateStory extends Component {
             <h1>{this.state.title}</h1>
             {/* <button className="back-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             {/* {!this.state.editCover && <a className='book-cover-container' onClick={this.handleCoverClick}><img className="book-cover" src={this.state.dataURL} alt="book cover"></img></a>} */}
-            {!this.state.editCover && <img onClick={this.handleCoverClick} className="book-cover" src={this.state.dataURL} alt="book cover"></img>}
+            {!this.state.editCover && <img onClick={this.handleCoverClick} data-tip="DIBUIXALA PORTADA" className="book-cover" src={this.state.dataURL} alt="book cover"></img>}
             {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
             {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
                 <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />
@@ -430,17 +431,18 @@ class CreateStory extends Component {
             </form>}
             {!this.state.editCover && <div className='buttons-story'>
                 <button className="help-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
-                <div><button className="delete-story" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
-                    {this.state.inProcess && <button className="finish" onClick={this.handleFinishClick}><i className="fa fa-rocket"></i></button>}
-                    {!this.state.inProcess && <button className="finish" onClick={this.handleWorkingClick}><i className="fa fa-child"></i></button>}
+                <div><button data-tip="ESBORRA EL CONTE" className="delete-story" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
+                    {this.state.inProcess && <button data-tip="COMPARTEIX EL CONTE" className="finish" onClick={this.handleFinishClick}><i className="fa fa-rocket"></i></button>}
+                    {!this.state.inProcess && <button data-tip="TORNAR A FER PRIVAT EL CONTE" className="finish" onClick={this.handleWorkingClick}><i className="fa fa-child"></i></button>}
                 </div>
             </div>}
             {!this.state.editCover && !!this.state.pages.length && <h3>PÀGINES</h3>}
             {!this.state.editCover && <ul className="pages-section">
                 {!!this.state.pages.length && this.state.pages.map((page, i) => <Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i + 1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} />)}
-                {this.state.pages.length ? <button className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
+                {this.state.pages.length ? <button data-tip="CREA UNA NOVA PÀGINA" className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
             </ul>}
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div>
     }
 

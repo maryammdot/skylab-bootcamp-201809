@@ -121,7 +121,7 @@ class Audio extends Component {
                 </div>
             </div>
             <div>
-                <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button>
+                {/* <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
                 <div className="audio-displays">
                     <div className="rec-stop">
                         <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
@@ -132,7 +132,7 @@ class Audio extends Component {
                         <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
                     </div>}
                 </div>
-                <button className="next-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button>
+                {/* <button className="next-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>
