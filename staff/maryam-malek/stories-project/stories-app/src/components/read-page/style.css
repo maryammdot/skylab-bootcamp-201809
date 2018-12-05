@@ -1,18 +1,28 @@
 .container-read-page {
-  display: grid;
-  grid-template-rows: 15% auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
-  width: 500px;
+  width: 100%;
   height: 70%;
-  margin-bottom: 7%;
+  position: absolute;
+  top: 10%;
+  left: 0%;
 }
 
 .header-read-page {
+  width: 70%;
+  flex: 0 0 65px;
+  font-size: 1.2em;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-read-page h1 {
+  font-size: 1.5em;
 }
 
 .info-read-page {
@@ -30,19 +40,41 @@
   font-size: 1.5em;
 }
 
+.help-read-page-button:hover {
+  cursor: pointer;
+}
+
 .back-read-page-button {
   font-size: 0.8em;
   width: 8em;
   height: 2em;
   border: solid 1px black;
-  border-radius: 10% 10%;
+  border-radius: 5px;
+  pad: 0;
   background-color: transparent;
+}
+
+.back-read-page-button:hover {
+  cursor: pointer;
+  background-color: white;
+}
+
+.read-page-book-extra-area {
+  background-color: rgba(20, 20, 22, 0.2);
+  padding: 0;
+  border-radius: 5px;
+  flex: 0 0 520px;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .read-page-book-area {
   background-color: lavender;
   border-radius: 20% 20% 20% 20%;
   border: 0.5px solid powderblue;
+  width: 500px;
   position: relative;
 }
 
@@ -112,6 +144,10 @@
   position: absolute;
   left: -1.5em;
   bottom: 50%;
+}
+
+.next:hover, .last:hover {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */

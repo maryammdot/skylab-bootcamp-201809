@@ -12,7 +12,7 @@ class MyStories extends Component {
         try {
             logic.listStories()
                 .then(stories => {
-                    this.setState({stories, error: null})
+                    this.setState({ stories, error: null })
                 })
                 .catch(err => this.setState({ error: err.message }))
         } catch (err) {
@@ -33,17 +33,20 @@ class MyStories extends Component {
     }
 
     render() {
-        return <div>
+        return <React.Fragment>
             <div className='container-my-stories'>
-                <h1>ELS MEUS CONTES</h1>
+                <div className='my-stories-header'>
+                    <h1>ELS MEUS CONTES</h1>
+                    {!!this.state.stories.length && <button className="newStoryButton" data-tip="CREA UN NOU CONTE" onClick={this.handleNewStoryClick}><i className="fa fa-plus-circle"></i></button>}
+                </div>
                 <ul className='my-stories-list'>
-                    {this.state.stories.map(story => <div className='detail-my-stories' data-tip="LLEGEIX EL CONTE"><Detail edit={true} id={story.id} img={story.hasCover? story.dataURL: './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} onEditClick={this.handleEditClick}/></div>)}
-                {this.state.stories.length? <button className="newStoryButton" data-tip="CREA UN NOU CONTE" onClick={this.handleNewStoryClick}><i className="fa fa-plus-circle"></i></button>: <button className="firstStoryButton" onClick={this.handleNewStoryClick}>CREA EL TEU PRIMER CONTE</button>}
+                    {this.state.stories.map(story => <div className='detail-my-stories' data-tip="LLEGEIX EL CONTE"><Detail edit={true} id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} onEditClick={this.handleEditClick} /></div>)}
+                    {!this.state.stories.length && <button className="firstStoryButton" onClick={this.handleNewStoryClick}>CREA EL TEU PRIMER CONTE</button>}
                 </ul>
             </div>
             {this.state.error && <Error message={this.state.error} />}
             <ReactTooltip effect='solid' />
-        </div>
+        </React.Fragment>
     }
 
 }

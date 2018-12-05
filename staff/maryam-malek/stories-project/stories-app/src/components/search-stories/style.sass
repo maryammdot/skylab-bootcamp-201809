@@ -9,23 +9,32 @@
     position: absolute
     top: 10%
     left: 0%
-.title-form-container
-    // position: absolute
-    // top: 8%
-    // left: 41%
+.title-form-container   
     display: flex
     flex-direction: column
     flex-wrap: wrap
     justify-content: center
     align-items: center
-.title-form-container h1 
+    width: 100%
+.search-stories-header
+    width: 70%
+    flex: 0 0 65px
     font-size: 1.4em
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
 .form-search-container
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content: center
     align-items: center
+    background-color: rgba(20,20,22, .2)
+    padding: 0
+    border-radius: 5px 5px 0 0 
+    flex: 0 0 107px
+    width: 70%
 .search-form
     width: 350px
     text-align: right
@@ -51,9 +60,15 @@
     font-weight: bolder
     width: 7em
     height: 3em
-    border: solid 1px black
-    border-radius: 10% 10%
+    border: solid 1px white
+    border-radius: 5px
+    padding: 0
     background-color: transparent 
+    color: white
+.random-button:hover
+    background-color: white
+    color: black
+    cursor: pointer
 .search-stories-list
     display: flex
     flex-direction: row
@@ -61,6 +76,12 @@
     justify-content: center
     align-items: center
     width: 70%
-    height: 70%
-.detail-my-stories
-    margin: 3%
+    height: 87%
+    background-color: rgba(20,20,22, .2)
+    padding: 0
+    border-radius: 0 0 5px 5px
+    flex: 0 0 70%
+    margin: 0
+    overflow: scroll
+.detail-search-stories
+    margin: 1%

@@ -48,7 +48,7 @@ class ReadPage extends Component {
 
                         this.setState({ error: null, last: false })
                     }
-                    if(this.state.hasAudio) {
+                    if (this.state.hasAudio) {
                         this.audioPlayer.play()
                     }
                 })
@@ -74,7 +74,7 @@ class ReadPage extends Component {
                                     this.setState({ error: null, dataURL })
                                 })
                         } else {
-                            this.setState({dataURL: '../../images/picture.png'})
+                            this.setState({ dataURL: '../../images/picture.png' })
                         }
                         // if (hasAudio) {
                         //     let audioPlay = this.audioPlayer
@@ -99,7 +99,7 @@ class ReadPage extends Component {
                         } else {
                             this.setState({ error: null, last: false })
                         }
-                        if(this.state.hasAudio) {
+                        if (this.state.hasAudio) {
                             this.audioPlayer.play()
                         }
                     })
@@ -162,24 +162,27 @@ class ReadPage extends Component {
                 <h1>{this.state.title}</h1>
                 <div className="info-read-page">
                     <button className='help-read-page-button' onClick={this.handleHelpPageClick}><i className="fa fa-question"></i></button>
-                    <button className='back-read-page-button' onClick={this.handleBackClick}>TORNAR AL LLIBRE</button>
+                    <button className='back-read-page-button' onClick={this.handleBackClick}>TORNAR AL CONTE</button>
                 </div>
             </div>
-            <div className="read-page-book-area">
-                <img src={this.state.dataURL} alt="page image" />
-                {this.state.hasAudio && <div className="audio-buttons">
-                    <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle"></i></button>
-                    <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop"></i></button>
-                    {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
+            <div className='read-page-book-extra-area'>
+                <div className="read-page-book-area">
+                    <img src={this.state.dataURL} alt="page image" />
+                    {this.state.hasAudio && <div className="audio-buttons">
+                        <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle"></i></button>
+                        <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop"></i></button>
+                        {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
-                    <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
-                </div>}
-                <div className="text-area-read-page">
-                    <span className='text-read-story'>{this.state.text}</span>
-                    <span>PÀGINA {this.state.index + 1}</span>
+                        <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
+                    </div>}
+                    <div className="text-area-read-page">
+                        <span className='text-read-story'>{this.state.text}</span>
+                        <span>PÀGINA {this.state.index + 1}</span>
+                    </div>
+                    {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right"></i></button>}
+                    {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left"></i></button>}
+                    <ReactTooltip effect='solid' />
                 </div>
-                {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right"></i></button>}
-                {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left"></i></button>}
             </div>
             {this.state.error && <Error message={this.state.error} />}
             <ReactTooltip effect='solid' />

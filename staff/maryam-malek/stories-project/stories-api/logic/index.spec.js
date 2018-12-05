@@ -2319,7 +2319,7 @@ describe('logic', () => {
                 expect(_page.hasAudio).to.be.true
             })
 
-            false && describe('without existing page', () => {
+            describe('without existing page', () => {
                 beforeEach(async () => await Page.deleteMany())
 
                 it('should fail unexisting page ',  () => {
@@ -2338,7 +2338,7 @@ describe('logic', () => {
                 })
             })
 
-            false && describe('without existing story', () => {
+            describe('without existing story', () => {
                 beforeEach(async () => await Story.deleteMany())
 
                 it('should fail unexisting story ', async () => {
@@ -2420,7 +2420,7 @@ describe('logic', () => {
 
             })
 
-            false && it('should succeed on correct data', async () => {
+            it('should succeed on correct data', async () => {
                 const pageAudioReadStream = await logic.retrievePageAudio(page.id, story.id)
 
                 const pageAudioHashReadStream = pageAudioReadStream.pipe(hasha.stream())
@@ -2439,7 +2439,7 @@ describe('logic', () => {
                 expect(pageAudioHash).to.equal(actualAudiotureHash)
             })
 
-            false && describe('without existing page', () => {
+            describe('without existing page', () => {
                 beforeEach(async () => await Page.deleteMany())
 
                 it('should fail unexisting story ', async () => {

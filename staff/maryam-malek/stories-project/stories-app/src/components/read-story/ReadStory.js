@@ -82,12 +82,13 @@ class ReadStory extends Component {
     render() {
         return <div className='container-read-story'>
             <div className='read-story-header'>
-                <h1>{this.state.title}</h1>
+                {/* <h1>{this.state.title}</h1> */}
                 <div className='buttons-story-read'>
                     <button className="help-story-read-button" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
                     {!this.state.favourite && <button className="favourites-story-button" data-tip="AFEGIR EL CONTE A PREFEREITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart-o"></i></button>}
-                    {this.state.favourite && <button className="favourites-story-button" data-tip="ELIMINAR EL CONTE DE PREFERITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart"></i></button>}
+                    {this.state.favourite && <button className="favourites-story-button" data-tip="ELIMINAR EL CONTE DE PREFERITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart favourites-button_on"></i></button>}
                     {/* <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button> */}
+                    <ReactTooltip effect='solid' />
                 </div>
             </div>
             <div className='read-story-body'>

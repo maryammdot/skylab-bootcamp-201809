@@ -104,10 +104,12 @@ class SearchStories extends Component {
     }
 
     render() {
-        return <div>
+        return <React.Fragment>
             <div className='container-search-stories'>
                 <div className='title-form-container'>
-                    <h1>CERCAR CONTES</h1>
+                    <div className='search-stories-header'>
+                        <h1>CERCAR CONTES</h1>
+                    </div>
                     <div className='form-search-container'>
                         <form className='search-form' onSubmit={this.handleSubmit}>
                             <input type="text" placeholder="TÍTOL DEL CONTE" onChange={this.handleInputChange} autoFocus />
@@ -121,7 +123,7 @@ class SearchStories extends Component {
                 </ul>
             </div>
             {this.state.error && <Error message={this.state.error} />}
-        </div>
+        </React.Fragment>
     }
 }
 

@@ -3,11 +3,13 @@
   letter-spacing: 2px;
   font-size: 1.05em;
   outline: 0;
-  color: white;
+  color: black;
+  font-weight: bold;
 }
 
 body {
   margin: 0;
+  background-color: rgba(150, 198, 211, 0.3);
 }
 
 #root {
@@ -16,8 +18,11 @@ body {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  background-image: url("../../images/back-lines.png");
+  background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(20, 20, 20, 0.3)), url("../../images/background_pencils.jpg");
+  background-color: rgba(255, 255, 255, 0.3);
+  background-size: 100% 100%;
   background-position: bottom;
+  background-repeat: no-repeat;
   width: 100%;
   min-height: 100vh;
   position: relative;

@@ -8,10 +8,12 @@
 }
 
 .container-detail button {
-  background-color: transparent;
+  background-color: #e5e6fa;
   border: none;
   font-size: 1em;
   font-family: arial;
+  padding: 0;
+  border-radius: 15px;
 }
 
 .detail {
@@ -21,9 +23,10 @@
   justify-content: space-around;
   align-items: center;
   border: 0.5px solid grey;
-  border-radius: 15%;
-  width: 100px;
-  height: 150px;
+  padding: 0;
+  border-radius: 10px;
+  width: 170px;
+  height: 230px;
   background-color: lavender;
 }
 
@@ -33,7 +36,17 @@
   padding-top: 3%;
 }
 
-.detail-text {
+.detail-text__top {
+  font-size: 0.7em;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 3%;
+  padding-top: 1%;
+  color: black;
+}
+
+.detail-text__bottom {
   font-size: 0.6em;
   overflow-wrap: break-word;
   height: 25%;
@@ -49,12 +62,6 @@
   background-color: transparent;
   border: none;
   position: absolute;
-  bottom: 1.3em;
-  right: -0.2em;
-  color: black;
-}
-
-.delete {
   bottom: 0.5em;
   right: 0.3em;
   color: #3a3838;
