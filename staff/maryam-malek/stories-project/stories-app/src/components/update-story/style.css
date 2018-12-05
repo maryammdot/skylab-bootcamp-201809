@@ -21,14 +21,47 @@
   align-items: center;
 }
 
-.container-story h1 {
-  grid-area: 1/1/2/3;
-  margin-top: 13%;
-  font-size: 1.6em;
+.body-container-update-story-extra {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+  flex: 0 0 510px;
+  background-color: rgba(20, 20, 22, 0.2);
+  padding: 0;
+  border-radius: 5px 5px 0 0;
 }
 
-.container-story h3 {
-  grid-area: 3/1/4/3;
+.body-container-update-story {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.upper-body-update-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 40%;
+}
+
+.detail-pages-update-story {
+  margin: 1%;
+}
+
+.bottom-body-update-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 60%;
+  height: 500px;
+  overflow: scroll;
 }
 
 .book-cover {
@@ -42,12 +75,7 @@
   background-color: lavender;
 }
 
-.canvas-cover {
-  grid-area: 2/2/3/3;
-}
-
 .book-details {
-  grid-area: 2/2/3/3;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -69,14 +97,14 @@
   height: 26px;
   background-color: #bdbdbd;
   border-color: #bdbdbd;
-  border-radius: 15% 15%;
+  padding: 0;
+  border-radius: 5px;
   outline: 0;
   margin-left: 3em;
   margin-top: 1%;
 }
 
 .buttons-story {
-  grid-area: 2/3/3/4;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -92,31 +120,13 @@
 }
 
 .pages-section {
-  grid-area: 4/1/5/4;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-}
-
-.page {
-  width: 100px;
-  height: 75px;
-  margin: 3%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.page-img {
-  max-width: 75px;
-  max-height: 50px;
-  padding: 1%;
-  border: 1px solid black;
-  border-radius: 15%;
+  overflow: scroll;
+  margin: 0;
 }
 
 .newPageButton {
