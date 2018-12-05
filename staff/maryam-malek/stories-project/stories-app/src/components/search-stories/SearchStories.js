@@ -50,26 +50,29 @@ class SearchStories extends Component {
 
         this.setState({ query, error: null })
 
-        try {
-            logic.searchStory(query)
-                .then((stories) => {
+        if (query.length) {
+            try {
+                logic.searchStory(query)
+                    .then((stories) => {
 
-                    this.setState({ stories, error: null })
-                })
-                .catch(err => {
-                    let message
-                    switch (err.message) {
-                        case `stories with query ${this.state.query} not found`:
-                            message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                            break
-                        default:
-                            message = err.message
-                    }
-                    this.setState({ error: message, stories: [] })
-                })
-        } catch (err) {
-            this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
+                        this.setState({ stories, error: null })
+                    })
+                    .catch(err => {
+                        let message
+                        switch (err.message) {
+                            case `stories with query ${this.state.query} not found`:
+                                message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
+                                break
+                            default:
+                                message = err.message
+                        }
+                        this.setState({ error: message, stories: [] })
+                    })
+            } catch (err) {
+                this.setState({ error: 'UPS! HI HA HAGUT UN ERROR, TORNA-HO A INTENTAR!', stories: [] })
+            }
         }
+
 
     }
 

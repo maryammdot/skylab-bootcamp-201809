@@ -1,3 +1,4 @@
+'use strict'
 const express = require('express')
 const bodyparser = require('body-parser')
 const jwt = require('jsonwebtoken')
@@ -321,7 +322,7 @@ router.get('/users/:id/findRandomStories', [bearerTokenParser, jwtVerifier], (re
 
         return logic.searchRandomStories()
             .then(stories => {
-                debugger
+                
                 res.json({
                     data: stories
                 })
@@ -432,7 +433,7 @@ router.get('/users/:id/stories/:storyId/pages/:pageId/picture', (req, res) => {
 
         return logic.retrievePagePicture(pageId, storyId)
             .then(({ dataURL, vectors, hasImage }) => {
-                debugger
+                
                 res.json({
                     data: { dataURL, vectors, hasImage }
                 })
@@ -461,7 +462,7 @@ router.post('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
             const busboy = new Busboy({ headers: req.headers })
 
             busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-                debugger
+                
                 logic.savePageAudio(pageId, storyId, file)
             })
 
@@ -472,7 +473,7 @@ router.post('/users/:id/stories/:storyId/pages/:pageId/audio', (req, res) => {
             req.pipe(busboy)
         })
             .then((audioURL) => {
-                debugger
+                
                 res.json({
                     data: audioURL,
                     message: `picture from page with id ${pageId} of correctly saved`

@@ -426,25 +426,28 @@ class CreateStory extends Component {
                         {!this.state.editCover && <img onClick={this.handleCoverClick} data-tip="DIBUIXA LA PORTADA" className="book-cover" src={this.state.dataURL} alt="book cover"></img>}
                         {this.state.editCover && <div className='canvas-cover'><Canvas className='canvas-cover' cover={true} vectors={this.state.vectors} onChange={this.handleCanvasChange} onCloseDrawClick={this.handleCloseDrawClick} /></div>}
                         {!this.state.editCover && <form className="book-details" onSubmit={this.handleSubmit}>
-                            <input type="text" placeholder={this.state.title} onChange={this.handleTitleChange} />
-                            <input type="text" disabled placeholder={this.state.author} />
-                            <input type="text" placeholder={this.state.audioLanguage} onChange={this.handleAudioLanguageChange} />
-                            <input type="text" placeholder={this.state.textLanguage} onChange={this.handleTextLanguageChange} />
+                            <input type="text" placeholder={`TÍTOL: ${this.state.title}`} onChange={this.handleTitleChange} />
+                            <input type="text" disabled placeholder={`AUTOR: ${this.state.author}`} />
+                            <input type="text" placeholder={`AUDIO: ${this.state.audioLanguage}`} onChange={this.handleAudioLanguageChange} />
+                            <input type="text" placeholder={`TEXT: ${this.state.textLanguage}`} onChange={this.handleTextLanguageChange} />
                             <button type="submit">GUARDA ELS CANVIS</button>
                         </form>}
                         {!this.state.editCover && <div className='buttons-story'>
-                            <button className="help-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button>
-                            <div><button data-tip="ESBORRA EL CONTE" className="delete-story" onClick={this.handleRemoveClick}><i className="fa fa-trash-o"></i></button>
-                                {this.state.inProcess && <button data-tip="COMPARTEIX EL CONTE" className="finish" onClick={this.handleFinishClick}><i className="fa fa-rocket"></i></button>}
-                                {!this.state.inProcess && <button data-tip="TORNAR A FER PRIVAT EL CONTE" className="finish" onClick={this.handleWorkingClick}><i className="fa fa-child"></i></button>}
-                            </div>
+                            <button className="help-story" onClick={this.handleHelpClick}><i className="fa fa-question icon-update-page"></i></button>
+                            <button data-tip="ESBORRA EL CONTE" className="delete-story" onClick={this.handleRemoveClick}><i className="fa fa-trash-o icon-update-page"></i></button>
+                            {this.state.inProcess && <button data-tip="COMPARTEIX EL CONTE" className="finish" onClick={this.handleFinishClick}><i className="fa fa-rocket icon-update-page"></i></button>}
+                            {!this.state.inProcess && <button data-tip="TORNAR A FER PRIVAT EL CONTE" className="finish" onClick={this.handleWorkingClick}><i className="fa fa-child icon-update-page"></i></button>}
+
                         </div>}
                     </div>
                     <div className='bottom-body-update-story'>
-                        {!this.state.editCover && !!this.state.pages.length && <h3>PÀGINES</h3>}
+                        <div className='bottom-body-header'>
+                            {!this.state.editCover && !!this.state.pages.length && <h3>PÀGINES</h3>}
+                            {!!this.state.pages.length && <button data-tip="CREA UNA NOVA PÀGINA" className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle icon-new-update-page"></i></button>}
+                        </div>
                         {!this.state.editCover && <ul className="pages-section">
                             {!!this.state.pages.length && this.state.pages.map((page, i) => <div className='detail-pages-update-story'><Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i + 1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} /></div>)}
-                            {this.state.pages.length ? <button data-tip="CREA UNA NOVA PÀGINA" className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle"></i></button> : <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
+                            {!this.state.pages.length && <button className="firstPageButton" onClick={this.handleNewPageClick}>CREA LA PRIMERA PÀGINA DEL TEU CONTE</button>}
                         </ul>}
                     </div>
                 </div>

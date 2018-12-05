@@ -1,3 +1,4 @@
+'use strict'
 const { mongoose, models: { User, Story, Page } } = require('stories-data')
 const logic = require('./index')
 const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('../errors')
@@ -17,7 +18,7 @@ describe('logic', () => {
     describe('users', () => {
 
         describe('register', () => {
-            let name, surname, username, password
+            let name, surname, username, password, user
 
             beforeEach(() => {
                 name = `n-${Math.random()}`
@@ -102,7 +103,7 @@ describe('logic', () => {
         })
 
         describe('authenticate', () => {
-            let user
+            let user, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -159,7 +160,7 @@ describe('logic', () => {
         })
 
         describe('retrieve user', () => {
-            let user
+            let user, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -212,7 +213,7 @@ describe('logic', () => {
 
 
         describe('update user', () => {
-            let user, newName, newSurname, newUsername, newPassword
+            let user, newName, newSurname, newUsername, newPassword, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -341,7 +342,7 @@ describe('logic', () => {
 
     describe('stories', () => {
         describe('add', () => {
-            let title, audioLanguage, textLanguage, user
+            let title, audioLanguage, textLanguage, user, name, surname, username, password, story
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -455,7 +456,7 @@ describe('logic', () => {
         })
 
         describe('list stories', () => {
-            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2
+            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -547,7 +548,7 @@ describe('logic', () => {
 
 
         describe('retrieve story', () => {
-            let title, audioLanguage, textLanguage, user, story, page, text
+            let title, audioLanguage, textLanguage, user, story, page, text, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -664,8 +665,8 @@ describe('logic', () => {
         })
 
 
-        describe('update', () => {
-            let title, audioLanguage, textLanguage, user, story, newTitle, newTextLanguage, newAudioLanguage
+        describe('update story', () => {
+            let title, audioLanguage, textLanguage, user, story, newTitle, newTextLanguage, newAudioLanguage, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -841,7 +842,7 @@ describe('logic', () => {
 
 
         describe('finish story', () => {
-            let title, audioLanguage, textLanguage, user, story
+            let title, audioLanguage, textLanguage, user, story, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -931,7 +932,7 @@ describe('logic', () => {
         })
 
         describe('work in story ', () => {
-            let title, audioLanguage, textLanguage, user, story
+            let title, audioLanguage, textLanguage, user, story, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1020,7 +1021,7 @@ describe('logic', () => {
         })
 
         describe('save story cover', () => {
-            let user, story, dataURL, vectors
+            let user, story, dataURL, vectors, name, surname, username, password, title, audioLanguage, textLanguage, newTitle, newTextLanguage, newAudioLanguage
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1105,7 +1106,7 @@ describe('logic', () => {
             })
 
             it('should fail on undefined vectors', () => {
-                expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not an array')
             })
 
             // it('should fail on empty vectors', () => {
@@ -1118,7 +1119,7 @@ describe('logic', () => {
         })
 
         describe('retrieve story cover', () => {
-            let user, story, vectors, dataURL
+            let user, story, vectors, dataURL, name, surname, username, password, title, audioLanguage, textLanguage, newTitle, newTextLanguage, newAudioLanguage
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1191,7 +1192,7 @@ describe('logic', () => {
         })
 
         describe('remove story', () => {
-            let title, audioLanguage, textLanguage, user, story, page
+            let title, audioLanguage, textLanguage, user, story, page, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1276,7 +1277,7 @@ describe('logic', () => {
         })
 
         describe('search stories by title', () => {
-            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2
+            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1369,7 +1370,7 @@ describe('logic', () => {
 
 
         describe('search random stories', () => {
-            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2
+            let title, audioLanguage, textLanguage, user, story, story2, title2, textLanguage2, audioLanguage2, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1430,7 +1431,7 @@ describe('logic', () => {
 
 
         describe('add story to favourite', () => {
-            let title, audioLanguage, textLanguage, user, story
+            let title, audioLanguage, textLanguage, user, story, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1554,7 +1555,7 @@ describe('logic', () => {
         })
 
         describe('remove story from favourites', () => {
-            let title, audioLanguage, textLanguage, user, story
+            let title, audioLanguage, textLanguage, user, story, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1660,7 +1661,7 @@ describe('logic', () => {
         })
 
         describe('list favourite stories', () => {
-            let title, audioLanguage, textLanguage, user, story
+            let title, audioLanguage, textLanguage, user, story, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1739,7 +1740,7 @@ describe('logic', () => {
 
     describe('page', () => {
         describe('add page', () => {
-            let title, audioLanguage, textLanguage, user, story, text
+            let title, audioLanguage, textLanguage, user, story, text, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1828,7 +1829,7 @@ describe('logic', () => {
         })
 
         describe('update page', () => {
-            let title, audioLanguage, textLanguage, user, story, text, newText, page
+            let title, audioLanguage, textLanguage, user, story, text, newText, page, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -1948,7 +1949,7 @@ describe('logic', () => {
         })
 
         describe('retrieve page', () => {
-            let title, audioLanguage, textLanguage, user, story, text, page
+            let title, audioLanguage, textLanguage, user, story, text, page, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -2054,7 +2055,7 @@ describe('logic', () => {
         })
 
         describe('save page picture', () => {
-            let user, story, page, dataURL, vectors
+            let user, story, page, dataURL, vectors, name, surname, username, password, title, audioLanguage, textLanguage, text
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -2067,9 +2068,9 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                newTitle = `${title}-${Math.random()}`
-                newTextLanguage = `${textLanguage}-${Math.random()}`
-                newAudioLanguage = `${audioLanguage}-${Math.random()}`
+                // newTitle = `${title}-${Math.random()}`
+                // newTextLanguage = `${textLanguage}-${Math.random()}`
+                // newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
 
                 text = `text-${Math.random()}`
@@ -2180,7 +2181,7 @@ describe('logic', () => {
         })
 
         describe('retrieve picture', () => {
-            let user, story, page, dataURL, vectors
+            let user, story, page, dataURL, vectors, name, surname, username, password,title, audioLanguage, textLanguage, text
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -2193,9 +2194,7 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                newTitle = `${title}-${Math.random()}`
-                newTextLanguage = `${textLanguage}-${Math.random()}`
-                newAudioLanguage = `${audioLanguage}-${Math.random()}`
+                
                 let id = user.id
                 text = `text-${Math.random()}`
                 dataURL = 'dataURL....'
@@ -2280,7 +2279,7 @@ describe('logic', () => {
         })
 
         describe('save page audio', () => {
-            let user, story, page
+            let user, story, page, name, surname, username, password, title, text, audioLanguage, textLanguage
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -2293,9 +2292,6 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                newTitle = `${title}-${Math.random()}`
-                newTextLanguage = `${textLanguage}-${Math.random()}`
-                newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
 
                 text = `text-${Math.random()}`
@@ -2381,7 +2377,7 @@ describe('logic', () => {
         })
 
         describe('retrieve page audio', () => {
-            let user, story, page, folder, file
+            let user, story, page, folder, file, name, surname, username, password, title, text, audioLanguage, textLanguage
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`
@@ -2394,9 +2390,6 @@ describe('logic', () => {
                 title = `title-${Math.random()}`
                 audioLanguage = `audioLanguage-${Math.random()}`
                 textLanguage = `textLanguage-${Math.random()}`
-                newTitle = `${title}-${Math.random()}`
-                newTextLanguage = `${textLanguage}-${Math.random()}`
-                newAudioLanguage = `${audioLanguage}-${Math.random()}`
                 let id = user.id
                 text = `text-${Math.random()}`
 
@@ -2494,7 +2487,7 @@ describe('logic', () => {
         })
 
         describe('remove page', () => {
-            let title, audioLanguage, textLanguage, user, story, text, page
+            let title, audioLanguage, textLanguage, user, story, text, page, name, surname, username, password
 
             beforeEach(async () => {
                 name = `n-${Math.random()}`

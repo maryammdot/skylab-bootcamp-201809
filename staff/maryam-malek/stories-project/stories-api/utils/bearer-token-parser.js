@@ -1,3 +1,4 @@
+'use strict'
 function bearerTokenParser(req, res, next) {
     try {
         const { headers: { authorization } } = req

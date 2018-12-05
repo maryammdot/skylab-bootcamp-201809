@@ -1,3 +1,4 @@
+'use strict'
 class NotFoundError extends Error {
     constructor(message, extra) {
         super()

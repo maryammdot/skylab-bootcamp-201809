@@ -36,7 +36,7 @@
 .body-container-update-story {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
 }
@@ -44,9 +44,14 @@
 .upper-body-update-story {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 40%;
+  height: 500px;
+}
+
+.upper-body-update-story img {
+  margin-top: 30px;
 }
 
 .detail-pages-update-story {
@@ -59,9 +64,17 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   align-items: center;
-  width: 60%;
+  width: 50%;
   height: 500px;
   overflow: scroll;
+}
+
+.bottom-body-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
 }
 
 .book-cover {
@@ -71,7 +84,8 @@
   padding: 1%;
   margin-left: 5%;
   border: 0.5px solid grey;
-  border-radius: 15%;
+  padding: 0;
+  border-radius: 10px;
   background-color: lavender;
 }
 
@@ -85,28 +99,39 @@
 }
 
 .book-details input {
-  width: 225px;
+  width: 200px;
   height: 22px;
   margin: 3% 0;
-  border: 1px solid #bdbdbd;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid #bdbdbd;
+  padding: 0;
+  font-size: 1em;
+}
+
+.book-details input::placeholder {
+  color: black;
 }
 
 .book-details button {
   font-size: 0.7em;
   width: 92%;
   height: 26px;
-  background-color: #bdbdbd;
+  background-color: transparent;
   border-color: #bdbdbd;
   padding: 0;
   border-radius: 5px;
-  outline: 0;
-  margin-left: 3em;
-  margin-top: 1%;
+  margin-left: 1.5em;
+}
+
+.book-details button:hover {
+  background-color: white;
+  color: black;
 }
 
 .buttons-story {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -117,6 +142,22 @@
   border: none;
   margin: 3% 0;
   font-size: 1.5em;
+}
+
+.icon-update-page {
+  color: black;
+}
+
+.icon-update-page:hover {
+  color: white;
+}
+
+.icon-new-update-page {
+  color: black;
+}
+
+.icon-new-update-page:hover {
+  color: white;
 }
 
 .pages-section {

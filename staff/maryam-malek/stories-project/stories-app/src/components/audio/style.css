@@ -1,5 +1,10 @@
 .container-audio {
   margin-bottom: 7%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-audio {
@@ -8,6 +13,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  width: 700px;
+  height: 97px;
 }
 
 .info-audio {
@@ -30,7 +37,8 @@
   width: 8em;
   height: 2em;
   border: solid 1px black;
-  border-radius: 10% 10%;
+  padding: 0;
+  border-radius: 5px;
   background-color: transparent;
 }
 
@@ -40,7 +48,13 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  height: 450px;
+  border: 1px solid white;
+  background-color: rgba(10, 10, 10, 0.2);
+  width: 450px;
+  height: 270px;
+  padding: 0;
+  border-radius: 10px;
+  margin-top: 4%;
 }
 
 .audio-displays button {
@@ -48,7 +62,13 @@
   border: none;
   margin: 3% 0;
   font-size: 1.5em;
-  outline: 0;
+}
+
+.audio-displays h3 {
+  color: white;
+  font-family: arial;
+  font-size: 1em;
+  font-weight: 100;
 }
 
 .rec-stop, .play-sec {
@@ -61,20 +81,8 @@
   font-size: 2em;
 }
 
-.rec {
-  color: green;
-}
-
-.stop {
-  color: red;
-}
-
-.rec :hover {
-  color: blue;
-}
-
-.stop :hover {
-  color: blue;
+.icons-audio:hover {
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */

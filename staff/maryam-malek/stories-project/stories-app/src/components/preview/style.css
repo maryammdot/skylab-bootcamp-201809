@@ -1,10 +1,10 @@
 .container-preview {
-  display: grid;
-  grid-template-rows: 15% auto;
-  position: relative;
-  width: 500px;
-  height: 70%;
   margin-bottom: 7%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-preview {
@@ -13,6 +13,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  width: 700px;
+  height: 97px;
 }
 
 .info-preview {
@@ -35,20 +37,27 @@
   width: 8em;
   height: 2em;
   border: solid 1px black;
-  border-radius: 10% 10%;
+  padding: 0;
+  border-radius: 5px;
   background-color: transparent;
+}
+
+.main-container {
+  height: 350px;
 }
 
 .preview-book-page {
   background-color: lavender;
-  border-radius: 20% 20% 20% 20%;
-  border: 0.5px solid powderblue;
+  padding: 0;
+  border-radius: 20px;
+  height: 380px;
+  width: 700px;
 }
 
 .preview-book-page img {
   width: 100%;
   height: 300px;
-  margin-top: 5%;
+  margin-top: 1%;
   border-radius: 19% 19% 17% 17%;
   background-color: transparent;
 }
@@ -59,7 +68,9 @@
   justify-content: center;
   align-items: center;
   height: 100px;
-  width: 100%;
+  width: 80%;
+  margin-left: 4em;
+  margin-top: -15%;
 }
 
 .audio-buttons {
@@ -80,7 +91,7 @@
 }
 
 .audio-buttons button :hover {
-  color: blue;
+  color: #3b98f1;
 }
 
 .audio-stop {
@@ -109,6 +120,10 @@
 .next-button {
   right: -14%;
   top: 50%;
+}
+
+.icons-preview:hover {
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */

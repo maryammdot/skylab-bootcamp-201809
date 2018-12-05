@@ -60,4 +60,8 @@
   margin: 3%;
 }
 
+.detail-my-favourite-stories:hover {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import swal from 'sweetalert2'
 import './style.css'
 import Error from '../error/Error'
+import ReactTooltip from 'react-tooltip'
 
 class Canvas extends Component {
 
@@ -12,14 +13,14 @@ class Canvas extends Component {
         // Here we set up the properties of the canvas element. 
         if (this.props.cover) {
             this.canvas.width = 150
-            
+
             this.canvas.height = 250
         } else {
             this.canvas.width = 500
-            
+
             this.canvas.height = 300
         }
-        
+
         this.ctx = this.canvas.getContext('2d')
         this.ctx.lineJoin = 'round'
         this.ctx.lineCap = 'round'
@@ -29,10 +30,10 @@ class Canvas extends Component {
 
             try {
                 this.paintComplete(this.props.vectors)
-                
+
                 this.setState({ line: [], storage: this.props.vectors, error: null })
             } catch (err) {
-                this.setState({error: err.message})
+                this.setState({ error: err.message })
             }
         }
     }
@@ -87,15 +88,15 @@ class Canvas extends Component {
             last.push(lastLine)
 
             this.setState({ last, storage: stg, error: null })
-            
+
             try {
                 this.clear()
-                
+
                 this.paintComplete(this.state.storage)
-                
-                this.setState({error: null})
-            } catch(err) {
-                this.setState({error: err.message})
+
+                this.setState({ error: null })
+            } catch (err) {
+                this.setState({ error: err.message })
             }
 
             const dataURL = this.canvas.toDataURL()
@@ -112,10 +113,10 @@ class Canvas extends Component {
             this.state.last[this.state.last.length - 1].forEach(el => {
                 try {
                     this.paint(el.start, el.stop, el.strokeStyle, el.width)
-                    
-                    this.setState({error: null})
-                } catch(err) {
-                    this.setState({error: err.message})
+
+                    this.setState({ error: null })
+                } catch (err) {
+                    this.setState({ error: err.message })
                 }
             })
 
@@ -137,7 +138,7 @@ class Canvas extends Component {
 
     onMouseDown = ({ nativeEvent }) => {
         const length = this.state.line.length
-        
+
         const { offsetX, offsetY } = nativeEvent
 
         this.setState({ length, isPainting: true, prevPos: { offsetX, offsetY }, error: null })
@@ -174,9 +175,9 @@ class Canvas extends Component {
             try {
                 this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle, this.state.width)
 
-                this.setState({error: null})
-            } catch(err) {
-                this.setState({error: err.message})
+                this.setState({ error: null })
+            } catch (err) {
+                this.setState({ error: err.message })
             }
         }
     }
@@ -187,11 +188,11 @@ class Canvas extends Component {
             this.setState({ isPainting: false, error: null })
 
             try {
-                this.setState({error: null})
+                this.setState({ error: null })
 
                 this.sendPaintData()
             } catch (err) {
-                this.setState({error: err.message})
+                this.setState({ error: err.message })
             }
         }
     }
@@ -227,14 +228,14 @@ class Canvas extends Component {
 
             const dataURL = this.canvas.toDataURL()
 
-            this.setState({ dataURL, isPainting: false, error: null})
+            this.setState({ dataURL, isPainting: false, error: null })
 
             try {
-                this.setState({error: null})
+                this.setState({ error: null })
 
                 this.sendPaintData()
             } catch (err) {
-                this.setState({error: err.message})
+                this.setState({ error: err.message })
             }
 
             this.props.onChange(dataURL, this.state.storage)
@@ -261,13 +262,13 @@ class Canvas extends Component {
         this.ctx.beginPath()
         this.ctx.strokeStyle = strokeStyle
         this.ctx.lineWidth = width
-       
+
         // Move the the prevPosition of the mouse
         this.ctx.moveTo(x, y)
-       
+
         // Draw a line to the current position of the mouse
         this.ctx.lineTo(offsetX, offsetY)
-       
+
         // Visualize the line using the strokeStyle
         this.ctx.stroke()
 
@@ -280,7 +281,7 @@ class Canvas extends Component {
 
             arr.forEach(el => {
                 try {
-                    this.setState({error: null})
+                    this.setState({ error: null })
 
                     this.paint(el.start, el.stop, el.strokeStyle, el.width)
                 } catch (err) {
@@ -295,43 +296,46 @@ class Canvas extends Component {
             <div className='header-canvas'>
                 {!this.props.cover && <h4 className="draw-title">DIBUIXA LA PÀGINA</h4>}
                 <div className="info-canvas">
-                    <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question"></i></button>
-                    {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o"></i></button>}
-                    {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>}
+                    <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question icons-canvas"></i></button>
+                    {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o icons-canvas"></i></button>}
+                    {/* {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>} */}
                 </div>
             </div>
             <div>
-            {/* <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
-            <div className='canvas-area'>
-                <div className="utils-canvas">
-                    <div className='do-container-buttons'>
-                        <button className='undo-canvas-button' onClick={this.handleUndoClick}><i class="fa fa-reply"></i></button>
-                        <button className='redo-canvas-button' onClick={this.handleRedoClick}><i class="fa fa-share"></i></button>
+                {/* <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
+                <div className='canvas-area'>
+                    <div>
+                    <canvas className='canvas'
+                        id="page-draw"
+                        ref={(ref) => (this.canvas = ref)}
+                        onMouseDown={this.onMouseDown}
+                        onMouseLeave={this.endPaintEvent}
+                        onMouseUp={this.endPaintEvent}
+                        onMouseMove={this.onMouseMove}
+                    // onTouchStart={this.onTouchStart}
+                    // onTouchEnd={this.onTouchEnd}
+                    // onTouchMove={this.onTouchMove}
+                    />
                     </div>
-                    <div className='color-container-buttons'>
-                        <button className='color1-canvas-button' onClick={this.handleColor1}></button>
-                        <button className='color2-canvas-button' onClick={this.handleColor2}></button>
-                        <button className='color3-canvas-button' onClick={this.handleColor3}></button></div>
-                    <div className='width-container-buttons'>
-                        <button className='width1-canvas-button' onClick={this.handleWidth1}></button>
-                        <button className='width2-canvas-button' onClick={this.handleWidth2}></button>
-                        <button className='width3-canvas-button' onClick={this.handleWidth3}></button></div>
+                    <div className="utils-canvas">
+                        <div className='do-container-buttons'>
+                            <button className='undo-canvas-button' data-tip="DESFER" onClick={this.handleUndoClick}><i class="fa fa-reply icons-canvas"></i></button>
+                            <button className='redo-canvas-button' data-tip="REFER" onClick={this.handleRedoClick}><i class="fa fa-share icons-canvas"></i></button>
+                        </div>
+                        <div className='color-container-buttons' data-tip="TRIAR EL COLOR">
+                            <button className='color1-canvas-button' onClick={this.handleColor1}></button>
+                            <button className='color2-canvas-button' onClick={this.handleColor2}></button>
+                            <button className='color3-canvas-button' onClick={this.handleColor3}></button></div>
+                        <div className='width-container-buttons' data-tip="TRIAR EL GRUIX DEL LLAPIS">
+                            <button className='width1-canvas-button' onClick={this.handleWidth1}></button>
+                            <button className='width2-canvas-button' onClick={this.handleWidth2}></button>
+                            <button className='width3-canvas-button' onClick={this.handleWidth3}></button></div>
+                    </div>
                 </div>
-                <canvas className='canvas'
-                    id="page-draw"
-                    ref={(ref) => (this.canvas = ref)}
-                    onMouseDown={this.onMouseDown}
-                    onMouseLeave={this.endPaintEvent}
-                    onMouseUp={this.endPaintEvent}
-                    onMouseMove={this.onMouseMove}
-                // onTouchStart={this.onTouchStart}
-                // onTouchEnd={this.onTouchEnd}
-                // onTouchMove={this.onTouchMove}
-                />
-            </div>
-            {/* <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
+                {/* <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div>
     }
 }

@@ -9,11 +9,12 @@
 }
 
 .error {
-  color: red;
+  color: #ff6403;
   border: red solid 1px;
   padding: 1%;
   max-width: 100%;
   width: fit-content;
+  background-color: rgba(20, 20, 22, 0.7);
 }
 
 /*# sourceMappingURL=style.css.map */

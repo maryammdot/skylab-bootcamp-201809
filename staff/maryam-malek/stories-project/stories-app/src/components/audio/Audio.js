@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './style.css'
 import swal from 'sweetalert2'
 import Error from '../error/Error'
+import ReactTooltip from 'react-tooltip'
 
 class Audio extends Component {
 
@@ -116,16 +117,15 @@ class Audio extends Component {
             <div className='header-audio'>
                 <h4 className="audio-title">AUDIO DE LA PÀGINA</h4>
                 <div className="info-audio">
-                    <button className="help-audio-button" onClick={this.handleHelpAudioClick}><i class="fa fa-question"></i></button>
-                    <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>
+                    <button className="help-audio-button" onClick={this.handleHelpAudioClick}><i class="fa fa-question icons-audio"></i></button>
+                    {/* <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button> */}
                 </div>
             </div>
-            <div>
                 {/* <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
                 <div className="audio-displays">
                     <div className="rec-stop">
-                        <button className="rec" onClick={this.start}><i className="fa fa-dot-circle-o"></i></button>
-                        <button className="stop" onClick={this.stop}><i className="fa fa-stop"></i></button>
+                        <button className="rec" data-tip="GRABAR" onClick={this.start}><i className="fa fa-dot-circle-o icons-audio"></i></button>
+                        <button className="stop" data-tip="PARAR" onClick={this.stop}><i className="fa fa-stop icons-audio"></i></button>
                     </div>
                     {!this.state.clear && <h3>{this.state.secs}</h3>}
                     {this.state.canListen && <div className="play-sec">
@@ -133,8 +133,8 @@ class Audio extends Component {
                     </div>}
                 </div>
                 {/* <button className="next-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
-            </div>
             {this.state.error && <Error message={this.state.error} />}
+            <ReactTooltip effect='solid' />
         </div>
     }
 }

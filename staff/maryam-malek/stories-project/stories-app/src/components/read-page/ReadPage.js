@@ -161,7 +161,7 @@ class ReadPage extends Component {
             <div className='header-read-page'>
                 <h1>{this.state.title}</h1>
                 <div className="info-read-page">
-                    <button className='help-read-page-button' onClick={this.handleHelpPageClick}><i className="fa fa-question"></i></button>
+                    <button className='help-read-page-button' onClick={this.handleHelpPageClick}><i className="fa fa-question icon-question-read-page"></i></button>
                     <button className='back-read-page-button' onClick={this.handleBackClick}>TORNAR AL CONTE</button>
                 </div>
             </div>
@@ -169,8 +169,8 @@ class ReadPage extends Component {
                 <div className="read-page-book-area">
                     <img src={this.state.dataURL} alt="page image" />
                     {this.state.hasAudio && <div className="audio-buttons">
-                        <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle"></i></button>
-                        <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop"></i></button>
+                        <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle icon-audio-read"></i></button>
+                        <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop icon-audio-read"></i></button>
                         {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
                     <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                         <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
@@ -179,8 +179,8 @@ class ReadPage extends Component {
                         <span className='text-read-story'>{this.state.text}</span>
                         <span>PÀGINA {this.state.index + 1}</span>
                     </div>
-                    {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right"></i></button>}
-                    {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left"></i></button>}
+                    {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right icon-move-read-page"></i></button>}
+                    {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left icon-move-read-page"></i></button>}
                     <ReactTooltip effect='solid' />
                 </div>
             </div>

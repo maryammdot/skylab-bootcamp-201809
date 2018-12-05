@@ -30,7 +30,7 @@ class CreatePage extends Component {
                                 this.setState({ dataURL, vectors, error: null })
                             })
                     } else {
-                        this.setState({dataURL: false, vectors: []})
+                        this.setState({ dataURL: false, vectors: [] })
                     }
                 })
                 .catch(err => this.setState({ error: err.message }))
@@ -50,15 +50,15 @@ class CreatePage extends Component {
                     })
                     .then(({ id, image, audioURL, text, hasImage, hasAudio }) => {
                         this.setState({ pageId: id, image, audioURL, text, hasImage, hasAudio, error: null })
-                        
+
                         if (hasImage) {
                             return logic.retrievePagePicture(nextProps.pageId, nextProps.storyId)
                                 .then(({ dataURL, vectors }) => {
 
                                     this.setState({ dataURL, vectors, error: null })
                                 })
-                        }else {
-                            this.setState({dataURL: false, vectors: []})
+                        } else {
+                            this.setState({ dataURL: false, vectors: [] })
                         }
                     })
                     .catch(err => this.setState({ error: err.message }))
@@ -180,8 +180,11 @@ class CreatePage extends Component {
     render() {
         return <div className='container-create-page'>
             <div className='create-page-header'>
-                <h1 className="title-create-page">{this.state.title}</h1>
-                <button className="new-page-button" onClick={this.handleNewPageClick}>CREAR UNA NOVA PÀGINA</button>
+                <h1>{this.state.title}</h1>
+                <div className='new-back-buttons'>
+                    <button className="new-page-button" onClick={this.handleNewPageClick}>CREAR UNA NOVA PÀGINA</button>
+                    <button className="back-page-button" onClick={this.handleBackClick}>TORNAR AL CONTE</button>
+                </div>
             </div>
             <div className='content'>
                 {this.state.draw && <Canvas onPreviewClick={this.handlePreviewClick} onTextClick={this.handleTextClick} storyId={this.state.storyId} pageId={this.state.pageId} vectors={this.state.vectors} onChange={this.handleCanvasChange} onHelpClick={this.handleHelpDrawClick} onBackClick={this.handleBackClick} />}

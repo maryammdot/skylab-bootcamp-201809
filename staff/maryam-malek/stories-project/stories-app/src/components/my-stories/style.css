@@ -41,6 +41,14 @@
   border: none;
 }
 
+.icon-new-my-stories {
+  color: black;
+}
+
+.icon-new-my-stories:hover {
+  color: white;
+}
+
 .firstStoryButton {
   font-size: 1em;
   width: 10em;
@@ -64,6 +72,7 @@
 
 .detail-my-stories {
   margin: 1.5%;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */

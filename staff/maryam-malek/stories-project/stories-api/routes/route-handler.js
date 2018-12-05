@@ -1,3 +1,4 @@
+'use strict'
 const { AlreadyExistsError, AuthError, NotFoundError, ValueError } = require('../errors')
 
 function routeHandler(callback, res) {
@@ -5,7 +6,7 @@ function routeHandler(callback, res) {
         callback()
             .catch(err => {
                 const { message } = err
-debugger
+
                 if (err instanceof AuthError) {
                     res.status(401)
                 } else if (err instanceof AlreadyExistsError) {
@@ -22,7 +23,7 @@ debugger
             })
     } catch (err) {
         const { error: message } = err
-debugger
+
         if (err instanceof TypeError || err instanceof ValueError) {
             res.status(400)
         } else {

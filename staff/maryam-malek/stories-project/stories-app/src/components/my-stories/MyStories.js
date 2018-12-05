@@ -37,7 +37,7 @@ class MyStories extends Component {
             <div className='container-my-stories'>
                 <div className='my-stories-header'>
                     <h1>ELS MEUS CONTES</h1>
-                    {!!this.state.stories.length && <button className="newStoryButton" data-tip="CREA UN NOU CONTE" onClick={this.handleNewStoryClick}><i className="fa fa-plus-circle"></i></button>}
+                    {!!this.state.stories.length && <button className="newStoryButton" data-tip="CREA UN NOU CONTE" onClick={this.handleNewStoryClick}><i className="fa fa-plus-circle icon-new-my-stories"></i></button>}
                 </div>
                 <ul className='my-stories-list'>
                     {this.state.stories.map(story => <div className='detail-my-stories' data-tip="LLEGEIX EL CONTE"><Detail edit={true} id={story.id} img={story.hasCover ? story.dataURL : './images/cover.png'} text={story.title} onDetailClick={this.handleDetailClick} onEditClick={this.handleEditClick} /></div>)}

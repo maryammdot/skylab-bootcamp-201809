@@ -17,38 +17,49 @@
     border: none
     margin: 3% 0
     font-size: 1.5em
-    outline: 0
+.icons-canvas:hover
+    color: white
+    cursor: pointer
 .back-canvas-button
     font-size: 0.8em
     width: 8em
     height: 2em
     border: solid 1px black
-    border-radius: 10% 10%
+    border-radius: 10px
+    padding: 0
     background-color: transparent 
-    outline: 0
 .canvas-area
-    height: 450px
+    height: 400px
     display: flex
-    flex-direction: column
-    flex-wrap: wrap
+    flex-direction: row
     justify-content: center
     align-items: center
+    width: 700px
 .canvas
     border: 1px solid grey
-    border-radius: 20%
+    border-radius: 20px
+    padding: 0
     background-color: lavender
 .utils-canvas
     display: flex
-    flex-direction: row
+    flex-direction: column
     flex-wrap: wrap
     justify-content: space-around
     align-items: center
-    margin: 0 2%
+    border: 1px solid white
+    padding: 0
+    border-radius: 10px
+    margin-left: 2%
+    background-color: rgba(10,10,10, .2)
+    width: 150px
+    // margin: 0 2%
+.utils-canvas button:hover
+    cursor: pointer
 .color1-canvas-button, .color2-canvas-button, .color3-canvas-button
     border: none
     margin: 3%
-    width: 0.5em
-    height: 1.5em
+    width: 1em
+    height: 1em
     outline: 0
     border-radius: 50%
 .color1-canvas-button
@@ -66,26 +77,23 @@
 .width1-canvas-button, .width2-canvas-button, .width3-canvas-button
     border: none
     margin: 3%
-    width: 0.3em
-    height: 1em
+    width: 0.5em
+    height: 0.5em
     outline: 0
     border-radius: 50%
     background-color: black
 .width2-canvas-button
-    width: 0.5em
-    height: 1.2em
+    width: 1em
+    height: 1em
 .width3-canvas-button
-    width: 0.5em
-    height: 1.7em
+    width: 1.5em
+    height: 1.5em
 .width-container-buttons, .color-container-buttons
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content: space-around
     align-items: center
-    width: 90px
-// .width3-canvas-button :focus
-//     border: blue 1px solid
-//     background-color: red 
-// .width3-canvas-button :hover
-// .width3-canvas-button :hover
+    width: 100%
+.color-container-buttons button:hover, .width-container-buttons button:hover
+    border: 1.5px white solid

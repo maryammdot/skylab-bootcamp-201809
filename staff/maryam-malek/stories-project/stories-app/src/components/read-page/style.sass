@@ -34,6 +34,10 @@
     flex-wrap: wrap
     justify-content: center
     align-items: center
+.icon-question-read-page, .icon-move-read-page
+    color: black
+.icon-question-read-page:hover, .icon-move-read-page:hover
+    color: white
 .help-read-page-button
     background-color: transparent 
     border: none
@@ -64,9 +68,13 @@
     // margin-top: 3%
 .read-page-book-area
     background-color: lavender
-    border-radius: 20% 20% 20% 20%
-    border: 0.5px solid powderblue
-    width: 500px
+    // border-radius: 20% 20% 20% 20%
+    // border: 0.5px solid powderblue
+    // width: 500px
+    padding: 0
+    border-radius: 20px
+    height: 380px
+    width: 700px
     position: relative
 .read-page-book-area img
     width: 100%
@@ -80,11 +88,21 @@
     justify-content: space-around
     align-items: center
     height: 100px
-    width: 100%
+    width: 85%
+    position: absolute
+    bottom: -10%
+    // font-size: 1em
 .text-area-read-page :first-child
-    font-size: 1.3em
+    position: absolute
+    bottom: 45%
+    left: 4.5em
+    font-size: 1em
 .text-area-read-page :last-child
     font-size: 0.8em
+    color: white 
+    position: absolute
+    bottom: 0
+    left: 50%
 .audio-buttons
     display: flex
     flex-direction: row
@@ -92,11 +110,16 @@
     align-items: center
     padding: 0 5%
     margin: -20px
+    margin-top: -35px
 .audio-buttons button
     background-color: transparent 
     border: none
     margin: 3% 0
     font-size: 1.5em
+    cursor: pointer
+.icon-audio-read:hover
+    cursor: pointer
+    color: #3b98f1
 .audio-stop
     color: red
 .audio-play

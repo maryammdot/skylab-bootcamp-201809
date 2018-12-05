@@ -1,3 +1,4 @@
+// 'use strict'
 require('dotenv').config()
 
 const { mongoose } = require('stories-data')

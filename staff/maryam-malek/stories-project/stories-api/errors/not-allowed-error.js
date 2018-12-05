@@ -1,3 +1,4 @@
+'use strict'
 class NotAllowedError extends Error {
     constructor(message, extra) {
         super()

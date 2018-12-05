@@ -1,3 +1,4 @@
+'use strict'
 const { models: { User, Story, Page } } = require('stories-data')
 const validate = require('../utils/validate')
 const { AlreadyExistsError, AuthError, NotFoundError } = require('../errors')
@@ -585,7 +586,7 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            page = new Page({ text })
+            let page = new Page({ text })
 
             page.image = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
 

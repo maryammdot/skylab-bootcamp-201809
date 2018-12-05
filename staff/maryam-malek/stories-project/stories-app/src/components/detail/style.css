@@ -16,6 +16,10 @@
   border-radius: 15px;
 }
 
+.detail:hover {
+  cursor: pointer;
+}
+
 .detail {
   display: flex;
   flex-direction: column;
@@ -28,6 +32,11 @@
   width: 170px;
   height: 230px;
   background-color: lavender;
+}
+
+.detail_pages {
+  width: 150px;
+  height: 200px;
 }
 
 .detail-img {
@@ -49,10 +58,8 @@
 .detail-text__bottom {
   font-size: 0.6em;
   overflow-wrap: break-word;
-  height: 25%;
   overflow: hidden;
   width: 100%;
-  padding-bottom: 3%;
   padding-top: 1%;
   color: black;
 }
