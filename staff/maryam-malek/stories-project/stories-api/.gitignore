@@ -10,3 +10,5 @@ data/stories/**/*.svg
 data/stories/**/*.ogg
 !data/stories/default/cover.png
 !data/stories/default/picture.png
+coverage
+.nyc_output

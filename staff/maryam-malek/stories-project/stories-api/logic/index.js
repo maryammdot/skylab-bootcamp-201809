@@ -7,6 +7,19 @@ const path = require('path')
 const { env: { PORT } } = process
 
 const logic = {
+    /**
+     * 
+     * @param {String} name 
+     * @param {String} surname 
+     * @param {String} username 
+     * @param {String} password 
+     * 
+     * @throws {TypeError} on non-string name, surname, username or password
+     * @throws {ValueError} on empty or blank name, surname, username or password
+     * @throws {AlreadyExistsError} on already registered username
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     register(name, surname, username, password) {
         validate([
             { key: 'name', value: name, type: String },
@@ -26,6 +39,17 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} username 
+     * @param {String} password 
+     * 
+     * @throws {TypeError} on non-string username or password
+     * @throws {ValueError} on empty or blank username or password
+     * @throws {AuthError} on invalid username or password
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     authenticate(username, password) {
         validate([
             { key: 'username', value: username, type: String },
@@ -41,6 +65,16 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} id 
+     * 
+     * @throws {TypeError} on non-string id
+     * @throws {ValueError} on empty or blank id
+     * @throws {NotFoundError} on non existing user with that id
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveUser(id) {
         validate(
             [{ key: 'id', value: id, type: String }]
@@ -57,31 +91,19 @@ const logic = {
         })()
     },
 
-    // updateUser(id, name, surname, username, newPassword, password) {
-    //     validate([
-    //         { key: 'id', value: id, type: String },
-    //         { key: 'name', value: name, type: String, optional: true },
-    //         { key: 'surname', value: surname, type: String, optional: true },
-    //         { key: 'username', value: username, type: String, optional: true },
-    //         { key: 'password', value: password, type: String },
-    //         { key: 'newPassword', value: newPassword, type: String, optional: true }
-    //     ])
-
-    //     return (async () => {
-    //         const user = await User.findById(id)
-
-    //         if (!user) throw new NotFoundError(`user with id ${id} not found`)
-
-    //         if (user.password !== password) throw new AuthError('wrong password')
-
-    //         name != null && (user.name = name)
-    //         surname != null && (user.surname = surname)
-    //         username != null && (user.username = username)
-    //         newPassword != null && (user.password = newPassword)
-
-    //         await user.save()
-    //     })()
-    // },
+    /**
+     * 
+     * @param {String} userId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string userId, storyId
+     * @throws {ValueError} on empty or blank userId, storyId
+     * @throws {NotFoundError} on unexisting user with id userId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * @throws {AlreadyExistsError} on story with id storyId already tagged as favourite
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
 
     addFavourites(userId, storyId) {
         validate([
@@ -109,6 +131,19 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} userId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string userId, storyId
+     * @throws {ValueError} on empty or blank userId, storyId
+     * @throws {NotFoundError} on unexisting user with id userId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * @throws {NotFoundError} on story with id storyId tagged as favourite
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     removeFavourites(userId, storyId) {
         validate([
             { key: 'userId', value: userId, type: String },
@@ -136,6 +171,17 @@ const logic = {
             await user.save()
         })()
     },
+
+    /**
+     * 
+     * @param {String} userId 
+     * 
+     * @throws {TypeError} on non-string userId
+     * @throws {ValueError} on empty or blank userId
+     * @throws {NotFoundError} on unexisting user with id userId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
 
     listFavourites(userId) {
         validate([
@@ -167,7 +213,20 @@ const logic = {
 
     },
 
-
+/**
+ * 
+ * @param {String} title 
+ * @param {String} author 
+ * @param {String} audioLanguage 
+ * @param {String} textLanguage 
+ * 
+ * @throws {TypeError} on non-string title, author, audioLanguage, textLanguage
+ * @throws {ValueError} on empty or blank title, author, audioLanguage, textLanguage
+ * @throws {NotFoundError} on unexisting user with id author
+ * @throws {AlreadyExistsError} on stroy with title title already created by user with id author
+ * 
+ * @returns {Promise} resolves on correct data rejects on wrong data
+ */
     addStory(title, author, audioLanguage, textLanguage) {
         validate([
             { key: 'title', value: title, type: String },
@@ -199,6 +258,16 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} author 
+     * 
+     * @throws {TypeError} on non-string author
+     * @throws {ValueError} on empty or blank author
+     * @throws {NotFoundError} on unexiting user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     listStories(author) {
         validate([
             { key: 'authorId', value: author, type: String }
@@ -227,6 +296,19 @@ const logic = {
 
     },
 
+    /**
+     * 
+     * @param {String} author 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string author, storyId
+     * @throws {ValueError} on empty or blank author, storyId
+     * @throws {NotFoundError} on unexisting user with id author
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * @throws {NotFoundError} on unexisting story with id storyId inside user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveStory(author, storyId) {
         validate([
             { key: 'authorId', value: author, type: String },
@@ -241,7 +323,9 @@ const logic = {
 
             let story = await Story.findById(storyId).populate('author').lean().exec()
 
-            if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+            if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
+
+            if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
 
             story.id = story._id.toString()
             delete story._id
@@ -262,7 +346,19 @@ const logic = {
             return story
         })()
     },
-
+    
+    /**
+     * 
+     * @param {String} storyId 
+     * @param {String} dataURL 
+     * @param {Array} vectors 
+     * 
+     * @throws {TypeError} on non-string storyId, dataURL, vectors
+     * @throws {ValueError} on empty or blank storyId, dataURL
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     saveStoryCover(storyId, dataURL, vectors) {
         validate([
             { key: 'storyId', value: storyId, type: String },
@@ -287,6 +383,16 @@ const logic = {
         })()
     },
 
+    /**
+     *          
+     * @param {string} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {NotFoundError} on unexisting story with id stoyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveStoryCover(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -312,6 +418,22 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} id 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} audioLanguage 
+     * @param {String} textLanguage 
+     * 
+     * @throws {TypeError} on non-string title, author, audioLanguage, textLanguage
+     * @throws {ValueError} on empty or blank title, author, audioLanguage, textLanguage
+     * @throws {NotFoundError} on unexisting user with id author
+     * @throws {NotFoundError} on unexisting story with id id
+     * @throws {NotFoundError} on unexisting story with id id inside user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     updateStory(id, title, author, audioLanguage, textLanguage) {
         validate([
             { key: 'id', value: id, type: String },
@@ -331,7 +453,10 @@ const logic = {
 
             //check if the stroy has userId as author. check it with mongo directly
 
-            if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+            if (!story) throw new NotFoundError(`story with id ${id} not found`)
+
+            if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+
 
             title != null && (story.title = title)
             audioLanguage != null && (story.audioLanguage = audioLanguage)
@@ -341,6 +466,19 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} id 
+     * @param {String} author 
+     * 
+     * @throws {TypeError} on non-string id, author
+     * @throws {ValueError} on empty or blank id, author
+     * @throws {NotFoundError} on unexisting user with id author
+     * @throws {NotFoundError} on unexisting story with id id
+     * @throws {NotFoundError} on unexisting story with id id inside user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     finishStory(id, author) {
         validate([
             { key: 'id', value: id, type: String },
@@ -355,7 +493,11 @@ const logic = {
 
             let story = await Story.findById(id)
 
-            if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+            //check if the stroy has userId as author. check it with mongo directly
+
+            if (!story) throw new NotFoundError(`story with id ${id} not found`)
+
+            if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
 
             story.inProcess = false
 
@@ -363,6 +505,19 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} id 
+     * @param {String} author 
+     * 
+     * @throws {TypeError} on non-string id, author
+     * @throws {ValueError} on empty or blank id, author
+     * @throws {NotFoundError} on unexisting user with id author
+     * @throws {NotFoundError} on unexisting story with id id
+     * @throws {NotFoundError} on unexisting story with id id inside user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     workInStory(id, author) {
         validate([
             { key: 'id', value: id, type: String },
@@ -385,6 +540,19 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} author 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string author, storyId
+     * @throws {ValueError} on empty or blank author, storyId
+     * @throws {NotFoundError} on unexisting user with id author
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * @throws {NotFoundError} on unexisting story with id storyId inside user with id author
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     removeStory(author, storyId) {
         validate([
             { key: 'authorId', value: author, type: String },
@@ -401,11 +569,23 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
+            if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+
             await story.remove()
 
         })()
     },
 
+    /**
+     * 
+     * @param {String} query 
+     * 
+     * @throws {TypeError} on non-string query
+     * @throws {ValueError} on empty or blank query
+     * @throws {NotFoundError} on unnexisting stories containing query in title
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     searchStoriesByTitle(query) {
         validate([
             { key: 'query', value: query, type: String }
@@ -437,6 +617,11 @@ const logic = {
         })()
     },
 
+    /**
+     * @throws {NotFoundError} on unexisting stories in the database
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     searchRandomStories() {
 
         return (async () => {
@@ -474,6 +659,17 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * @param {String} text 
+     * 
+     * @throws {TypeError} on non-string storyId, text
+     * @throws {ValueError} on empty or blank storyId, text
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     addPage(storyId, text) {
         validate([
             { key: 'storyId', value: storyId, type: String },
@@ -500,6 +696,19 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * @param {String} text 
+     * 
+     * @throws {TypeError} on non-string pageId,storyId, text
+     * @throws {ValueError} on empty or blank pageId, storyId, text
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     updatePage(pageId, storyId, text) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -527,6 +736,18 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrievePage(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -546,6 +767,20 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * @param {String} dataURL 
+     * @param {String} vectors 
+     *
+     * @throws {TypeError} on non-string pageId, storyId, dataURL, vectors
+     * @throws {ValueError} on empty or blank pageId, storyId, dataURL 
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     savePagePicture(pageId, storyId, dataURL, vectors) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -581,6 +816,18 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrievePagePicture(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -601,6 +848,18 @@ const logic = {
         })()
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data 
+     */
     removePage(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -625,6 +884,19 @@ const logic = {
         })()
     },
 
+    /**
+     *      
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * @param {Object} audioFile 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     savePageAudio(pageId, storyId, audioFile) {
 
         validate([
@@ -670,6 +942,18 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {NotFoundError} on unexisting page with id pageId
+     * @throws {NotFoundError} on unexisting story with id storyId
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrievePageAudio(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },

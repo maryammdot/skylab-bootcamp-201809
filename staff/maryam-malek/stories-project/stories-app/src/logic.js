@@ -6,6 +6,19 @@ const logic = {
     url: 'NO_URL',
     
 
+    /**
+     * 
+     * @param {String} name 
+     * @param {String} surname 
+     * @param {String} username 
+     * @param {String} password 
+     * 
+     * @throws {TypeError} on non-string name, surname, username, password
+     * @throws {ValueError} on empty or blank name, surname, username, password
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     register(name, surname, username, password) {
         validate([
             { key: 'name', value: name, type: String },
@@ -27,6 +40,17 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} username 
+     * @param {String} password 
+     * 
+     * @throws {TypeError} on non-string username, password
+     * @throws {ValueError} on empty or blank username, password
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     login(username, password) {
         validate([
             { key: 'username', value: username, type: String },
@@ -53,6 +77,11 @@ const logic = {
             })
     },
 
+    /**
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveUser() {
 
         return fetch(`${this.url}/users/${this._userId}`, {
@@ -88,6 +117,18 @@ const logic = {
         sessionStorage.removeItem('token')
     },
 
+    /**
+     * 
+     * @param {String} title 
+     * @param {String} audioLanguage 
+     * @param {String} textLanguage 
+     * 
+     * @throws {TypeError} on non-string title, audioLanguage, textLanguage
+     * @throws {ValueError} on empty or blank title, audioLanguage, textLanguage
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     addStory(title, audioLanguage, textLanguage) {
         validate([
             { key: 'title', value: title, type: String },
@@ -112,6 +153,11 @@ const logic = {
             })
     },
 
+    /**
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     listStories() {
 
         return fetch(`${this.url}/users/${this._userId}/stories`, {
@@ -130,6 +176,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveStory(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -151,6 +207,19 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * @param {String} title
+     * @param {String} audioLanguage 
+     * @param {String} textLanguage 
+     * 
+     * @throws {TypeError} on non-string storyId, title, audioLanguage, textLanguage
+     * @throws {ValueError} on empty or blank storyId, title, audioLanguage, textLanguage
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     updateStory(storyId, title, audioLanguage, textLanguage) {
         validate([
             { key: 'storyId', value: storyId, type: String },
@@ -174,6 +243,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     addFavourite(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -192,6 +271,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     *
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     removeFavourite(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -210,6 +299,11 @@ const logic = {
             })
     },
 
+    /**
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     listFavourites() {
 
         return fetch(`${this.url}/users/${this._userId}/favourites`, {
@@ -227,6 +321,16 @@ const logic = {
     },
 
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     finishStory(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -245,6 +349,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     workInStory(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -263,6 +377,18 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * @param {String} dataURL 
+     * @param {String} vectors 
+     *
+     * @throws {TypeError} on non-string storyId, dataURL, vectors
+     * @throws {ValueError} on empty or blank storyId, dataURL, vectors
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     saveStoryCover(storyId, dataURL, vectors) {
 
         validate([
@@ -286,6 +412,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrieveStoryCover(storyId) {
 
         validate([
@@ -304,6 +440,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string storyId
+     * @throws {ValueError} on empty or blank storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     removeStory(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -323,6 +469,16 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} query 
+     * 
+     * @throws {TypeError} on non-string query
+     * @throws {ValueError} on empty or blank query
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     searchStory(query) {
         validate([
             { key: 'query', value: query, type: String }
@@ -342,6 +498,11 @@ const logic = {
             })
     },
 
+    /**
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     searchRandomStories() {
 
         return fetch(`${this.url}/users/${this._userId}/findRandomStories`, {
@@ -359,6 +520,17 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} storyId 
+     * @param {String} text 
+     * 
+     * @throws {TypeError} on non-string storyId, text
+     * @throws {ValueError} on empty or blank storyId, text
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     addPage(storyId, text) {
 
         validate([
@@ -382,6 +554,19 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * @param {String} dataURL 
+     * @param {String} vectors 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId, dataURL, vectors
+     * @throws {ValueError} on empty or blank pageId, storyId, dataURL, vectors
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     savePagePicture(pageId, storyId, dataURL, vectors) {
 
         validate([
@@ -405,6 +590,17 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrievePagePicture(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -422,6 +618,17 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     savePageAudio(pageId, storyId, audioBlob) {
         
         validate([
@@ -446,6 +653,18 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * @param {String} text 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId, text
+     * @throws {ValueError} on empty or blank pageId, storyId, text
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     updatePage(pageId, storyId, text) {
 
         validate([
@@ -469,6 +688,17 @@ const logic = {
             })
     },
 
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     retrievePage(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
@@ -486,12 +716,22 @@ const logic = {
             .then(res => {
 
                 if (res.error) throw Error(res.error)
-debugger
+
                 return res.data
             })
     },
 
-
+    /**
+     * 
+     * @param {String} pageId 
+     * @param {String} storyId 
+     * 
+     * @throws {TypeError} on non-string pageId, storyId
+     * @throws {ValueError} on empty or blank pageId, storyId
+     * @throws {Error} on api error
+     * 
+     * @returns {Promise} resolves on correct data rejects on wrong data
+     */
     removePage(pageId, storyId) {
         validate([
             { key: 'pageId', value: pageId, type: String },
