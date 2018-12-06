@@ -36,7 +36,7 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color: rgba(20, 20, 22, 0.2);
+  background-color: rgba(20, 20, 22, 0.4);
   padding: 0;
   border-radius: 5px 5px 0 0;
   flex: 0 0 107px;
@@ -96,7 +96,7 @@
   align-items: center;
   width: 70%;
   height: 87%;
-  background-color: rgba(20, 20, 22, 0.2);
+  background-color: rgba(20, 20, 22, 0.4);
   padding: 0;
   border-radius: 0 0 5px 5px;
   flex: 0 0 70%;

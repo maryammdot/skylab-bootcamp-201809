@@ -177,8 +177,8 @@ class ReadPage extends Component {
                     </div>}
                     <div className="text-area-read-page">
                         <span className='text-read-story'>{this.state.text}</span>
-                        <span>PÀGINA {this.state.index + 1}</span>
                     </div>
+                    <span className='page-number-read-page'>PÀGINA {this.state.index + 1}</span>
                     {this.state.next && <button className="next" onClick={this.handleNextPageClick} data-tip="ANAR A LA SEGÜENT PÀGINA"><i className="fa fa-chevron-right icon-move-read-page"></i></button>}
                     {this.state.last && <button className="last" onClick={this.handleLastPageClick} data-tip="ANAR A LA PÀGINA ANTERIOR"><i className="fa fa-chevron-left icon-move-read-page"></i></button>}
                     <ReactTooltip effect='solid' />

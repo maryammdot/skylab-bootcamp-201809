@@ -486,7 +486,7 @@ const logic = {
             .then(res => {
 
                 if (res.error) throw Error(res.error)
-
+debugger
                 return res.data
             })
     },

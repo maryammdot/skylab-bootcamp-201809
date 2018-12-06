@@ -519,9 +519,9 @@ const logic = {
 
             page.text = text
 
-            const _page = story.pages.find(page => page.id === pageId)
+            // const _page = story.pages.find(page => page.id === pageId)
 
-            _page.text = text
+            // _page.text = text
 
             await story.save()
         })()
@@ -569,13 +569,13 @@ const logic = {
 
             page.hasImage = true
 
-            const _page = story.pages.find(page => page.id === pageId)
+            // const _page = story.pages.find(page => page.id === pageId)
 
-            _page.dataURL = dataURL
+            // _page.dataURL = dataURL
 
-            _page.vectors = vectors
+            // _page.vectors = vectors
 
-            _page.hasImage = true
+            // _page.hasImage = true
 
             await story.save()
         })()
