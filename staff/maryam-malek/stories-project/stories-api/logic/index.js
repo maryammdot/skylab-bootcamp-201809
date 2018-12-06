@@ -325,7 +325,7 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+            // if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
 
             story.id = story._id.toString()
             delete story._id
@@ -455,7 +455,7 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${id} not found`)
 
-            if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+            // if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
 
 
             title != null && (story.title = title)
@@ -497,7 +497,7 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${id} not found`)
 
-            if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+            // if(story.author.id !== author) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
 
             story.inProcess = false
 
@@ -532,7 +532,9 @@ const logic = {
 
             let story = await Story.findById(id)
 
-            if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+            if (!story) throw new NotFoundError(`story with id ${id} not found`)
+            // if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
+
 
             story.inProcess = true
 
@@ -569,7 +571,7 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
+            // if(story.author.id !== author) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
 
             await story.remove()
 
