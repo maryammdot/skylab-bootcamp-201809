@@ -1,11 +1,5 @@
 const validate = require('./utils/validate')
 
-// const { ValueError } = require('./errors')
-
-//If I don't require sessionstorage here it doesn't work!!!!
-
-// global.sessionStorage = require('sessionstorage')
-
 const logic = {
     _userId: sessionStorage.getItem('userId') || null,
     _token: sessionStorage.getItem('token') || null,
@@ -310,50 +304,6 @@ const logic = {
             })
     },
 
-    // saveStoryCover(storyId, cover) {
-    //     validate([
-    //         { key: 'storyId', value: storyId, type: String }
-    //         // { key: 'cover', value: cover, type: String } TYPE??????
-    //     ])
-
-    //     let file = new FormData()
-
-    //     file.append('avatar', cover)
-
-    //     return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
-    //         method: 'POST',
-    //         // headers: {
-    //         //     'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
-    //         // },
-    //         body: file
-    //     })
-    //         .then(res => res.json())
-    //         .then(res => {
-    //             if (res.error) throw Error(res.error)
-    //         })
-    // },
-
-    // CREC QUE AQUESTA FUNCIÓ NO LA HE DE FER PERQUÈ HO FARÀ SOL QUAN POSI LA RUTA AL SRC DEL IMAGE DE HTML
-
-    // retrieveStoryCover(storyId) {
-    //     validate([
-    //         { key: 'storyId', value: storyId, type: String }
-    //     ])
-
-    //     return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/cover`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
-    //         }
-    //     })
-    //         .then(res => res.json())
-    //         .then(res => {
-    //             if (res.error) throw Error(res.error)
-
-    //             return res.data
-    //         })
-    // },
-
     removeStory(storyId) {
         validate([
             { key: 'storyId', value: storyId, type: String }
@@ -495,27 +445,6 @@ const logic = {
                 if (res.error) throw Error(res.error)
             })
     },
-
-//     retrievePageAudio(pageId, storyId) {
-//         validate([
-//             { key: 'pageId', value: pageId, type: String },
-//             { key: 'storyId', value: storyId, type: String }
-//         ])
-// debugger
-//         return fetch(`${this.url}/users/${this._userId}/stories/${storyId}/pages/${pageId}/audio`, {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryzuW5nPZQFQCwQtg4'
-//             }
-//         })
-//             .then(res => res.json())
-//             .then(res => {
-// debugger
-//                 if (res.error) throw Error(res.error)
-//                 return res.data
-//             })
-//     },
-
 
     updatePage(pageId, storyId, text) {
 

@@ -62,11 +62,11 @@ const Story = new Schema({
     },
     audioLanguage: {
         type: String,
-        required: true,
+        required: false
     },
     textLanguage: {
         type: String,
-        required: true
+        required: false
     },
     hasCover: {
         type: Boolean,

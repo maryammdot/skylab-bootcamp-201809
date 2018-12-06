@@ -15,10 +15,11 @@ class SearchStories extends Component {
             })
             .catch(err => {
                 let message
+
                 switch (err.message) {
-                    // case `stories with query ${this.state.query} not found`:
-                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                    //     break
+                    case `stories not found`:
+                        message = `ENCARA NO HI HA CAP CONTE`
+                        break
                     default:
                         message = err.message
                 }
@@ -35,9 +36,9 @@ class SearchStories extends Component {
             .catch(err => {
                 let message
                 switch (err.message) {
-                    // case `stories with query ${this.state.query} not found`:
-                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                    //     break
+                    case `stories not found`:
+                        message = `ENCARA NO HI HA CAP CONTE`
+                        break
                     default:
                         message = err.message
                 }

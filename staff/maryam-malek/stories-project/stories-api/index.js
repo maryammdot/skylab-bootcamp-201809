@@ -1,9 +1,9 @@
-// 'use strict'
+'use strict'
 require('dotenv').config()
 
 const { mongoose } = require('stories-data')
 const express = require('express')
-const package = require('./package.json')
+const pack = require('./package.json')
 const router = require('./routes')
 const cors = require('./utils/cors')
 
@@ -21,6 +21,6 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true, useCreateIndex: true })
 
         app.use('/api', router)
 
-        app.listen(port, () => console.log(`${package.name} ${package.version} up and running on port ${port}`))
+        app.listen(port, () => console.log(`${pack.name} ${pack.version} up and running on port ${port}`))
     })
     .catch(console.error)

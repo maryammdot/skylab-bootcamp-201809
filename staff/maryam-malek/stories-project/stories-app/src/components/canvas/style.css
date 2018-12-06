@@ -25,6 +25,11 @@
   font-size: 1.5em;
 }
 
+.canvas-cover-buttons {
+  width: 500px;
+  margin-left: 38%;
+}
+
 .icons-canvas:hover {
   color: white;
   cursor: pointer;

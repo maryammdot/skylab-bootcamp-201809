@@ -12,9 +12,9 @@ class Canvas extends Component {
     componentDidMount() {
         // Here we set up the properties of the canvas element. 
         if (this.props.cover) {
-            this.canvas.width = 150
+            this.canvas.width = 250
 
-            this.canvas.height = 250
+            this.canvas.height = 350
         } else {
             this.canvas.width = 500
 
@@ -296,26 +296,29 @@ class Canvas extends Component {
             <div className='header-canvas'>
                 {!this.props.cover && <h4 className="draw-title">DIBUIXA LA PÀGINA</h4>}
                 <div className="info-canvas">
-                    <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question icons-canvas"></i></button>
-                    {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o icons-canvas"></i></button>}
-                    {/* {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>} */}
+                    {!this.props.cover && <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question icons-canvas"></i></button>}
+                    {this.props.cover && <div className='canvas-cover-buttons'>
+                        <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question icons-canvas"></i></button>
+                        {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o icons-canvas"></i></button>}
+                        {/* {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>} */}
+                    </div>}
                 </div>
             </div>
             <div>
                 {/* <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
                 <div className='canvas-area'>
                     <div>
-                    <canvas className='canvas'
-                        id="page-draw"
-                        ref={(ref) => (this.canvas = ref)}
-                        onMouseDown={this.onMouseDown}
-                        onMouseLeave={this.endPaintEvent}
-                        onMouseUp={this.endPaintEvent}
-                        onMouseMove={this.onMouseMove}
-                    // onTouchStart={this.onTouchStart}
-                    // onTouchEnd={this.onTouchEnd}
-                    // onTouchMove={this.onTouchMove}
-                    />
+                        <canvas className='canvas'
+                            id="page-draw"
+                            ref={(ref) => (this.canvas = ref)}
+                            onMouseDown={this.onMouseDown}
+                            onMouseLeave={this.endPaintEvent}
+                            onMouseUp={this.endPaintEvent}
+                            onMouseMove={this.onMouseMove}
+                        // onTouchStart={this.onTouchStart}
+                        // onTouchEnd={this.onTouchEnd}
+                        // onTouchMove={this.onTouchMove}
+                        />
                     </div>
                     <div className="utils-canvas">
                         <div className='do-container-buttons'>

@@ -68,21 +68,21 @@ router.get('/users/:id', [bearerTokenParser, jwtVerifier], (req, res) => {
     }, res)
 })
 
-router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
-    routeHandler(() => {
-        const { params: { id }, sub, body: { name, surname, username, newPassword, password } } = req
+// router.patch('/users/:id', [jsonBodyParser, bearerTokenParser, jwtVerifier], (req, res) => {
+//     routeHandler(() => {
+//         const { params: { id }, sub, body: { name, surname, username, newPassword, password } } = req
 
-        if (id !== sub) throw Error('token sub does not match user id')
+//         if (id !== sub) throw Error('token sub does not match user id')
 
-        return logic.updateUser(id, name, surname, username, newPassword, password)
-            .then(() => {
-                res.json({
-                    message: `${username} successfully updated`
+//         return logic.updateUser(id, name, surname, username, newPassword, password)
+//             .then(() => {
+//                 res.json({
+//                     message: `${username} successfully updated`
 
-                })
-            })
-    }, res)
-})
+//                 })
+//             })
+//     }, res)
+// })
 
 router.post('/users/:id/stories/:storyId/favourites', [bearerTokenParser, jwtVerifier], (req, res) => {
     routeHandler(() => {

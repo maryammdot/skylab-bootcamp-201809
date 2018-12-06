@@ -20,8 +20,6 @@ const logic = {
 
             if (user) throw new AlreadyExistsError(`username ${username} already registered`)
 
-            // user = new User({ name: name.toUpperCase(), surname: surname.toUpperCase(), username: username.toUpperCase(), password: password.toUpperCase() })
-
             user = new User({ name, surname, username, password })
 
             await user.save()
@@ -59,31 +57,31 @@ const logic = {
         })()
     },
 
-    updateUser(id, name, surname, username, newPassword, password) {
-        validate([
-            { key: 'id', value: id, type: String },
-            { key: 'name', value: name, type: String, optional: true },
-            { key: 'surname', value: surname, type: String, optional: true },
-            { key: 'username', value: username, type: String, optional: true },
-            { key: 'password', value: password, type: String },
-            { key: 'newPassword', value: newPassword, type: String, optional: true }
-        ])
+    // updateUser(id, name, surname, username, newPassword, password) {
+    //     validate([
+    //         { key: 'id', value: id, type: String },
+    //         { key: 'name', value: name, type: String, optional: true },
+    //         { key: 'surname', value: surname, type: String, optional: true },
+    //         { key: 'username', value: username, type: String, optional: true },
+    //         { key: 'password', value: password, type: String },
+    //         { key: 'newPassword', value: newPassword, type: String, optional: true }
+    //     ])
 
-        return (async () => {
-            const user = await User.findById(id)
+    //     return (async () => {
+    //         const user = await User.findById(id)
 
-            if (!user) throw new NotFoundError(`user with id ${id} not found`)
+    //         if (!user) throw new NotFoundError(`user with id ${id} not found`)
 
-            if (user.password !== password) throw new AuthError('wrong password')
+    //         if (user.password !== password) throw new AuthError('wrong password')
 
-            name != null && (user.name = name)
-            surname != null && (user.surname = surname)
-            username != null && (user.username = username)
-            newPassword != null && (user.password = newPassword)
+    //         name != null && (user.name = name)
+    //         surname != null && (user.surname = surname)
+    //         username != null && (user.username = username)
+    //         newPassword != null && (user.password = newPassword)
 
-            await user.save()
-        })()
-    },
+    //         await user.save()
+    //     })()
+    // },
 
     addFavourites(userId, storyId) {
         validate([
@@ -100,10 +98,6 @@ const logic = {
             let story = await Story.findById(storyId)
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-            // Si és un conte del mateix usuari, si que l'ha de poder posar com a preferit, encara que no estigui acabat, no?
-
-            // if(story.inProcess === true) throw Error(`story with id ${storyId} still in process`)
 
             const index = user.favourites.findIndex(__story => __story.toString() === story.id.toString())
 
@@ -161,7 +155,6 @@ const logic = {
                 story.id = story._id.toString()
                 delete story._id
                 delete story.__v
-                // delete story.pages
                 delete story.vectors
                 delete story.cover
                 delete story.inProcess
@@ -224,7 +217,6 @@ const logic = {
                 delete story._id
                 delete story.__v
                 delete story.pages
-                // delete story.hasCover
 
                 story.author = story.author.toString()
 
@@ -254,7 +246,6 @@ const logic = {
             story.id = story._id.toString()
             delete story._id
             delete story.__v
-            // delete story.hasCover
 
             story.author = story.author.name
 
@@ -263,8 +254,7 @@ const logic = {
                     page.id = page._id.toString()
                     delete page._id
                     delete page.__v
-                    // delete page.hasImage
-                    // delete page.hasAudio
+    
                     return page
                 })
             }
@@ -304,7 +294,7 @@ const logic = {
 
         return (async () => {
 
-            let story = await Story.findById(storyId).lean()
+            let story = await Story.findById(storyId)
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
@@ -322,95 +312,6 @@ const logic = {
         })()
     },
 
-    // saveStoryCover(author, storyId, cover) {
-    //     validate([
-    //         { key: 'authorId', value: author, type: String },
-    //         { key: 'storyId', value: storyId, type: String }
-    //         // { key: 'coverUrl', value: cover, type: String }
-    //     ])
-
-    //     const folder = `data/stories/${storyId}`
-
-    //     return new Promise((resolve, reject) => {
-    //         try {
-    //             User.findById(author)
-    //                 .then(user => {
-    //                     if (!user) throw new NotFoundError(`user with id ${author} not found`)
-
-    //                     return Story.findById(storyId)
-    //                 })
-    //                 .then(story => {
-    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
-
-    //                     if (!fs.existsSync(folder)) {
-    //                         fs.mkdirSync(folder)
-    //                         fs.mkdirSync(`${folder}/cover`)
-
-
-    //                     } else {
-    //                         // const files = fs.readdirSync(`${folder}/cover`)
-
-    //                         // files.forEach(file => fs.unlinkSync(path.join(`${folder}/cover`, file)))
-
-    //                         fs.unlinkSync(path.join(`${folder}/cover`, 'cover.png'))
-    //                     }
-
-    //                     const pathToFile = path.join(`${folder}/cover`, 'cover.png')
-
-    //                     const ws = fs.createWriteStream(pathToFile)
-
-    //                     cover.pipe(ws)
-
-    //                     story.hasCover = true
-
-    //                     return story.save()
-    //                 })
-    //                 .then(() => {
-
-    //                     resolve()
-    //                 })
-
-    //         } catch (err) {
-
-    //             reject(err)
-    //         }
-    //     })
-    // },
-
-    // retrieveStoryCover(author, storyId) {
-    //     validate([
-    //         { key: 'authorId', value: author, type: String },
-    //         { key: 'storyId', value: storyId, type: String }
-    //     ])
-
-    //     return new Promise((resolve, reject) => {
-    //         try {
-    //             User.findById(author)
-    //                 .then(user => {
-    //                     if (!user) throw new NotFoundError(`user with id ${author} not found`)
-    //                     return Story.findById(storyId)
-    //                 })
-    //                 .then(story => {
-    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found in user with id ${author} stories`)
-
-    //                     if (story.hasCover) {
-
-    //                         file = `data/stories/${story.id}/cover/cover.png`
-
-    //                     } else {
-    //                         file = `data/stories/default/cover.png`
-    //                     }
-
-    //                     const rs = fs.createReadStream(file)
-
-    //                     resolve(rs)
-    //                 })
-    //         } catch (err) {
-    //             reject(err)
-    //         }
-    //     })
-    // },
-
     updateStory(id, title, author, audioLanguage, textLanguage) {
         validate([
             { key: 'id', value: id, type: String },
@@ -427,6 +328,8 @@ const logic = {
             if (!user) throw new NotFoundError(`user with id ${author} not found`)
 
             let story = await Story.findById(id)
+
+            //check if the stroy has userId as author. check it with mongo directly
 
             if (!story) throw new NotFoundError(`story with id ${id} not found in user with id ${author} stories`)
 
@@ -509,8 +412,6 @@ const logic = {
         ])
         return (async () => {
 
-            // let newQuery = query.toUpperCase()
-            // let newQuery = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "")
             let test = new RegExp(query, 'i')
             const regQuery = {
                 title: { $regex: test },
@@ -522,7 +423,6 @@ const logic = {
             if (!stories.length) throw new NotFoundError(`stories with query ${query} not found`)
 
             stories.forEach(story => {
-                // if(story.inProcess === true) throw Error(`story with id ${story.id} still in process`)
                 story.id = story._id.toString()
                 delete story._id
                 delete story.__v
@@ -592,8 +492,6 @@ const logic = {
 
             page.audioURL = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
 
-            await page.save()
-
             story.pages.push(page)
 
             await story.save()
@@ -615,13 +513,11 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId)
+            let page = story.pages.id(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
             page.text = text
-
-            await page.save()
 
             const _page = story.pages.find(page => page.id === pageId)
 
@@ -638,22 +534,15 @@ const logic = {
         ])
 
         return (async () => {
-
             let story = await Story.findById(storyId)
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId).lean()
+            let page = story.pages.id(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-            page.id = page._id.toString()
-            delete page._id
-            delete page.__v
-            // delete page.hasImage
-            // delete page.hasAudio
-
-            return page
+            return {id:page._id.toString(), hasImage: page.hasImage, hasAudio: page.hasAudio, vectors: page.vectors, dataURL: page.dataURL, audioURL: page.audioURL, text: page.text}
         })()
     },
 
@@ -666,12 +555,11 @@ const logic = {
         ])
 
         return (async () => {
-
             let story = await Story.findById(storyId)
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId)
+            let page = story.pages.id(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
@@ -680,8 +568,6 @@ const logic = {
             page.vectors = vectors
 
             page.hasImage = true
-
-            await page.save()
 
             const _page = story.pages.find(page => page.id === pageId)
 
@@ -707,113 +593,13 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId).lean()
+            let page = story.pages.id(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-            delete page._id
-            delete page.__v
-            delete page.hasAudio
-            delete page.audio
-            delete page.image
-            delete page.text
-
-            return page
+            return {id:page._id.toString(), hasImage: page.hasImage, vectors: page.vectors, dataURL: page.dataURL}
         })()
     },
-
-    // savePicPage(pageId, storyId, picture) {
-    //     validate([
-    //         { key: 'pageId', value: pageId, type: String },
-    //         { key: 'storyId', value: storyId, type: String }
-    //         // { key: 'picture', value: picture, type: String }
-    //     ])
-
-    //     const folder = `data/stories/${storyId}`
-
-    //     return new Promise((resolve, reject) => {
-    //         try {
-    //             Story.findById(storyId)
-    //                 .then(story => {
-    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-    //                     return Page.findById(pageId)
-    //                 })
-    //                 .then(page => {
-    //                     if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-    //                     if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
-    //                         if (!fs.existsSync(`${folder}`)) {
-
-    //                             fs.mkdirSync(folder)
-    //                         }
-    //                         if (!fs.existsSync(`${folder}pages`)) {
-
-    //                             fs.mkdirSync(`${folder}/pages`)
-    //                         }
-    //                         fs.mkdirSync(`${folder}/pages/${pageId}`)
-
-    //                     } else {
-    //                         // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
-
-    //                         // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
-    //                         fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, 'picture.png'))
-    //                     }
-
-    //                     const pathToFile = path.join(`${folder}/pages/${pageId}`, 'picture.png')
-
-    //                     const ws = fs.createWriteStream(pathToFile)
-
-    //                     picture.pipe(ws)
-
-    //                     page.hasImage = true
-
-    //                     return page.save()
-    //                 })
-    //                 .then(() => {
-    //                     resolve()
-    //                 })
-
-    //         } catch (err) {
-    //             reject(err)
-    //         }
-    //     })
-    // },
-
-    // retrievePagePic(pageId, storyId) {
-    //     validate([
-    //         { key: 'pageId', value: pageId, type: String },
-    //         { key: 'storyId', value: storyId, type: String }
-    //     ])
-
-    //     return new Promise((resolve, reject) => {
-    //         try {
-    //             Story.findById(storyId)
-    //                 .then(story => {
-    //                     if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-    //                     return Page.findById(pageId)
-    //                 })
-    //                 .then(page => {
-    //                     if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-    //                     if (page.hasImage) {
-
-    //                         file = `data/stories/${storyId}/pages/${pageId}/picture.png`
-
-    //                     } else {
-    //                         file = `data/stories/default/picture.png`
-    //                     }
-
-    //                     const rs = fs.createReadStream(file)
-
-    //                     resolve(rs)
-    //                 })
-    //         } catch (err) {
-    //             reject(err)
-    //         }
-    //     })
-    // },
 
     removePage(pageId, storyId) {
         validate([
@@ -827,15 +613,11 @@ const logic = {
 
             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-            let page = await Page.findById(pageId)
+            let page = story.pages.id(pageId)
 
             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
-            await page.remove()
-
             const index = story.pages.findIndex(page => page.id === pageId)
-
-            if (index < 0) throw new NotFoundError(`page with id ${pageId} not found in story with id ${storyId}`)
 
             story.pages.splice(index, 1)
 
@@ -843,78 +625,9 @@ const logic = {
         })()
     },
 
-
-    //     addPageAudio(storyId, pageId, audioUrl, audioBlob) {
-    //         validate([
-    //             { key: 'pageId', value: pageId, type: String },
-    //             { key: 'storyId', value: storyId, type: String },
-    //             { key: 'audioUrl', value: audioUrl, type: String },
-    //             // { key: 'audioBlob', value: audioBlob, type: String }
-    //         ])
-
-    //         return (async () => {
-
-    //             let story = await Story.findById(storyId)
-
-    //             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-    //             let page = await Page.findById(pageId)
-
-    //             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-    // debugger
-    //             page.audioURL = audioUrl
-
-    //             page.audioBlob = audioBlob
-
-    //             page.hasAudio = true
-
-    //             await page.save()
-
-    //             const _page = story.pages.find(page => page.id === pageId)
-
-    //             _page.audioURL = audioURL
-
-    //             _page.audioBlob = audioBlob
-
-    //             _page.hasAudio = true
-
-    //             await story.save()
-    //         })()
-    //     },
-
-    //     retrievePageAudio(pageId, storyId) {
-    //         validate([
-    //             { key: 'pageId', value: pageId, type: String },
-    //             { key: 'storyId', value: storyId, type: String }
-    //         ])
-
-    //         return (async () => {
-
-    //             let story = await Story.findById(storyId)
-
-    //             if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
-
-    //             let page = await Page.findById(pageId).lean()
-
-    //             if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
-
-    //             page.id = page._id.toString()
-    //             delete page._id
-    //             delete page.__v
-    //             delete page.hasImage
-    //             delete page.dataURL
-    //             delete page.vectors
-    //             delete page.image
-    //             delete page.text
-    // debugger
-    //             return page
-    //         })()
-    //     }
-
     savePageAudio(pageId, storyId, audioFile) {
 
         validate([
-            // { key: 'userId', value: userId, type: String },
             { key: 'pageId', value: pageId, type: String },
             { key: 'storyId', value: storyId, type: String }
             // { key: 'audioFile', value: audioFile, type: String }
@@ -928,9 +641,8 @@ const logic = {
             .then(story => {
                 if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                return Page.findById(pageId)
-            })
-            .then(page => {
+                const page = story.pages.id(pageId)
+
                 if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
                 if (!fs.existsSync(`${folder}/pages/${pageId}`)) {
@@ -945,9 +657,6 @@ const logic = {
                     fs.mkdirSync(`${folder}/pages/${pageId}`)
 
                 } else {
-                    // const files = fs.readdirSync(`${folder}/pages/${pageId}`)
-
-                    // files.forEach(file => fs.unlinkSync(path.join(`${folder}/pages/${pageId}`, file)))
                     fs.unlinkSync(pathToFile)
                 }
 
@@ -957,7 +666,7 @@ const logic = {
 
                 page.hasAudio = true
 
-                return page.save()
+                return story.save()
             })
     },
 
@@ -971,9 +680,8 @@ const logic = {
             .then(story => {
                 if (!story) throw new NotFoundError(`story with id ${storyId} not found`)
 
-                return Page.findById(pageId)
-            })
-            .then(page => {
+                let page = story.pages.id(pageId)
+
                 if (!page) throw new NotFoundError(`page with id ${pageId} not found`)
 
                 let file

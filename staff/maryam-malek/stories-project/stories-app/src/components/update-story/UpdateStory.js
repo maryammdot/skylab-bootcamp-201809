@@ -443,7 +443,7 @@ class CreateStory extends Component {
                     <div className='bottom-body-update-story'>
                         <div className='bottom-body-header'>
                             {!this.state.editCover && !!this.state.pages.length && <h3>PÀGINES</h3>}
-                            {!!this.state.pages.length && <button data-tip="CREA UNA NOVA PÀGINA" className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle icon-new-update-page"></i></button>}
+                            {!this.state.editCover && !!this.state.pages.length && <button data-tip="CREA UNA NOVA PÀGINA" className="newPageButton" onClick={this.handleNewPageClick}><i className="fa fa-plus-circle icon-new-update-page"></i></button>}
                         </div>
                         {!this.state.editCover && <ul className="pages-section">
                             {!!this.state.pages.length && this.state.pages.map((page, i) => <div className='detail-pages-update-story'><Detail pages={true} img={page.hasImage ? page.dataURL : './images/picture.png'} text={i + 1} id={page.id} storyId={this.state.storyId} onDetailClick={this.handleDetailClick} onRemoveClick={this.handleRemovePageClick} /></div>)}

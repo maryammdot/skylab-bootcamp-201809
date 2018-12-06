@@ -28,7 +28,7 @@ function validate(params) {
             case Array:
                 if (optional && value == null) break
 
-                if (!value instanceof Array) throw TypeError(`${value} is not an array`)
+                if (!value instanceof Array || typeof value === 'undefined' && typeof value !== 'function') throw TypeError(`${value} is not an array`)
                 break
         }
     })

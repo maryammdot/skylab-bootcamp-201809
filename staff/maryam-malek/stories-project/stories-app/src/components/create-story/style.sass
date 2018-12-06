@@ -1,50 +1,67 @@
 .container-create-story
     display: flex
     flex-direction: column
-    flex-wrap: wrap
-    justify-content: space-around
+    // flex-wrap: wrap
+    justify-content: flex-start
     align-items: center
-    padding: 2%
-    width: 500px
+    // padding: 2%
+    width: 100%
     height: 70%
-// .create-story-header
-//     display: flex
-//     flex-direction: row
-//     flex-wrap: wrap
-//     justify-content: space-between
-//     align-items: center
-//     width: 500px
-.help-create-story
-    background-color: transparent 
-    border: none
-    margin: 3% 0
-    font-size: 1.5em
-.back-create-story
-    width: 13em
-    height: 2.5em
-    background-color: transparent 
-    border-color: black
-    font-size: 0.8em
-    border-radius: 15%
+    position: absolute
+    top: 10%
+    left: 0%
+.create-new-story-header
+    width: 70%
+    flex: 0 0 65px
+    height: 65px
+    font-size: 1.4em
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+// .help-create-story
+//     background-color: transparent 
+//     border: none
+//     margin: 3% 0
+//     font-size: 1.5em
+// .back-create-story
+//     width: 13em
+//     height: 2.5em
+//     background-color: transparent 
+//     border-color: black
+//     font-size: 0.8em
+//     border-radius: 15%
 .book-details-create
     display: flex
     flex-direction: column
     flex-wrap: wrap
     justify-content: center
     align-items: center
-    width: 500px
+    width: 70%
+    background-color: rgba(20,20,22, .2)
+    padding: 0
+    border-radius: 5px
+    flex: 0 0 510px
+// .book-details-create h3 
+//     margin: 0
 .book-details-create h3 
-    margin: 0
+    color: white
 .book-details-create input
     width: 70%
     height: 32px
-    margin: 3% 0
+    // margin: 3% 0
     border: 1px solid #bdbdbd
     font-size: 1em
 .book-details-create button
+    margin-top: 3%
     width: 34%
     height: 29px
-    background-color: #bdbdbd
-    border-color: #bdbdbd
-    border-radius: 5% 3%
+    background-color: transparent 
+    border-color: white
+    border-radius: 5px
+    padding: 0
     font-size: 1em
+    color: white 
+.book-details-create button:hover
+    color: black
+    background-color: white

@@ -124,7 +124,7 @@ class Audio extends Component {
                 {/* <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
                 <div className="audio-displays">
                     <div className="rec-stop">
-                        <button className="rec" data-tip="GRABAR" onClick={this.start}><i className="fa fa-dot-circle-o icons-audio"></i></button>
+                        <button className="rec" data-tip="GRABAR" onClick={this.start}><i className="fa fa-microphone icons-audio"></i></button>
                         <button className="stop" data-tip="PARAR" onClick={this.stop}><i className="fa fa-stop icons-audio"></i></button>
                     </div>
                     {!this.state.clear && <h3>{this.state.secs}</h3>}

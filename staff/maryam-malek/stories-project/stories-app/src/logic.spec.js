@@ -17,7 +17,7 @@ logic.url = process.env.REACT_APP_API_URL
 describe('logic', () => {
     before(() => mongoose.connect(MONGO_URL, { useNewUrlParser: true, useCreateIndex: true }))
 
-    beforeEach(() => Promise.all([User.deleteMany(), Story.deleteMany(), Page.deleteMany()]))
+    beforeEach(() => Promise.all([User.deleteMany(), Story.deleteMany()]))
 
     describe('users', () => {
 
@@ -433,7 +433,7 @@ describe('logic', () => {
 
                 text = `text-${Math.random()}`
 
-                page = await new Page({ text }).save()
+                page = new Page({ text })
 
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
 
@@ -648,8 +648,12 @@ describe('logic', () => {
                 expect(() => logic.updateStory('   \t\n', title, null, null)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
-            it('should fail on undefined title', () => {
-                expect(() => logic.updateStory(story.id, undefined, null, null)).not.to.throw(TypeError, 'undefined is not a string')
+            it('should not fail on undefined title', async () => {
+                try {
+                    await logic.updateStory(story.id, undefined, null, null)
+                } catch(err) {
+                    throw err
+                }
             })
 
             it('should fail on empty title', () => {
@@ -660,8 +664,12 @@ describe('logic', () => {
                 expect(() => logic.updateStory(story.id, '   \t\n', null, null)).to.throw(ValueError, 'title is empty or blank')
             })
 
-            it('should fail on undefined audioLanguage', () => {
-                expect(() => logic.updateStory(story.id, null, undefined, null)).not.to.throw(TypeError, 'undefined is not a string')
+            it('should not fail on undefined audioLanguage', async() => {
+                try {
+                    await logic.updateStory(story.id, null, undefined, null)
+                }catch(err) {
+                    throw err
+                }
             })
 
             it('should fail on empty audioLanguage', () => {
@@ -672,8 +680,12 @@ describe('logic', () => {
                 expect(() => logic.updateStory(story.id, null, '   \t\n', null)).to.throw(ValueError, 'audioLanguage is empty or blank')
             })
 
-            it('should fail on undefined textLanguage', () => {
-                expect(() => logic.updateStory(story.id, null, audioLanguage, undefined)).not.to.throw(TypeError, 'undefined is not a string')
+            it('should not fail on undefined textLanguage', async () => {
+                try {
+                    await logic.updateStory(story.id, null, audioLanguage, undefined)
+                }catch(err) {
+                    throw err
+                }
             })
 
             it('should fail on empty textLanguage', () => {
@@ -1210,7 +1222,7 @@ describe('logic', () => {
             })
 
             it('should fail on undefined vectors', () => {
-                expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.saveStoryCover(story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not an array')
             })
 
             // it('should fail on empty vectors', () => {
@@ -1576,14 +1588,14 @@ describe('logic', () => {
                 expect(page.id).to.be.a('string')
                 expect(page.text).to.equal(text)
 
-                const pages = await Page.find()
+                // const pages = await Page.find()
 
-                expect(pages.length).to.equal(1)
+                // expect(pages.length).to.equal(1)
 
-                const [_page] = pages
+                // const [_page] = pages
 
-                expect(_page.id).to.equal(page.id)
-                expect(_page.text).to.equal(text)
+                // expect(_page.id).to.equal(page.id)
+                // expect(_page.text).to.equal(text)
             })
 
             describe('without existing story', () => {
@@ -1612,8 +1624,12 @@ describe('logic', () => {
                 expect(() => logic.addPage('   \t\n', text)).to.throw(ValueError, 'storyId is empty or blank')
             })
 
-            it('should fail on undefined text', () => {
-                expect(() => logic.addPage(story.id, undefined, text)).not.to.throw(TypeError, 'undefined is not a string')
+            it('should not fail on undefined text', async () => {
+                try {
+                    await logic.addPage(story.id, undefined, text)
+                }catch(err){
+                    throw err
+                }
             })
 
             it('should fail on empty text', () => {
@@ -1653,7 +1669,7 @@ describe('logic', () => {
                     width: 4
                 }]
 
-                page = await new Page({ text }).save()
+                page = new Page({ text })
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
 
                 await logic.login(username, password)
@@ -1662,8 +1678,11 @@ describe('logic', () => {
             it('should succeed on correct data', async () => {
 
                 await logic.savePagePicture(page.id, story.id, dataURL, vectors)
-
-                let _page = await Page.findById(page.id)
+                const stories = await Story.find()
+                
+                const [_story] = stories
+            
+                let _page =_story.pages.id(page.id)
 
                 expect(_page.hasImage).to.be.true
                 expect(_page.dataURL).to.equal(dataURL)
@@ -1677,15 +1696,13 @@ describe('logic', () => {
             })
 
             describe('without existing page', () => {
-                beforeEach(async () => await Page.deleteMany())
-
                 it('should fail unexisting story ', async () => {
                     try {
-                        await logic.savePagePicture(page.id, story.id, dataURL, vectors)
+                        await logic.savePagePicture('page.id', story.id, dataURL, vectors)
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                        expect(err.message).to.equal(`page with id page.id not found`)
                     }
                 })
             })
@@ -1741,7 +1758,7 @@ describe('logic', () => {
             })
 
             it('should fail on undefined vectors', () => {
-                expect(() => logic.savePagePicture(page.id, story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not a string')
+                expect(() => logic.savePagePicture(page.id, story.id, dataURL, undefined)).to.throw(TypeError, 'undefined is not an array')
             })
 
             // it('should fail on empty vectors', () => {
@@ -1780,7 +1797,7 @@ describe('logic', () => {
                     width: 4
                 }]
 
-                page = await new Page({ text, hasImage: true, dataURL, vectors }).save()
+                page = new Page({ text, hasImage: true, dataURL, vectors })
                 story = await new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] }).save()
 
                 await logic.login(username, password)
@@ -1789,7 +1806,11 @@ describe('logic', () => {
 
                 const image = await logic.retrievePagePicture(page.id, story.id)
 
-                let _page = await Page.findById(page.id)
+                const stories = await Story.find()
+                
+                const [_story] = stories
+            
+                let _page =_story.pages.id(page.id)
 
                 expect(_page.hasImage).to.be.true
                 expect(_page.hasImage).to.equal(image.hasImage)
@@ -1803,15 +1824,13 @@ describe('logic', () => {
                 expect(_page.vectors[0].stop.offsetY).to.equal(image.vectors[0].stop.offsetY)
             })
             describe('without existing page', () => {
-                beforeEach(async () => await Page.deleteMany())
-
                 it('should fail unexisting story ', async () => {
                     try {
-                        await logic.retrievePagePicture(page.id, story.id)
+                        await logic.retrievePagePicture('page.id', story.id)
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                        expect(err.message).to.equal(`page with id page.id not found`)
                     }
                 })
             })
@@ -1884,7 +1903,7 @@ describe('logic', () => {
                 text = `text-${Math.random()}`
                 newText = `text-${Math.random()}`
 
-                page = await new Page({ text }).save()
+                page = new Page({ text })
 
                 story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
                 await story.save()
@@ -1909,26 +1928,24 @@ describe('logic', () => {
                 expect(__page.id).to.be.a('string')
                 expect(__page.text).to.equal(newText)
 
-                const pages = await Page.find()
+                // const pages = await Page.find()
 
-                expect(pages.length).to.equal(1)
+                // expect(pages.length).to.equal(1)
 
-                const [_page] = pages
+                // const [_page] = pages
 
-                expect(_page.id).to.equal(page.id)
-                expect(_page.text).to.equal(newText)
+                // expect(_page.id).to.equal(page.id)
+                // expect(_page.text).to.equal(newText)
             })
 
             describe('without existing page', () => {
-                beforeEach(async () => await Page.deleteMany())
-
                 it('should fail unexisting story ', async () => {
                     try {
-                        await logic.updatePage(page.id, story.id, text)
+                        await logic.updatePage('page.id', story.id, text)
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                        expect(err.message).to.equal(`page with id page.id not found`)
                     }
                 })
             })
@@ -2004,7 +2021,7 @@ describe('logic', () => {
 
                 text = `text-${Math.random()}`
 
-                page = await new Page({ text }).save()
+                page = new Page({ text })
 
                 story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
                 await story.save()
@@ -2029,26 +2046,24 @@ describe('logic', () => {
                 expect(__page.id).to.equal(_page.id)
                 expect(__page.text).to.equal(_page.text)
 
-                const pages = await Page.find()
+                // const pages = await Page.find()
 
-                expect(pages.length).to.equal(1)
+                // expect(pages.length).to.equal(1)
 
-                const [___page] = pages
+                // const [___page] = pages
 
-                expect(___page.id).to.equal(_page.id)
-                expect(___page.text).to.equal(_page.text)
+                // expect(___page.id).to.equal(_page.id)
+                // expect(___page.text).to.equal(_page.text)
             })
 
             describe('without existing page', () => {
-                beforeEach(async () => await Page.deleteMany())
-
-                it('should fail unexisting story ', async () => {
+                it('should fail unexisting page ', async () => {
                     try {
-                        await logic.retrievePage(page.id, story.id)
+                        await logic.retrievePage('page.id', story.id)
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                        expect(err.message).to.equal(`page with id page.id not found`)
                     }
                 })
             })
@@ -2111,7 +2126,7 @@ describe('logic', () => {
 
                 text = `text-${Math.random()}`
 
-                page = await new Page({ text }).save()
+                page = new Page({ text })
 
                 story = new Story({ title, author: id, audioLanguage, textLanguage, pages: [page] })
                 await story.save()
@@ -2131,22 +2146,20 @@ describe('logic', () => {
 
                 expect(_story.pages.length).to.equal(0)
 
-                const pages = await Page.find()
+                // const pages = await Page.find()
 
-                expect(pages.length).to.equal(0)
+                // expect(pages.length).to.equal(0)
 
             })
 
             describe('without existing page', () => {
-                beforeEach(async () => await Page.deleteMany())
-
                 it('should fail unexisting page ', async () => {
                     try {
-                        await logic.removePage(page.id, story.id)
+                        await logic.removePage('page.id', story.id)
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found`)
+                        expect(err.message).to.equal(`page with id page.id not found`)
                     }
                 })
             })
@@ -2177,7 +2190,7 @@ describe('logic', () => {
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(Error)
-                        expect(err.message).to.equal(`page with id ${page.id} not found in story with id ${story.id}`)
+                        expect(err.message).to.equal(`page with id ${page.id} not found`)
                     }
                 })
             })
@@ -2208,7 +2221,7 @@ describe('logic', () => {
         })
     })
 
-    afterEach(() => Promise.all([User.deleteMany(), Story.deleteMany(), Page.deleteMany()]))
+    afterEach(() => Promise.all([User.deleteMany(), Story.deleteMany()]))
 
     after(() => mongoose.disconnect())
 })

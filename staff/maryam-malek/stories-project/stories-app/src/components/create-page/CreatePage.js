@@ -195,7 +195,7 @@ class CreatePage extends Component {
             <div className="navbar-pages">
                 <button className="draw" data-tip="DIBUIXA LA PÀGINA" onClick={this.handleDrawClick}><i className="fa fa-pencil"></i></button>
                 <button className="text" data-tip="ESCRIU EL TEXT DE LA PÀGINA" onClick={this.handleTextClick}><i className="fa fa-text-width"></i></button>
-                <button className="audio" data-tip="GRAVA L'AUDIO DE LA PÀGINA" onClick={this.handleAudioClick}><i className="fa fa-dot-circle-o"></i></button>
+                <button className="audio" data-tip="GRAVA L'AUDIO DE LA PÀGINA" onClick={this.handleAudioClick}><i className="fa fa-microphone"></i></button>
                 <button className="preview" data-tip="MIRA COM QUEDA LA PÀGINA" onClick={this.handlePreviewClick}><i className="fa fa-eye"></i></button>
             </div>
             {this.state.error && <Error message={this.state.error} />}
