@@ -686,9 +686,9 @@ const logic = {
 
             let page = new Page({ text })
 
-            page.image = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
+            page.image = `http://192.168.8.119:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
 
-            page.audioURL = `http://localhost:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
+            page.audioURL = `http://192.168.8.119:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
 
             story.pages.push(page)
 
