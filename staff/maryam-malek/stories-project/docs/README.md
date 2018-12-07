@@ -20,11 +20,11 @@ When updating the tale, the user can decide to share his tale. If the tale is sh
 
 ## Technical description
 
-Once Upon a Tale is designed as a desktop application, and as a web application it should be runned in a browser. It's created using React.js in the front-end, Express in the back-end and mongoose to interact with Mongo DataBase.
+Once Upon a Tale is designed as a desktop application, and as a web application it should be runned in a browser. It's created using React.js in the front-end, Express and node.js in the back-end and mongoose to interact with Mongo DataBase.
 
 The app is written in javascript language, using some features of javascript ES6 and ESNext. It also uses SessionStorage to maintain the user logged even a reload occurs by keeping userId and token. 
 
-The design is implemented using CSS and SASS and the SweetAlert2 library and react-tooltip.
+The design is implemented using CSS, SASS, the SweetAlert2 library and react-tooltip.
 
 ### Block diagram
 
