@@ -10,7 +10,6 @@ class Canvas extends Component {
     state = { error: null, isPainting: false, width: 4, userStrokeStyle: '#EE92C2', line: [], storage: [], last: [], prevPos: { offsetX: 0, offsetY: 0 }, width: 4 }
 
     componentDidMount() {
-        // Here we set up the properties of the canvas element. 
         if (this.props.cover) {
             this.canvas.width = 250
 
@@ -144,12 +143,6 @@ class Canvas extends Component {
         this.setState({ length, isPainting: true, prevPos: { offsetX, offsetY }, error: null })
     }
 
-    // onTouchStart = ({ nativeEvent }) => {
-    //     const { offsetX, offsetY } = nativeEvent
-    //     this.state.isPainting = true
-    //     this.state.prevPos = { offsetX, offsetY }
-    // }
-
     clear() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
@@ -159,7 +152,6 @@ class Canvas extends Component {
             const { offsetX, offsetY } = nativeEvent
             const offSetData = { offsetX, offsetY }
 
-            // Set the start and stop position of the paint event.
             const positionData = {
                 start: { ...this.state.prevPos },
                 stop: { ...offSetData },
@@ -167,7 +159,6 @@ class Canvas extends Component {
                 width: this.state.width
             }
 
-            // Add the position to the line array
             let line = this.state.line.concat(positionData)
 
             this.setState({ line, error: null })
@@ -207,22 +198,6 @@ class Canvas extends Component {
 
     }
 
-    // onTouchMove = ({ nativeEvent }) => {
-    //     if (this.state.isPainting) {
-    //         const { offsetX, offsetY } = nativeEvent
-    //         const offSetData = { offsetX, offsetY }
-    //         // Set the start and stop position of the paint event.
-    //         const positionData = {
-    //             start: { ...this.state.prevPos },
-    //             stop: { ...offSetData },
-    //         }
-    //         // Add the position to the line array
-    //         this.state.line = this.state.line.concat(positionData)
-    //         // this.state.line2 = this.state.line
-    //         this.paint(this.state.prevPos, offSetData, this.state.userStrokeStyle)
-    //     }
-    // }
-
     endPaintEvent = () => {
         if (this.state.isPainting) {
 
@@ -241,19 +216,6 @@ class Canvas extends Component {
             this.props.onChange(dataURL, this.state.storage)
         }
     }
-
-    // onTouchEnd = () => {
-    //     if (this.state.isPainting) {
-    //         this.state.isPainting = false
-    //         //   this.sendPaintData()
-    //         // this.paintComplete()
-    //         const dataURL = this.canvas.toDataURL()
-    //         this.setState({ dataURL })
-    //         // this.props.onEnd(dataURL)
-
-    //         this.props.onChange(dataURL, this.state.line)
-    //     }
-    // }
 
     paint(prevPos, currPos, strokeStyle, width) {
         const { offsetX, offsetY } = currPos
@@ -300,12 +262,10 @@ class Canvas extends Component {
                     {this.props.cover && <div className='canvas-cover-buttons'>
                         <button className='help-canvas-button' onClick={this.handleHelpDrawClick}><i class="fa fa-question icons-canvas"></i></button>
                         {this.props.cover && <button className='close-canvas-button' onClick={this.handleCloseDrawClick}><i class="fa fa-check-circle-o icons-canvas"></i></button>}
-                        {/* {!this.props.cover && <button className='back-canvas-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button>} */}
                     </div>}
                 </div>
             </div>
             <div>
-                {/* <button className="last-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
                 <div className='canvas-area'>
                     <div>
                         <canvas className='canvas'
@@ -315,9 +275,6 @@ class Canvas extends Component {
                             onMouseLeave={this.endPaintEvent}
                             onMouseUp={this.endPaintEvent}
                             onMouseMove={this.onMouseMove}
-                        // onTouchStart={this.onTouchStart}
-                        // onTouchEnd={this.onTouchEnd}
-                        // onTouchMove={this.onTouchMove}
                         />
                     </div>
                     <div className="utils-canvas">
@@ -335,7 +292,6 @@ class Canvas extends Component {
                             <button className='width3-canvas-button' onClick={this.handleWidth3}></button></div>
                     </div>
                 </div>
-                {/* <button className="next-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
             <ReactTooltip effect='solid' />

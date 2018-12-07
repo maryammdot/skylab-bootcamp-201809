@@ -23,7 +23,6 @@ class Login extends Component {
 
         const { username, password } = this.state
 
-        // handleLogin = (username, password) => {
         try {
             logic.login(username, password)
                 .then(() => this.setState({ error: null }))
@@ -32,8 +31,6 @@ class Login extends Component {
         } catch (err) {
             this.setState({ error: err.message })
         }
-        // }
-        // this.props.onLogin(username, password)
     }
 
     render() {

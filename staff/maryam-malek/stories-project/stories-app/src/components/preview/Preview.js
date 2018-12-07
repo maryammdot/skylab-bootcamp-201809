@@ -54,19 +54,15 @@ class Preview extends Component {
                 <h4 className="preview-title">AIXÍ QUEDA LA PÀGINA DEL TEU CONTE</h4>
                 <div className="info-preview">
                     <button className='help-preview-button' onClick={this.handleHelpPreviewClick}><i className="fa fa-question icons-preview"></i></button>
-                    {/* <button className='back-preview-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button> */}
                 </div>
             </div>
             <div className='main-container'>
-                {/* <button className="last-button" onClick={this.props.onAudioClick}>GRAVAR LA VEU</button> */}
                 <div className="preview-book-page">
                     {this.props.dataURL && <img src={this.props.dataURL} alt="page" />}
                     {!this.props.dataURL && <img src='./images/picture.png' alt="page" />}
                     {this.state.hasAudio && <div className="audio-buttons">
                         <button onClick={this.handlePlayClick} className="audio-play"><i className="fa fa-play-circle icons-preview"></i></button>
                         <button onClick={this.handleStopClick} className="audio-stop"><i className="fa fa-stop icons-preview"></i></button>
-                        {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
-                    <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                     </div>}
                     {this.state.hasAudio && <div>
                         <audio ref={(ref) => (this.audioPlayer = ref)} autoPlay src={this.state.audioURL}></audio>
@@ -75,9 +71,7 @@ class Preview extends Component {
                         <span>{this.props.text}</span>
                     </div>
                 </div>
-                {/* <button className="next-button" onClick={this.props.onDrawClick}>DIBUIXAR</button> */}
             </div>
-            {/* <button className="audio"><i className="fa fa-volume-off"></i></button> */}
         </div>
     }
 

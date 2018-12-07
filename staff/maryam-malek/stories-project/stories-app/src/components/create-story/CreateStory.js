@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './style.css'
 import logic from '../../logic'
 import Error from '../error/Error'
-import swal from 'sweetalert2'
 
 class CreateStory extends Component {
     state = { error: null, title: '', audioLanguage: '', textLanguage: '' }
@@ -60,16 +59,6 @@ class CreateStory extends Component {
         }
     }
 
-    // handleHelpClick = () => {
-    //     swal({
-    //         text: `APRETA EL CUBELL D'ESCOMBRARIES SI VOLS ESBORRAR EL CONTE, APRETA EL COHET SI VOLS QUE EL CONTE EL PUGUIN VEURE ALTRES NENS O APRETA EL NEN SI EL VOLS PODER VEURE NOMÉS TU`,
-    //         width: 300,
-    //         padding: '3em',
-    //         confirmButtonText: 'SOM-HI',
-    //         confirmButtonColor: '#0097A7'
-    //     })
-    // }
-
     handleBackClick = () => {
         this.props.onBackClick()
     }
@@ -78,8 +67,6 @@ class CreateStory extends Component {
         return <div className='container-create-story'>
             <div className='create-new-story-header'>
                 <h1>CREA UN NOU CONTE</h1>
-                {/* <button className="help-create-story" onClick={this.handleHelpClick}><i className="fa fa-question"></i></button> */}
-                {/* <button className="back-create-story" onClick={this.handleBackClick}>TORNAR ALS MEUS CONTES</button> */}
             </div>
             <form className="book-details-create" onSubmit={this.handleSubmit}>
                 <h3>TÍTOL DEL CONTE</h3>
@@ -95,7 +82,6 @@ class CreateStory extends Component {
             {this.state.error && <Error message={this.state.error} />}
         </div>
     }
-
 }
 
 export default CreateStory

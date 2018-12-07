@@ -118,10 +118,8 @@ class Audio extends Component {
                 <h4 className="audio-title">AUDIO DE LA PÀGINA</h4>
                 <div className="info-audio">
                     <button className="help-audio-button" onClick={this.handleHelpAudioClick}><i class="fa fa-question icons-audio"></i></button>
-                    {/* <button className='back-audio-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button> */}
                 </div>
             </div>
-                {/* <button className="last-button" onClick={this.props.onTextClick}>ESCRIURE EL TEXT</button> */}
                 <div className="audio-displays">
                     <div className="rec-stop">
                         <button className="rec" data-tip="GRABAR" onClick={this.start}><i className="fa fa-microphone icons-audio"></i></button>
@@ -132,7 +130,6 @@ class Audio extends Component {
                         <audio ref={(ref) => (this.audioPlayer = ref)} preload='metadata' controls="controls" src={this.state.audioUrl}></audio>
                     </div>}
                 </div>
-                {/* <button className="next-button" onClick={this.props.onPreviewClick}>VEURE EL RESULTAT</button> */}
             {this.state.error && <Error message={this.state.error} />}
             <ReactTooltip effect='solid' />
         </div>

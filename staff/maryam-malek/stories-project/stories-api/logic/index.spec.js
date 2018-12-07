@@ -645,7 +645,7 @@ describe('logic', () => {
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(NotFoundError)
-                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
                     }
                 })
             })
@@ -783,7 +783,7 @@ describe('logic', () => {
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(NotFoundError)
-                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
                     }
                 })
             })
@@ -922,7 +922,7 @@ describe('logic', () => {
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(NotFoundError)
-                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
                     }
                 })
             })
@@ -1011,7 +1011,7 @@ describe('logic', () => {
                         expect(true).to.be.false
                     } catch (err) {
                         expect(err).to.be.instanceof(NotFoundError)
-                        expect(err.message).to.equal(`story with id ${story.id} not found in user with id ${user.id} stories`)
+                        expect(err.message).to.equal(`story with id ${story.id} not found`)
                     }
                 })
             })

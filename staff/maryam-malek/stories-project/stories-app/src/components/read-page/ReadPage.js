@@ -23,15 +23,6 @@ class ReadPage extends Component {
                                 this.setState({ error: null, dataURL })
                             })
                     }
-                    // if (hasAudio) {
-                    //     let audioPlay = this.audioPlayer
-                    //     audioPlay.oncanplay = (e) => {
-                    //         let audioDuration = audioPlay.duration
-                    //         let ev = e
-                    //         debugger
-                    //         this.setState({audioDuration})
-                    //     }
-                    // }
                 })
                 .then(() => {
                     if (this.state.pages.length > this.state.index + 1) {
@@ -76,15 +67,6 @@ class ReadPage extends Component {
                         } else {
                             this.setState({ dataURL: '../../images/picture.png' })
                         }
-                        // if (hasAudio) {
-                        //     let audioPlay = this.audioPlayer
-                        //     audioPlay.oncanplay = (e) => {
-                        //         let audioDuration = audioPlay.duration
-                        //         let event = e
-                        //         debugger
-                        //         this.setState({audioDuration})
-                        //     }
-                        // }
                     })
                     .then(() => {
                         if (this.state.pages.length > this.state.index + 1) {
@@ -145,17 +127,6 @@ class ReadPage extends Component {
         this.audioPlayer.pause()
     }
 
-    // handleLoadedMetadata = () => {
-    //     let audioPlay = this.audioPlayer
-    //     let audioDuration
-    //     audioPlay.addEventListener('loadedmetadata', function() {
-    //         // debugger
-    //         // audioDuration = audioPlay.duration
-    //         // debugger
-    //     })
-    //     debugger
-    // }
-
     render() {
         return <div className='container-read-page'>
             <div className='header-read-page'>
@@ -171,8 +142,6 @@ class ReadPage extends Component {
                     {this.state.hasAudio && <div className="audio-buttons">
                         <button onClick={this.handlePlayClick} className="audio-play" data-tip="REPRODUIR L'AUDIO"><i className="fa fa-play-circle icon-audio-read"></i></button>
                         <button onClick={this.handleStopClick} className="audio-stop" data-tip="ATURAR L'AUDIO"><i className="fa fa-stop icon-audio-read"></i></button>
-                        {/* {this.state.volume && <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-up"></i></button>}
-                    <button onClick={this.handleVolume} className="audio"><i className="fa fa-volume-off"></i></button> */}
                         <audio ref={(ref) => (this.audioPlayer = ref)} onLoadedMetadataCapture={this.handleLoadedMetadata} autoPlay src={this.state.audioURL}></audio>
                     </div>}
                     <div className="text-area-read-page">

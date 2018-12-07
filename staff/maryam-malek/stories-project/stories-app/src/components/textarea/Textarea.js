@@ -13,13 +13,6 @@ class Textarea extends Component {
         }
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (this.props !== nextProps) {
-    //         debugger
-    //         this.setState({ text: nextProps.text })
-    //     }
-    // }
-
     handleHelpTextClick = () => {
         swal({
             title: 'ESCRIU EL TEXT QUE VOLS QUE APAREGUI A LA PÀGINA DEL TEU CONTE',
@@ -51,15 +44,12 @@ class Textarea extends Component {
                 </div>
                 <div className='info-text'>
                     <button className='help-text-button' onClick={this.handleHelpTextClick}><i class="fa fa-question icon-question-textarea"></i></button>
-                    {/* <button className='back-text-button' onClick={this.props.onBackClick}>TORNAR AL LLIBRE</button> */}
                 </div>
             </div>
             <div>
-                {/* <button className="last-button" onClick={this.props.onDrawClick}>DIBUIXAR</button> */}
                 <div className='text-area-space'>
                     <textarea required className='textarea-page' name='text' id='text-page' maxLength='100' placeholder='ESCRIU AQUÍ EL TEXT DE LA PÀGINA...' defaultValue={this.state.text} onChange={this.handleChangeText} onBlur={this.handleOnBlur} cols='20' rows='10' ></textarea>
                 </div>
-                {/* <button className="next-button" onClick={this.props.onAudioClick}>GRAVAR L'AUDIO</button> */}
             </div>
             {this.state.error && <Error message={this.state.error} />}
         </div>

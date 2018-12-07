@@ -35,7 +35,6 @@ class Register extends Component {
 
         const { name, surname, username, password } = this.state
 
-        // handleRegister = (name, surname, username, password) => {
             try {
                 logic.register(name, surname, username, password)
                     .then(() => this.setState({ error: null }))
@@ -44,9 +43,6 @@ class Register extends Component {
             } catch (err) {
                 this.setState({ error: err.message })
             }
-        // }
-
-        // this.props.onRegister(name, surname, username, password)
     }
 
     render() {

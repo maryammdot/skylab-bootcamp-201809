@@ -146,14 +146,10 @@ class CreatePage extends Component {
 
                         this.setState({ pageId, error: null })
 
-                        // this.props.onNewPageClick(this.state.storyId, pageId)
                     })
                     .catch(err => {
                         let message
                         switch (err.message) {
-                            // case `stories with query ${this.state.query} not found`:
-                            //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                            //     break
                             default:
                                 message = err.message
                         }
@@ -162,9 +158,6 @@ class CreatePage extends Component {
             } catch (err) {
                 let message
                 switch (err.message) {
-                    // case `stories with query ${this.state.query} not found`:
-                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                    //     break
                     default:
                         message = err.message
                 }

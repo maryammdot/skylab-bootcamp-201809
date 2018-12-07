@@ -27,9 +27,6 @@ class CreateStory extends Component {
                 .catch(err => {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -38,9 +35,6 @@ class CreateStory extends Component {
         } catch (err) {
             let message
             switch (err.message) {
-                // case `stories with query ${this.state.query} not found`:
-                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                //     break
                 default:
                     message = err.message
             }
@@ -68,9 +62,6 @@ class CreateStory extends Component {
                 .catch(err => {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -79,9 +70,6 @@ class CreateStory extends Component {
         } catch (err) {
             let message
             switch (err.message) {
-                // case `stories with query ${this.state.query} not found`:
-                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                //     break
                 default:
                     message = err.message
             }
@@ -139,9 +127,6 @@ class CreateStory extends Component {
                 .catch(err => {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -150,9 +135,6 @@ class CreateStory extends Component {
         } catch (err) {
             let message
             switch (err.message) {
-                // case `stories with query ${this.state.query} not found`:
-                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                //     break
                 default:
                     message = err.message
             }
@@ -173,9 +155,6 @@ class CreateStory extends Component {
                     .catch(err => {
                         let message
                         switch (err.message) {
-                            // case `stories with query ${this.state.query} not found`:
-                            //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                            //     break
                             default:
                                 message = err.message
                         }
@@ -184,9 +163,6 @@ class CreateStory extends Component {
             } catch (err) {
                 let message
                 switch (err.message) {
-                    // case `stories with query ${this.state.query} not found`:
-                    //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                    //     break
                     default:
                         message = err.message
                 }
@@ -219,7 +195,6 @@ class CreateStory extends Component {
                             swal(
                                 'ESBORRAT!',
                                 `S'HA ESBORRAT LA PÀGINA`,
-                                'success'
                             )
                             return logic.retrieveStory(this.state.storyId)
                         })
@@ -230,9 +205,6 @@ class CreateStory extends Component {
                         .catch(err => {
                             let message
                             switch (err.message) {
-                                // case `stories with query ${this.state.query} not found`:
-                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                                //     break
                                 default:
                                     message = err.message
                             }
@@ -241,9 +213,6 @@ class CreateStory extends Component {
                 } catch (err) {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -284,7 +253,6 @@ class CreateStory extends Component {
                             swal(
                                 'ESBORRAT!',
                                 `S'HA ESBORRAT EL TEU CONTE`,
-                                'success'
                             )
                             this.props.onBackClick()
                             this.setState({ error: null })
@@ -292,9 +260,6 @@ class CreateStory extends Component {
                         .catch(err => {
                             let message
                             switch (err.message) {
-                                // case `stories with query ${this.state.query} not found`:
-                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                                //     break
                                 default:
                                     message = err.message
                             }
@@ -304,9 +269,6 @@ class CreateStory extends Component {
 
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -333,7 +295,6 @@ class CreateStory extends Component {
                         .then(() => {
                             swal(
                                 'ARA JA EL PODEN VEURE ALTRES NENS!',
-                                'success'
                             )
                             this.setState({ inProcess: false, error: null })
                         })
@@ -352,9 +313,6 @@ class CreateStory extends Component {
                 } catch (err) {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }
@@ -381,16 +339,12 @@ class CreateStory extends Component {
                         .then(() => {
                             swal(
                                 'ARA EL POTS VEURE NOMÉS TU!',
-                                'success'
                             )
                             this.setState({ inProcess: true, error: null })
                         })
                         .catch(err => {
                             let message
                             switch (err.message) {
-                                // case `stories with query ${this.state.query} not found`:
-                                //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                                //     break
                                 default:
                                     message = err.message
                             }
@@ -399,9 +353,6 @@ class CreateStory extends Component {
                 } catch (err) {
                     let message
                     switch (err.message) {
-                        // case `stories with query ${this.state.query} not found`:
-                        //     message = `NO S'HA TROBAT CAP CONTE AMB AQUEST TÍTOL`
-                        //     break
                         default:
                             message = err.message
                     }

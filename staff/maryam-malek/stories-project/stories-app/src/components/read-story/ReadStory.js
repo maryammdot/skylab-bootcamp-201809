@@ -48,10 +48,6 @@ class ReadStory extends Component {
         })
     }
 
-    // handleBackClick = () => {
-    //     this.props.onBackClick()
-    // }
-
     handleReadClick = () => {
         this.props.onReadClick(this.props.storyId, this.state.pages[0].id)
     }
@@ -82,12 +78,10 @@ class ReadStory extends Component {
     render() {
         return <div className='container-read-story'>
             <div className='read-story-header'>
-                {/* <h1>{this.state.title}</h1> */}
                 <div className='buttons-story-read'>
                     <button className="help-story-read-button" onClick={this.handleHelpClick}><i className="fa fa-question icon-question-read-story"></i></button>
                     {!this.state.favourite && <button className="favourites-story-button" data-tip="AFEGIR EL CONTE A PREFEREITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart-o icon-fav-read-story"></i></button>}
                     {this.state.favourite && <button className="favourites-story-button" data-tip="ELIMINAR EL CONTE DE PREFERITS" onClick={this.handleFavouritesClick}><i className="fa fa-heart favourites-button_on"></i></button>}
-                    {/* <button className="back-story-read-button" onClick={this.handleBackClick}>TORNAR ALS CONTES</button> */}
                     <ReactTooltip effect='solid' />
                 </div>
             </div>

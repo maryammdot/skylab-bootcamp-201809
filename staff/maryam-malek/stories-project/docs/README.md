@@ -1,17 +1,18 @@
-# Stories App
+# Once Uppon a Tale App
 
 ## Intro
 
-The objective of this application is to allow users to search movies in a big database and show the most important infomation about movies. It allso allows to add movies in lists and tag them as favourite and like or unlike.
+This web application is oriented to children. The goal of the app is to allow the user to create his own tale, with draws, audios and texts as well as to share it with other children.
 
 
 ## Functional description
 
-With SMDb every user is able to find the considered trending and popular movies and the ones that are in cinemas at the moment. The app also offers the possibilitie of searching movies by title coincidence. Once the user clicks on one movie image, some of the most relevant details of that film appear, such as the duration, the language, the overview and the cast. 
+In Once Upon a Tale the registered user is able to create his own stories. Drawing the cover and pages and recording audio and writing brief text for each page. 
 
-If the user is registered and logged he also has the possibilitie to add the movie in his own seen movies list or pending movies list. If he adds it in the seen movies list, he is able to add the favourite tag and the like or unlike tag to the movie. In the same way, he can click again to that buttons to delete the movie from the lists or to take out the tags. 
+From his stories page the user can update each tale or can read them. When reading, the audio is displayed at the same time as the user is able to read the text and watch the image of that page. 
 
-The registered and logged user can acces from the user picture menu (top-right of the menu) to his information, the one that he added in the moment of the registration, and to his movies lists. From his movies lists page he can also acces to the detailed movie information by clicking to each movie picture.   
+When updating the tale, the user can decide to share his tale. If the tale is shared then other users will be able to find it from the search page by entering a query that matches with the title. By clicking on the cover of a tale the the user will be able to begin to read, watch and listen that story. From that page the user has the possibility to tag the tale as favourite or take out that category. Once the user has tagged a story as favourite, he will find it in his favourites page.
+
 
 ### Use Cases diagram
 
@@ -19,11 +20,11 @@ The registered and logged user can acces from the user picture menu (top-right o
 
 ## Technical description
 
-SMDb is designed as desktop first application, but responsive and as a web application should be runned in a browser. It's created using React.js in the frontend and interacting with two appis in the backend, The Movie Database API and Skylab User API. 
+Once Upon a Tale is designed as a desktop application, and as a web application it should be runned in a browser. It's created using React.js in the front-end, Express in the back-end and mongoose to interact with Mongo DataBase.
 
-The app is written in javascript language,using some features of javascript ES 6. It also uses SessionStorage to maintain the user logged even a reload occurs. 
+The app is written in javascript language, using some features of javascript ES6 and ESNext. It also uses SessionStorage to maintain the user logged even a reload occurs by keeping userId and token. 
 
-The design is implemented using the library of Bootstrap 4, jQuery, Popper and Slick. 
+The design is implemented using CSS and SASS and the SweetAlert2 library and react-tooltip.
 
 ### Block diagram
 
@@ -33,11 +34,15 @@ The design is implemented using the library of Bootstrap 4, jQuery, Popper and S
 
 ![alt components diagram](./images/components_diagram.png)
 
-### Sequence diagram
-
 
 ### Data Model diagram
 
-![alt data model diagram](./images/data_model_diagram_2.png)
+![alt data model diagram](./images/data_model_diagram.png)
+
+### Test Coverage
+
+![alt all files test coverage](./images/all_files_test_coverage.png)
+
+![alt logic test coverage](./images/logic_test_coverage.png)
 
 
