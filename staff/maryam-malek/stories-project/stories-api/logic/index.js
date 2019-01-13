@@ -250,7 +250,7 @@ const logic = {
             audioLanguage != null && (story.audioLanguage = audioLanguage)
             textLanguage != null && (story.textLanguage = textLanguage)
 
-            story.cover = `http://localhost:${PORT}/api/users/${author}/stories/${story.id}/cover`
+            story.cover = `${HOST}/api/users/${author}/stories/${story.id}/cover`
 
             await story.save()
 
@@ -686,9 +686,9 @@ const logic = {
 
             let page = new Page({ text })
 
-            page.image = `${HOST}:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
+            page.image = `${HOST}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/picture`
 
-            page.audioURL = `${HOST}:${PORT}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
+            page.audioURL = `${HOST}/api/users/${story.author.toString()}/stories/${storyId}/pages/${page.id.toString()}/audio`
 
             story.pages.push(page)
 
